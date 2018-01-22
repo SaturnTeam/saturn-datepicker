@@ -30,8 +30,15 @@ As easy as pie.
         [rangeMode]="true">
     </mat-datepicker>
 ```
+I/O value have this interface:
+```typescript
+export interface MatDatePickerRangeValue<D> {
+  begin: D | null;
+  end: D | null;
+}
+```
 Don't forget import the module from right place!
-```angular2html
+```typescript
 import { MatDatepickerModule } from 'saturn-datepicker'
 ```
 And finally, add styles somewhere:
