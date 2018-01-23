@@ -22,6 +22,7 @@ I created this repository and this package due to it takes a lot of time to cont
 
 ## It's awesome, but how to use it?
 As easy as pie.
+Installation: `yarn add saturn-datepicker` or `npm install saturn-datepicker`
 ```angular2html
   <mat-form-field>
     <input matInput [matDatepicker]="resultPicker">
