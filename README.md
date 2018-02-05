@@ -1,5 +1,5 @@
 # Saturn datepicker
-
+Material datepicker with range support
 ## What is this?
 
 This is a based on Material source code implementation of Material Datepicker for Angular. 
