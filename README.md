@@ -30,6 +30,7 @@ Installation: `yarn add saturn-datepicker` or `npm install saturn-datepicker`
         #resultPicker
         [rangeMode]="true">
     </mat-datepicker>
+   </mat-form-field>
 ```
 I/O value have this interface:
 ```typescript
