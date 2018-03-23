@@ -1,6 +1,6 @@
 {
   "name": "saturn-datepicker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "./bundles/saturn-datepicker.umd.js",
   "module": "./esm5/saturn-datepicker.es5.js",
