@@ -30,10 +30,10 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {SatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../datetime';
 
 /**
  * An internal component used to display a single year in the datepicker.
@@ -116,7 +116,7 @@ export class SatYearView<D> implements AfterContentInit {
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              @Optional() public _dateAdapter: DateAdapter<D>,
+              public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');

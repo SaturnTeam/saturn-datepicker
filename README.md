@@ -17,6 +17,7 @@ I created this repository and this package due to it takes a lot of time to cont
  
 ## Disadvantages
 1) Requires manual styles insertions
+2) May not work with moment.js date object
 
 ##Changelog
 
@@ -28,7 +29,7 @@ API has been completely changed.
 
 As easy as pie.
 Installation: `yarn add saturn-datepicker` or `npm install saturn-datepicker`
-Import `SatDatepickerModule` and `MatDatepickerModule`.
+Import `SatDatepickerModule`, `SatNativeDateModule` and `MatDatepickerModule`
 ```angular2html
   <mat-form-field>
     <input matInput [satDatepicker]="resultPicker">

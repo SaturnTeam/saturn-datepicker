@@ -29,7 +29,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
+import {DateAdapter} from '../datetime';
 import {Directionality} from '@angular/cdk/bidi';
 import {SatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -115,7 +115,7 @@ export class SatMultiYearView<D> implements AfterContentInit {
   _selectedYear: number | null;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() public _dateAdapter: DateAdapter<D>,
+              public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');

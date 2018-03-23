@@ -7,3 +7,4 @@
  */
 
 export * from './datepicker/public-api';
+export * from './datetime';

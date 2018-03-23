@@ -30,7 +30,7 @@ import {
   ViewEncapsulation,
   ViewChild,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../datetime';
 import {Directionality} from '@angular/cdk/bidi';
 import {SatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -165,7 +165,7 @@ export class SatMonthView<D> implements AfterContentInit {
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              @Optional() public _dateAdapter: DateAdapter<D>,
+              public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');

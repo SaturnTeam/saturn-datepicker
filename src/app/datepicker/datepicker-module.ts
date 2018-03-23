@@ -15,7 +15,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {SatCalendar} from './calendar';
 import {SatCalendarBody} from './calendar-body';
 import {
-    MAT_DATEPICKER_SCROLL_STRATEGY, MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER, SatDatepicker,
+    MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER, SatDatepicker,
     SatDatepickerContent
 } from './datepicker';
 import {SatDatepickerInput} from './datepicker-input';

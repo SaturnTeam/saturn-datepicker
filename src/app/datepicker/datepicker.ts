@@ -23,7 +23,7 @@ import {
     Component,
     ComponentRef,
     ElementRef,
-    EventEmitter, inject,
+    EventEmitter,
     Inject,
     InjectionToken,
     Input,
@@ -36,7 +36,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation,
 } from '@angular/core';
-import {CanColor, DateAdapter, mixinColor, ThemePalette} from '@angular/material/core';
+import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge} from 'rxjs/observable/merge';
 import {filter} from 'rxjs/operators/filter';
@@ -47,6 +47,7 @@ import {SatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {SatDatepickerInput, SatDatepickerRangeValue} from './datepicker-input';
+import {DateAdapter} from '../datetime';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
