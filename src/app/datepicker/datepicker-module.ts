@@ -12,59 +12,58 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatIconModule} from '@angular/material/icon';
-import {MatCalendar} from './calendar';
-import {MatCalendarBody} from './calendar-body';
+import {SaturnCalendar} from './calendar';
+import {SaturnCalendarBody} from './calendar-body';
 import {
-  MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
-  MatDatepicker,
-  MatDatepickerContent,
+    MAT_DATEPICKER_SCROLL_STRATEGY, MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER, SaturnDatepicker,
+    SaturnDatepickerContent
 } from './datepicker';
-import {MatDatepickerInput} from './datepicker-input';
-import {MatDatepickerIntl} from './datepicker-intl';
-import {MatDatepickerToggle} from './datepicker-toggle';
-import {MatMonthView} from './month-view';
-import {MatMultiYearView} from './multi-year-view';
-import {MatYearView} from './year-view';
+import {SaturnDatepickerInput} from './datepicker-input';
+import {SaturnDatepickerIntl} from './datepicker-intl';
+import {SaturnDatepickerToggle, SaturnDatepickerToggleIcon} from './datepicker-toggle';
+import {SaturnMonthView} from './month-view';
+import {SaturnMultiYearView} from './multi-year-view';
+import {SaturnYearView} from './year-view';
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatIconModule,
-    OverlayModule,
-    A11yModule,
-  ],
-  exports: [
-    MatCalendar,
-    MatCalendarBody,
-    MatDatepicker,
-    MatDatepickerContent,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatMonthView,
-    MatYearView,
-    MatMultiYearView,
-  ],
-  declarations: [
-    MatCalendar,
-    MatCalendarBody,
-    MatDatepicker,
-    MatDatepickerContent,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatMonthView,
-    MatYearView,
-    MatMultiYearView,
-  ],
-  providers: [
-    MatDatepickerIntl,
-    MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
-  ],
-  entryComponents: [
-    MatDatepickerContent,
-  ]
+    imports: [
+        A11yModule,
+        CommonModule,
+        MatButtonModule,
+        MatDialogModule,
+        OverlayModule,
+    ],
+    exports: [
+        SaturnCalendar,
+        SaturnCalendarBody,
+        SaturnDatepicker,
+        SaturnDatepickerContent,
+        SaturnDatepickerInput,
+        SaturnDatepickerToggle,
+        SaturnDatepickerToggleIcon,
+        SaturnMonthView,
+        SaturnYearView,
+        SaturnMultiYearView,
+    ],
+    declarations: [
+        SaturnCalendar,
+        SaturnCalendarBody,
+        SaturnDatepicker,
+        SaturnDatepickerContent,
+        SaturnDatepickerInput,
+        SaturnDatepickerToggle,
+        SaturnDatepickerToggleIcon,
+        SaturnMonthView,
+        SaturnYearView,
+        SaturnMultiYearView,
+    ],
+    providers: [
+        SaturnDatepickerIntl,
+        MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
+    ],
+    entryComponents: [
+        SaturnDatepickerContent,
+    ]
 })
-export class MatDatepickerModule {}
+export class SaturnDatepickerModule {}

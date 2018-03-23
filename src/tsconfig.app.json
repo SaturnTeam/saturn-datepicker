@@ -4,7 +4,22 @@
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
     "module": "es2015",
-    "types": []
+    "types": [],
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "target": "es2015",
+    "lib": ["es5", "es2015", "dom"]
+  },
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": false, // Workaround for Angular #22210
+//    "flatModuleOutFile": "index.js",
+//    "flatModuleId": "@angular/material",
+//    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
   },
   "exclude": [
     "test.ts",

@@ -9,12 +9,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  NgZone,
 } from '@angular/core';
-
+import {take} from 'rxjs/operators/take';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -34,7 +36,7 @@ export class MatCalendarCell {
  */
 @Component({
   moduleId: module.id,
-  selector: '[mat-calendar-body]',
+  selector: '[saturn-calendar-body]',
   templateUrl: 'calendar-body.html',
   styleUrls: ['calendar-body.css'],
   host: {
@@ -44,10 +46,9 @@ export class MatCalendarCell {
   },
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatCalendarBody {
+export class SaturnCalendarBody {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
@@ -95,7 +96,9 @@ export class MatCalendarBody {
   @Input() cellAspectRatio = 1;
 
   /** Emits when a new value is selected. */
-  @Output() selectedValueChange = new EventEmitter<number>();
+  @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
+
+  constructor(private _elementRef: ElementRef, private _ngZone: NgZone) { }
 
   _cellClicked(cell: MatCalendarCell): void {
     if (!this.allowDisabledSelection && !cell.enabled) {
@@ -134,11 +137,20 @@ export class MatCalendarBody {
       return false;
     }
     if (this.begin && !this.end) {
-        return date > this.begin;
+      return date > this.begin;
     }
     if (this.end && !this.begin) {
       return date < this.end;
     }
     return date > <number>this.begin && date < <number>this.end;
+  }
+  
+  /** Focuses the active cell after the microtask queue is empty. */
+  _focusActiveCell() {
+    this._ngZone.runOutsideAngular(() => {
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
+        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
+      });
+    });
   }
 }

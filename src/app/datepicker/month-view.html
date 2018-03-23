@@ -3,7 +3,7 @@
     <tr><th *ngFor="let day of _weekdays" [attr.aria-label]="day.long">{{day.narrow}}</th></tr>
     <tr><th class="mat-calendar-table-header-divider" colspan="7" aria-hidden="true"></th></tr>
   </thead>
-  <tbody mat-calendar-body
+  <tbody saturn-calendar-body
          [label]="_monthLabel"
          [rows]="_weeks"
          [todayValue]="_todayDate"
@@ -14,6 +14,7 @@
          [rangeMode]="rangeMode"
          [labelMinRequiredCells]="3"
          [activeCell]="_dateAdapter.getDate(activeDate) - 1"
-         (selectedValueChange)="_dateSelected($event)">
+         (selectedValueChange)="_dateSelected($event)"
+         (keydown)="_handleCalendarBodyKeydown($event)">
   </tbody>
 </table>

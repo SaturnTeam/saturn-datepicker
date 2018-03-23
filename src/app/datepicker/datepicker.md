@@ -32,19 +32,50 @@ can easily be used as a prefix or suffix on the material input:
 </mat-form-field>
 ```
 
+If you want to customize the icon that is rendered inside the `saturn-datepicker-toggle`, you can do so
+by using the `matDatepickerToggleIcon` directive:
+
+<!-- example(datepicker-custom-icon) -->
+
 ### Setting the calendar starting view
 
-The `startView` property of `<mat-datepicker>` can be used to set the view that will show up when
+The `startView` property of `<saturn-datepicker>` can be used to set the view that will show up when
 the calendar first opens. It can be set to `month`, `year`, or `multi-year`; by default it will open
 to month view.
 
 The month, year, or range of years that the calendar opens to is determined by first checking if any
 date is currently selected, if so it will open to the month or year containing that date. Otherwise
 it will open to the month or year containing today's date. This behavior can be overridden by using
-the `startAt` property of `<mat-datepicker>`. In this case the calendar will open to the month or
+the `startAt` property of `<saturn-datepicker>`. In this case the calendar will open to the month or
 year containing the `startAt` date.
 
 <!-- example(datepicker-start-view) -->
+
+#### Watching the views for changes on selected years and months
+
+When a year or a month is selected in `multi-year` and `year` views respectively, the `yearSelected`
+and `monthSelected` outputs emit a normalized date representing the chosen year or month. By
+"normalized" we mean that the dates representing years will have their month set to January and
+their day set to the 1st. Dates representing months will have their day set to the 1st of the
+month. For example, if `<saturn-datepicker>` is configured to work with javascript native Date
+objects, the `yearSelected` will emit `new Date(2017, 0, 1)` if the user selects 2017 in
+`multi-year` view. Similarly, `monthSelected` will emit `new Date(2017, 1, 1)` if the user
+selects **February** in `year` view and the current date value of the connected `<input>` was
+set to something like `new Date(2017, MM, dd)` when the calendar was opened (the month and day are
+irrelevant in this case).
+
+Notice that the emitted value does not affect the current value in the connected `<input>`, which
+is only bound to the selection made in the `month` view. So if the end user closes the calendar 
+after choosing a year in `multi-view` mode (by pressing the `ESC` key, for example), the selected
+year, emitted by `yearSelected` output, will not cause any change in the value of the date in the
+associated `<input>`.
+
+The following example uses `yearSelected` and `monthSelected` outputs to emulate a month and year
+picker (if you're not familiar with the usage of `MomentDateAdapter` and `MAT_DATE_FORMATS`
+you can [read more about them](#choosing-a-date-implementation-and-date-format-settings) below in
+this document to fully understand the example).
+
+<!-- example(datepicker-views-selection) -->
 
 ### Setting the selected date
 
@@ -68,6 +99,14 @@ As with other types of `<input>`, the datepicker works with `@angular/forms` dir
 `formGroup`, `formControl`, `ngModel`, etc.
 
 <!-- example(datepicker-value) -->
+
+### Changing the datepicker colors
+
+The datepicker popup will automatically inherit the color palette (`primary`, `accent`, or `warn`)
+from the `mat-form-field` it is attached to. If you would like to specify a different palette for
+the popup you can do so by setting the `color` property on `saturn-datepicker`.
+
+<!-- example(datepicker-color) -->
 
 ### Date validation
 
@@ -99,7 +138,6 @@ Each validation property has a different error that can be checked:
  * A value that violates the `min` property will have a `matDatepickerMin` error.
  * A value that violates the `max` property will have a `matDatepickerMax` error.
  * A value that violates the `matDatepickerFilter` property will have a `matDatepickerFilter` error.
- * If a datepicker in range mode have `value.begin > value.end` the value will have a `matDatepickerRange` error.
 
 ### Input and change events
 
@@ -117,7 +155,7 @@ date from the calendar. The `(dateChange)` event will fire whenever the user fin
 ### Disabling parts of the datepicker
 
 As with any standard `<input>`, it is possible to disable the datepicker input by adding the
-`disabled` property. By default, the `<mat-datepicker>` and `<mat-datepicker-toggle>` will inherit
+`disabled` property. By default, the `<saturn-datepicker>` and `<saturn-datepicker-toggle>` will inherit
 their disabled state from the `<input>`, but this can be overridden by setting the `disabled`
 property on the datepicker or toggle elements. This can be useful if you want to disable text input
 but allow selection via the calendar or vice-versa.
@@ -128,7 +166,7 @@ but allow selection via the calendar or vice-versa.
 
 The datepicker normally opens as a popup under the input. However this is not ideal for touch
 devices that don't have as much screen real estate and need bigger click targets. For this reason
-`<mat-datepicker>` has a `touchUi` property that can be set to `true` in order to enable a more
+`<saturn-datepicker>` has a `touchUi` property that can be set to `true` in order to enable a more
 touch friendly UI where the calendar opens in a large dialog.
 
 <!-- example(datepicker-touch) -->
@@ -136,18 +174,9 @@ touch friendly UI where the calendar opens in a large dialog.
 ### Manually opening and closing the calendar
 
 The calendar popup can be programmatically controlled using the `open` and `close` methods on the
-`<mat-datepicker>`. It also has an `opened` property that reflects the status of the popup.
+`<saturn-datepicker>`. It also has an `opened` property that reflects the status of the popup.
 
 <!-- example(datepicker-api) -->
-
-### Range datepicker
-
-The datepicker is also might be used to select interval of dates. In that case you should add `[rangeMode]="true"`
- to `<mat-datepicker>`. The value passed to `<input>` should implement interface `MatDatePickerRangeValue<D>`.
- Entered string with dates interval will be separated by `-`, for example: `01/01/2001 - 01/10/2010` (or on some 
- locales: `01-01-2001 - 01-10-2010`). Dates, around `-` can be in any format accepted by `DateAdapter.parse()`.
-  
-<!-- example(datepicker-range) -->
 
 ### Internationalization
 
@@ -181,7 +210,7 @@ It's also possible to set the locale at runtime using the `setLocale` method of 
 The datepicker was built to be date implementation agnostic. This means that it can be made to work
 with a variety of different date implementations. However it also means that developers need to make
 sure to provide the appropriate pieces for the datepicker to work with their chosen implementation.
-The easiest way to ensure this is just to import one of the pre-made modules: 
+The easiest way to ensure this is just to import one of the pre-made modules:
 
 |Module               |Date type|Supported locales                                                      |Dependencies                      |Import from                       |
 |---------------------|---------|-----------------------------------------------------------------------|----------------------------------|----------------------------------|
@@ -348,19 +377,19 @@ In multi-year view:
 
 This error is thrown if you have not provided all of the injectables the datepicker needs to work.
 The easiest way to resolve this is to import the `MatNativeDateModule` or `MatMomentDateModule` in
-your application's root module. See 
+your application's root module. See
 [_Choosing a date implementation_](#choosing-a-date-implementation-and-date-format-settings)) for
 more information.
 
 #### Error: A MatDatepicker can only be associated with a single input
 
 This error is thrown if more than one `<input>` tries to claim ownership over the same
-`<mat-datepicker>` (via the `matDatepicker` attribute on the input). A datepicker can only be
+`<saturn-datepicker>` (via the `matDatepicker` attribute on the input). A datepicker can only be
 associated with a single input.
 
 #### Error: Attempted to open an MatDatepicker with no associated input.
 
-This error occurs if your `<mat-datepicker>` is not associated with any `<input>`. To associate an
+This error occurs if your `<saturn-datepicker>` is not associated with any `<input>`. To associate an
 input with your datepicker, create a template reference for the datepicker and assign it to the
 `matDatepicker` attribute on the input:
 

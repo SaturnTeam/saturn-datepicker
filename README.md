@@ -2,10 +2,9 @@
 Material datepicker with range support
 ## What is this?
 
-This is a based on Material source code implementation of Material Datepicker for Angular. 
+This is a based on Material source code (March 22, 2018) implementation of Material Datepicker for Angular.
 I created this repository and this package due to it takes a lot of time to contribute to material2 repository.
-[Issue in material2 repo.](https://github.com/angular/material2/issues/4763) 
-[Changes made by me.](https://github.com/SaturnTeam/material2/commit/2f1409165ea601e6193c5d4c4784b04a9db67d21)
+[Issue in material2 repo.](https://github.com/angular/material2/issues/4763)
 ![Material date range picker](screenshot.png)
 
 ## Advantages
@@ -17,33 +16,28 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Disadvantages 
-1) I use the same module and template names as it in native material datepicker. I do this, because I hope I'll push my code to material2 repository
+~~1) I use the same module and template names as it in native material datepicker. I do this, because I hope I'll push my code to material2 repository~~
 2) Requires manual styles insertions
+##Changelog
+
+### 1.0
+API has been completely changed.
 
 ## It's awesome, but how to use it?
 As easy as pie.
 Installation: `yarn add saturn-datepicker` or `npm install saturn-datepicker`
 ```angular2html
   <mat-form-field>
-    <input matInput [matDatepicker]="resultPicker">
-    <mat-datepicker
+    <input matInput [saturnDatepicker]="resultPicker">
+    <saturn-datepicker
         #resultPicker
         [rangeMode]="true">
-    </mat-datepicker>
+    </saturn-datepicker>
    </mat-form-field>
 ```
-I/O value have this interface:
-```typescript
-export interface MatDatePickerRangeValue<D> {
-  begin: D | null;
-  end: D | null;
-}
-```
-Don't forget import the module from right place!
-```typescript
-import { MatDatepickerModule } from 'saturn-datepicker'
-```
-And finally, add styles somewhere:
+Module name: `SaturnDatepickerModule`. Required also `MatDatepickerModule`.
+
+And finally, add styles somewhere (for default pink theme):
 ```css
 
 :not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-semi-selected),
@@ -76,6 +70,13 @@ And finally, add styles somewhere:
   background-color: #e8eaf6; }
 ```
 
+## I/O value have this interface:
+```typescript
+export interface SaturnDatepickerRangeValue<D> {
+  begin: D | null;
+  end: D | null;
+}
+```
 
 ## I found a bug what to do?
 Create issue. But before, please be sure it happens due to range datepicker feature.

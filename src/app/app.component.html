@@ -1,2 +1,7 @@
-<input [matDatepicker]="myDatepicker">
-<mat-datepicker #myDatepicker [rangeMode]="true"></mat-datepicker>
+<mat-form-field>
+    <input matInput [matDatepicker]="resultPicker">
+    <mat-datepicker
+            #resultPicker
+            [rangeMode]="true">
+    </mat-datepicker>
+</mat-form-field>
