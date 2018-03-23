@@ -36,7 +36,7 @@ export class MatCalendarCell {
  */
 @Component({
   moduleId: module.id,
-  selector: '[saturn-calendar-body]',
+  selector: '[sat-calendar-body]',
   templateUrl: 'calendar-body.html',
   styleUrls: ['calendar-body.css'],
   host: {
@@ -48,7 +48,7 @@ export class MatCalendarCell {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SaturnCalendarBody {
+export class SatCalendarBody {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 

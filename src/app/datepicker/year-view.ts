@@ -32,7 +32,7 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {SaturnCalendarBody, MatCalendarCell} from './calendar-body';
+import {SatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 /**
@@ -41,13 +41,13 @@ import {createMissingDateImplError} from './datepicker-errors';
  */
 @Component({
   moduleId: module.id,
-  selector: 'saturn-year-view',
+  selector: 'sat-year-view',
   templateUrl: 'year-view.html',
   exportAs: 'saturnYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SaturnYearView<D> implements AfterContentInit {
+export class SatYearView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -97,7 +97,7 @@ export class SaturnYearView<D> implements AfterContentInit {
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SaturnCalendarBody) _matCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody;
 
   /** Grid of calendar cells representing the months of the year. */
   _months: MatCalendarCell[][];

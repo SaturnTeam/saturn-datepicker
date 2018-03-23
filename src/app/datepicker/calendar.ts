@@ -25,11 +25,11 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subscription} from 'rxjs/Subscription';
 import {createMissingDateImplError} from './datepicker-errors';
-import {SaturnDatepickerIntl} from './datepicker-intl';
-import {SaturnMonthView} from './month-view';
-import {SaturnMultiYearView, yearsPerPage} from './multi-year-view';
-import {SaturnYearView} from './year-view';
-import {SaturnDatepickerRangeValue} from './datepicker-input';
+import {SatDatepickerIntl} from './datepicker-intl';
+import {SatMonthView} from './month-view';
+import {SatMultiYearView, yearsPerPage} from './multi-year-view';
+import {SatYearView} from './year-view';
+import {SatDatepickerRangeValue} from './datepicker-input';
 
 
 /**
@@ -38,7 +38,7 @@ import {SaturnDatepickerRangeValue} from './datepicker-input';
  */
 @Component({
   moduleId: module.id,
-  selector: 'saturn-calendar',
+  selector: 'sat-calendar',
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],
   host: {
@@ -48,7 +48,7 @@ import {SaturnDatepickerRangeValue} from './datepicker-input';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SaturnCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
+export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   private _intlChanges: Subscription;
 
   /** A date representing the period (month or year) to start the calendar in. */
@@ -127,16 +127,16 @@ export class SaturnCalendar<D> implements AfterContentInit, OnDestroy, OnChanges
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
   /** Emits when new pair of dates selected. */
-  @Output() dateRangesChange = new EventEmitter<SaturnDatepickerRangeValue<D>>();
+  @Output() dateRangesChange = new EventEmitter<SatDatepickerRangeValue<D>>();
 
   /** Reference to the current month view component. */
-  @ViewChild(SaturnMonthView) monthView: SaturnMonthView<D>;
+  @ViewChild(SatMonthView) monthView: SatMonthView<D>;
 
   /** Reference to the current year view component. */
-  @ViewChild(SaturnYearView) yearView: SaturnYearView<D>;
+  @ViewChild(SatYearView) yearView: SatYearView<D>;
 
   /** Reference to the current multi-year view component. */
-  @ViewChild(SaturnMultiYearView) multiYearView: SaturnMultiYearView<D>;
+  @ViewChild(SatMultiYearView) multiYearView: SatMultiYearView<D>;
 
   /** Whenever user already selected start of dates interval. */
   private _beginDateSelected = false;
@@ -202,7 +202,7 @@ export class SaturnCalendar<D> implements AfterContentInit, OnDestroy, OnChanges
     }[this._currentView];
   }
 
-  constructor(private _intl: SaturnDatepickerIntl,
+  constructor(private _intl: SatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {

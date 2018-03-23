@@ -32,21 +32,21 @@ can easily be used as a prefix or suffix on the material input:
 </mat-form-field>
 ```
 
-If you want to customize the icon that is rendered inside the `saturn-datepicker-toggle`, you can do so
+If you want to customize the icon that is rendered inside the `sat-datepicker-toggle`, you can do so
 by using the `matDatepickerToggleIcon` directive:
 
 <!-- example(datepicker-custom-icon) -->
 
 ### Setting the calendar starting view
 
-The `startView` property of `<saturn-datepicker>` can be used to set the view that will show up when
+The `startView` property of `<sat-datepicker>` can be used to set the view that will show up when
 the calendar first opens. It can be set to `month`, `year`, or `multi-year`; by default it will open
 to month view.
 
 The month, year, or range of years that the calendar opens to is determined by first checking if any
 date is currently selected, if so it will open to the month or year containing that date. Otherwise
 it will open to the month or year containing today's date. This behavior can be overridden by using
-the `startAt` property of `<saturn-datepicker>`. In this case the calendar will open to the month or
+the `startAt` property of `<sat-datepicker>`. In this case the calendar will open to the month or
 year containing the `startAt` date.
 
 <!-- example(datepicker-start-view) -->
@@ -57,7 +57,7 @@ When a year or a month is selected in `multi-year` and `year` views respectively
 and `monthSelected` outputs emit a normalized date representing the chosen year or month. By
 "normalized" we mean that the dates representing years will have their month set to January and
 their day set to the 1st. Dates representing months will have their day set to the 1st of the
-month. For example, if `<saturn-datepicker>` is configured to work with javascript native Date
+month. For example, if `<sat-datepicker>` is configured to work with javascript native Date
 objects, the `yearSelected` will emit `new Date(2017, 0, 1)` if the user selects 2017 in
 `multi-year` view. Similarly, `monthSelected` will emit `new Date(2017, 1, 1)` if the user
 selects **February** in `year` view and the current date value of the connected `<input>` was
@@ -104,7 +104,7 @@ As with other types of `<input>`, the datepicker works with `@angular/forms` dir
 
 The datepicker popup will automatically inherit the color palette (`primary`, `accent`, or `warn`)
 from the `mat-form-field` it is attached to. If you would like to specify a different palette for
-the popup you can do so by setting the `color` property on `saturn-datepicker`.
+the popup you can do so by setting the `color` property on `sat-datepicker`.
 
 <!-- example(datepicker-color) -->
 
@@ -155,7 +155,7 @@ date from the calendar. The `(dateChange)` event will fire whenever the user fin
 ### Disabling parts of the datepicker
 
 As with any standard `<input>`, it is possible to disable the datepicker input by adding the
-`disabled` property. By default, the `<saturn-datepicker>` and `<saturn-datepicker-toggle>` will inherit
+`disabled` property. By default, the `<sat-datepicker>` and `<sat-datepicker-toggle>` will inherit
 their disabled state from the `<input>`, but this can be overridden by setting the `disabled`
 property on the datepicker or toggle elements. This can be useful if you want to disable text input
 but allow selection via the calendar or vice-versa.
@@ -166,7 +166,7 @@ but allow selection via the calendar or vice-versa.
 
 The datepicker normally opens as a popup under the input. However this is not ideal for touch
 devices that don't have as much screen real estate and need bigger click targets. For this reason
-`<saturn-datepicker>` has a `touchUi` property that can be set to `true` in order to enable a more
+`<sat-datepicker>` has a `touchUi` property that can be set to `true` in order to enable a more
 touch friendly UI where the calendar opens in a large dialog.
 
 <!-- example(datepicker-touch) -->
@@ -174,7 +174,7 @@ touch friendly UI where the calendar opens in a large dialog.
 ### Manually opening and closing the calendar
 
 The calendar popup can be programmatically controlled using the `open` and `close` methods on the
-`<saturn-datepicker>`. It also has an `opened` property that reflects the status of the popup.
+`<sat-datepicker>`. It also has an `opened` property that reflects the status of the popup.
 
 <!-- example(datepicker-api) -->
 
@@ -384,12 +384,12 @@ more information.
 #### Error: A MatDatepicker can only be associated with a single input
 
 This error is thrown if more than one `<input>` tries to claim ownership over the same
-`<saturn-datepicker>` (via the `matDatepicker` attribute on the input). A datepicker can only be
+`<sat-datepicker>` (via the `matDatepicker` attribute on the input). A datepicker can only be
 associated with a single input.
 
 #### Error: Attempted to open an MatDatepicker with no associated input.
 
-This error occurs if your `<saturn-datepicker>` is not associated with any `<input>`. To associate an
+This error occurs if your `<sat-datepicker>` is not associated with any `<input>`. To associate an
 input with your datepicker, create a template reference for the datepicker and assign it to the
 `matDatepicker` attribute on the input:
 

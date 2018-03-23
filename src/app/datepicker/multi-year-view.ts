@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {SaturnCalendarBody, MatCalendarCell} from './calendar-body';
+import {SatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -46,13 +46,13 @@ export const yearsPerRow = 4;
  */
 @Component({
   moduleId: module.id,
-  selector: 'saturn-multi-year-view',
+  selector: 'sat-multi-year-view',
   templateUrl: 'multi-year-view.html',
   exportAs: 'saturnMultiYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SaturnMultiYearView<D> implements AfterContentInit {
+export class SatMultiYearView<D> implements AfterContentInit {
   /** The date to display in this multi-year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -103,7 +103,7 @@ export class SaturnMultiYearView<D> implements AfterContentInit {
   @Output() readonly yearSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SaturnCalendarBody) _matCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody;
 
   /** Grid of calendar cells representing the currently displayed years. */
   _years: MatCalendarCell[][];

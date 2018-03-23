@@ -34,28 +34,28 @@ import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/c
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs/Subscription';
-import {SaturnDatepicker} from './datepicker';
+import {SatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
-import {SaturnDatepickerRangeValue} from './datepicker-input';
+import {SatDatepickerRangeValue} from './datepicker-input';
 
 
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => SaturnDatepickerInput),
+  useExisting: forwardRef(() => SatDatepickerInput),
   multi: true
 };
 
 
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
-  useExisting: forwardRef(() => SaturnDatepickerInput),
+  useExisting: forwardRef(() => SatDatepickerInput),
   multi: true
 };
 
 /**
  * Special interface to input and output dates interval.
  */
-export interface SaturnDatepickerRangeValue<D> {
+export interface SatDatepickerRangeValue<D> {
   begin: D | null;
   end: D | null;
 }
@@ -65,13 +65,13 @@ export interface SaturnDatepickerRangeValue<D> {
  * input or change event because the event may have been triggered by the user clicking on the
  * calendar popup. For consistency, we always use MatDatepickerInputEvent instead.
  */
-export class SaturnDatepickerInputEvent<D> {
+export class SatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
-  value: SaturnDatepickerRangeValue<D> | D | null;
+  value: SatDatepickerRangeValue<D> | D | null;
 
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
-    public target: SaturnDatepickerInput<D>,
+    public target: SatDatepickerInput<D>,
     /** Reference to the native input element associated with the datepicker input. */
     public targetElement: HTMLElement) {
     this.value = this.target.value;
@@ -81,11 +81,11 @@ export class SaturnDatepickerInputEvent<D> {
 
 /** Directive used to connect an input to a MatDatepicker. */
 @Directive({
-  selector: 'input[saturnDatepicker]',
+  selector: 'input[satDatepicker]',
   providers: [
     MAT_DATEPICKER_VALUE_ACCESSOR,
     MAT_DATEPICKER_VALIDATORS,
-    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: SaturnDatepickerInput},
+    {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: SatDatepickerInput},
   ],
   host: {
     '[attr.aria-haspopup]': 'true',
@@ -98,18 +98,18 @@ export class SaturnDatepickerInputEvent<D> {
     '(blur)': '_onTouched()',
     '(keydown)': '_onKeydown($event)',
   },
-  exportAs: 'saturnDatepickerInput',
+  exportAs: 'satDatepickerInput',
 })
-export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
+export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
     Validator {
   /** The datepicker that this input is associated with. */
   @Input()
-  set saturnDatepicker(value: SaturnDatepicker<D>) {
+  set satDatepicker(value: SatDatepicker<D>) {
     this.registerDatepicker(value);
   }
-  _datepicker: SaturnDatepicker<D>;
+  _datepicker: SatDatepicker<D>;
 
-  private registerDatepicker(value: SaturnDatepicker<D>) {
+  private registerDatepicker(value: SatDatepicker<D>) {
     if (value) {
       this._datepicker = value;
       this._datepicker._registerInput(this);
@@ -122,24 +122,24 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
     this._dateFilter = filter;
     this._validatorOnChange();
   }
-  _dateFilter: (date: SaturnDatepickerRangeValue<D> | D | null) => boolean;
+  _dateFilter: (date: SatDatepickerRangeValue<D> | D | null) => boolean;
 
   /** The value of the input. */
   @Input()
-  get value(): SaturnDatepickerRangeValue<D> | D | null {
+  get value(): SatDatepickerRangeValue<D> | D | null {
     return this._value;
   }
-  set value(value:  SaturnDatepickerRangeValue<D> | D | null) {
+  set value(value:  SatDatepickerRangeValue<D> | D | null) {
     if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) {
       /** Range mode */
-      const rangeValue = <SaturnDatepickerRangeValue<D>>value;
+      const rangeValue = <SatDatepickerRangeValue<D>>value;
       rangeValue.begin = this._dateAdapter.deserialize(rangeValue.begin);
       rangeValue.end = this._dateAdapter.deserialize(rangeValue.end);
       this._lastValueValid = !rangeValue.begin || !rangeValue.end ||
           this._dateAdapter.isValid(rangeValue.begin) && this._dateAdapter.isValid(rangeValue.end);
       rangeValue.begin = this._getValidDateOrNull(rangeValue.begin);
       rangeValue.end = this._getValidDateOrNull(rangeValue.end);
-      let oldDate = <SaturnDatepickerRangeValue<D> | null>this.value;
+      let oldDate = <SatDatepickerRangeValue<D> | null>this.value;
       this._elementRef.nativeElement.value =
           rangeValue && rangeValue.begin && rangeValue.end
               ? this._dateAdapter.format(rangeValue.begin, this._dateFormats.display.dateInput) +
@@ -147,9 +147,9 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
                 this._dateAdapter.format(rangeValue.end, this._dateFormats.display.dateInput)
               : '';
       if (oldDate == null && rangeValue != null || oldDate != null && rangeValue == null ||
-          !this._dateAdapter.sameDate((<SaturnDatepickerRangeValue<D>>oldDate).begin,
+          !this._dateAdapter.sameDate((<SatDatepickerRangeValue<D>>oldDate).begin,
               rangeValue.begin) ||
-          !this._dateAdapter.sameDate((<SaturnDatepickerRangeValue<D>>oldDate).end,
+          !this._dateAdapter.sameDate((<SatDatepickerRangeValue<D>>oldDate).end,
               rangeValue.end)) {
         if (rangeValue.end && rangeValue.begin &&
             this._dateAdapter
@@ -173,7 +173,7 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
       }
     }
   }
-  private _value: SaturnDatepickerRangeValue<D> | D | null;
+  private _value: SatDatepickerRangeValue<D> | D | null;
 
   /** The minimum valid date. */
   @Input()
@@ -216,15 +216,15 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange: EventEmitter<SaturnDatepickerInputEvent<D>> =
-      new EventEmitter<SaturnDatepickerInputEvent<D>>();
+  @Output() readonly dateChange: EventEmitter<SatDatepickerInputEvent<D>> =
+      new EventEmitter<SatDatepickerInputEvent<D>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput: EventEmitter<SaturnDatepickerInputEvent<D>> =
-      new EventEmitter<SaturnDatepickerInputEvent<D>>();
+  @Output() readonly dateInput: EventEmitter<SatDatepickerInputEvent<D>> =
+      new EventEmitter<SatDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange = new EventEmitter<SaturnDatepickerRangeValue<D>|D|null>();
+  _valueChange = new EventEmitter<SatDatepickerRangeValue<D>|D|null>();
 
   /** Emits when the disabled state has changed */
   _disabledChange = new EventEmitter<boolean>();
@@ -347,12 +347,12 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
   ngAfterContentInit() {
     if (this._datepicker) {
       this._datepickerSubscription =
-          this._datepicker._selectedChanged.subscribe((selected: SaturnDatepickerRangeValue<D> | D) => {
+          this._datepicker._selectedChanged.subscribe((selected: SatDatepickerRangeValue<D> | D) => {
             this.value = selected;
             this._cvaOnChange(selected);
             this._onTouched();
-            this.dateInput.emit(new SaturnDatepickerInputEvent(this, this._elementRef.nativeElement));
-            this.dateChange.emit(new SaturnDatepickerInputEvent(this, this._elementRef.nativeElement));
+            this.dateInput.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
+            this.dateChange.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
           });
     }
   }
@@ -391,7 +391,7 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
   }
 
   // Implemented as part of ControlValueAccessor
-  writeValue(value: SaturnDatepickerRangeValue<D> | D): void {
+  writeValue(value: SatDatepickerRangeValue<D> | D): void {
     this.value = value;
   }
 
@@ -418,7 +418,7 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
   }
 
   _onInput(value: string) {
-    let date: SaturnDatepickerRangeValue<D>|D|null = null;
+    let date: SatDatepickerRangeValue<D>|D|null = null;
     if (this._datepicker.rangeMode) {
       const parts = value.split('-');
       if (parts.length > 1) {
@@ -433,7 +433,7 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
           beginDate = this._getValidDateOrNull(beginDate);
           endDate = this._getValidDateOrNull(endDate);
           if (beginDate && endDate) {
-            date = <SaturnDatepickerRangeValue<D>>{begin: beginDate, end: endDate};
+            date = <SatDatepickerRangeValue<D>>{begin: beginDate, end: endDate};
           }
       }
     } else {
@@ -444,11 +444,11 @@ export class SaturnDatepickerInput<D> implements AfterContentInit, ControlValueA
     this._value = date;
     this._cvaOnChange(date);
     this._valueChange.emit(date);
-    this.dateInput.emit(new SaturnDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.dateInput.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
   _onChange() {
-    this.dateChange.emit(new SaturnDatepickerInputEvent(this, this._elementRef.nativeElement));
+    this.dateChange.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
   }
 
   /** Returns the palette used by the input's form field, if any. */

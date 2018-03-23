@@ -23,20 +23,20 @@ import {
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {Subscription} from 'rxjs/Subscription';
-import {SaturnDatepicker} from './datepicker';
-import {SaturnDatepickerIntl} from './datepicker-intl';
+import {SatDatepicker} from './datepicker';
+import {SatDatepickerIntl} from './datepicker-intl';
 
 
 /** Can be used to override the icon of a `matDatepickerToggle`. */
 @Directive({
     selector: '[matDatepickerToggleIcon]'
 })
-export class SaturnDatepickerToggleIcon {}
+export class SatDatepickerToggleIcon {}
 
 
 @Component({
     moduleId: module.id,
-    selector: 'saturn-datepicker-toggle',
+    selector: 'sat-datepicker-toggle',
     templateUrl: 'datepicker-toggle.html',
     styleUrls: ['datepicker-toggle.css'],
     host: {
@@ -49,11 +49,11 @@ export class SaturnDatepickerToggleIcon {}
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SaturnDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
+export class SatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     private _stateChanges = Subscription.EMPTY;
 
     /** Datepicker instance that the button will toggle. */
-    @Input('for') datepicker: SaturnDatepicker<D>;
+    @Input('for') datepicker: SatDatepicker<D>;
 
     /** Whether the toggle button is disabled. */
     @Input()
@@ -66,9 +66,9 @@ export class SaturnDatepickerToggle<D> implements AfterContentInit, OnChanges, O
     private _disabled: boolean;
 
     /** Custom icon set by the consumer. */
-    @ContentChild(SaturnDatepickerToggleIcon) _customIcon: SaturnDatepickerToggleIcon;
+    @ContentChild(SatDatepickerToggleIcon) _customIcon: SatDatepickerToggleIcon;
 
-    constructor(public _intl: SaturnDatepickerIntl, private _changeDetectorRef: ChangeDetectorRef) {}
+    constructor(public _intl: SatDatepickerIntl, private _changeDetectorRef: ChangeDetectorRef) {}
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.datepicker) {

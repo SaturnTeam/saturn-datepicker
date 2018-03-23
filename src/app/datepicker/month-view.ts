@@ -32,7 +32,7 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {SaturnCalendarBody, MatCalendarCell} from './calendar-body';
+import {SatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -45,13 +45,13 @@ const DAYS_PER_WEEK = 7;
  */
 @Component({
   moduleId: module.id,
-  selector: 'saturn-month-view',
+  selector: 'sat-month-view',
   templateUrl: 'month-view.html',
   exportAs: 'saturnMonthView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SaturnMonthView<D> implements AfterContentInit {
+export class SatMonthView<D> implements AfterContentInit {
 
   /** Current start of interval. */
   @Input()
@@ -140,7 +140,7 @@ export class SaturnMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SaturnCalendarBody) _matCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;

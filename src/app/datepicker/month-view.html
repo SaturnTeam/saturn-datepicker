@@ -3,7 +3,7 @@
     <tr><th *ngFor="let day of _weekdays" [attr.aria-label]="day.long">{{day.narrow}}</th></tr>
     <tr><th class="mat-calendar-table-header-divider" colspan="7" aria-hidden="true"></th></tr>
   </thead>
-  <tbody saturn-calendar-body
+  <tbody sat-calendar-body
          [label]="_monthLabel"
          [rows]="_weeks"
          [todayValue]="_todayDate"

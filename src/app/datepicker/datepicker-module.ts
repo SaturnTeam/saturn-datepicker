@@ -12,18 +12,18 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {SaturnCalendar} from './calendar';
-import {SaturnCalendarBody} from './calendar-body';
+import {SatCalendar} from './calendar';
+import {SatCalendarBody} from './calendar-body';
 import {
-    MAT_DATEPICKER_SCROLL_STRATEGY, MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER, SaturnDatepicker,
-    SaturnDatepickerContent
+    MAT_DATEPICKER_SCROLL_STRATEGY, MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER, SatDatepicker,
+    SatDatepickerContent
 } from './datepicker';
-import {SaturnDatepickerInput} from './datepicker-input';
-import {SaturnDatepickerIntl} from './datepicker-intl';
-import {SaturnDatepickerToggle, SaturnDatepickerToggleIcon} from './datepicker-toggle';
-import {SaturnMonthView} from './month-view';
-import {SaturnMultiYearView} from './multi-year-view';
-import {SaturnYearView} from './year-view';
+import {SatDatepickerInput} from './datepicker-input';
+import {SatDatepickerIntl} from './datepicker-intl';
+import {SatDatepickerToggle, SatDatepickerToggleIcon} from './datepicker-toggle';
+import {SatMonthView} from './month-view';
+import {SatMultiYearView} from './multi-year-view';
+import {SatYearView} from './year-view';
 
 
 @NgModule({
@@ -35,35 +35,35 @@ import {SaturnYearView} from './year-view';
         OverlayModule,
     ],
     exports: [
-        SaturnCalendar,
-        SaturnCalendarBody,
-        SaturnDatepicker,
-        SaturnDatepickerContent,
-        SaturnDatepickerInput,
-        SaturnDatepickerToggle,
-        SaturnDatepickerToggleIcon,
-        SaturnMonthView,
-        SaturnYearView,
-        SaturnMultiYearView,
+        SatCalendar,
+        SatCalendarBody,
+        SatDatepicker,
+        SatDatepickerContent,
+        SatDatepickerInput,
+        SatDatepickerToggle,
+        SatDatepickerToggleIcon,
+        SatMonthView,
+        SatYearView,
+        SatMultiYearView,
     ],
     declarations: [
-        SaturnCalendar,
-        SaturnCalendarBody,
-        SaturnDatepicker,
-        SaturnDatepickerContent,
-        SaturnDatepickerInput,
-        SaturnDatepickerToggle,
-        SaturnDatepickerToggleIcon,
-        SaturnMonthView,
-        SaturnYearView,
-        SaturnMultiYearView,
+        SatCalendar,
+        SatCalendarBody,
+        SatDatepicker,
+        SatDatepickerContent,
+        SatDatepickerInput,
+        SatDatepickerToggle,
+        SatDatepickerToggleIcon,
+        SatMonthView,
+        SatYearView,
+        SatMultiYearView,
     ],
     providers: [
-        SaturnDatepickerIntl,
+        SatDatepickerIntl,
         MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
     ],
     entryComponents: [
-        SaturnDatepickerContent,
+        SatDatepickerContent,
     ]
 })
-export class SaturnDatepickerModule {}
+export class SatDatepickerModule {}
