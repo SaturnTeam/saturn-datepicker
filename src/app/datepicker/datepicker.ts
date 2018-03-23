@@ -339,7 +339,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
-              @Optional() private _dateAdapter: DateAdapter<D>,
+              private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
     if (!this._dateAdapter) {

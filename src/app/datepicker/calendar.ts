@@ -203,7 +203,7 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   }
 
   constructor(private _intl: SatDatepickerIntl,
-              @Optional() private _dateAdapter: DateAdapter<D>,
+              private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               changeDetectorRef: ChangeDetectorRef) {
 
