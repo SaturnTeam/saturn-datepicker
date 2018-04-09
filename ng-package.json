@@ -1,5 +1,7 @@
 {
   "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+  "name": "saturn-datepicker",
+  "version": "1.0.8",
   "lib": {
     "entryFile": "src/app/public-api"
   }

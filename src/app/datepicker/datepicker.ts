@@ -258,7 +258,7 @@ export class SatDatepicker<D> implements OnDestroy {
   private _dialogRef: MatDialogRef<any> | null;
 
   /** A portal containing the calendar for this datepicker. */
-  private _calendarPortal: ComponentPortal<SatDatepickerContent<D>>;
+  private _calendarPortal: ComponentPortal<SatDatepickerContent<any>>;
 
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
@@ -433,7 +433,7 @@ export class SatDatepicker<D> implements OnDestroy {
     }
 
     if (!this._popupRef.hasAttached()) {
-      let componentRef: ComponentRef<SatDatepickerContent<D>> =
+      let componentRef: ComponentRef<SatDatepickerContent<any>> =
           this._popupRef.attach(this._calendarPortal);
       componentRef.instance.datepicker = this;
 
