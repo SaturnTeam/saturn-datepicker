@@ -7,17 +7,6 @@
  */
 
 import {
-  DOWN_ARROW,
-  END,
-  ENTER,
-  HOME,
-  LEFT_ARROW,
-  PAGE_DOWN,
-  PAGE_UP,
-  RIGHT_ARROW,
-  UP_ARROW,
-} from '@angular/cdk/keycodes';
-import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -27,11 +16,9 @@ import {
   Input,
   Optional,
   Output,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {Directionality} from '@angular/cdk/bidi';
-import {SatCalendarBody, MatCalendarCell} from './calendar-body';
+import {SatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../datetime';
 
@@ -43,9 +30,10 @@ import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../datetime';
   moduleId: module.id,
   selector: 'sat-year-view',
   templateUrl: 'year-view.html',
-  exportAs: 'saturnYearView',
+  exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  preserveWhitespaces: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SatYearView<D> implements AfterContentInit {
   /** The date to display in this year view (everything other than the year is ignored). */
@@ -96,11 +84,8 @@ export class SatYearView<D> implements AfterContentInit {
   /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
-  /** The body of calendar table */
-  @ViewChild(SatCalendarBody) _matCalendarBody;
-
   /** Grid of calendar cells representing the months of the year. */
-  _months: MatCalendarCell[][];
+  _months: SatCalendarCell[][];
 
   /** The label for this year (e.g. "2017"). */
   _yearLabel: string;
@@ -114,10 +99,9 @@ export class SatYearView<D> implements AfterContentInit {
    */
   _selectedMonth: number | null;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef,
+  constructor(@Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              public _dateAdapter: DateAdapter<D>,
-              @Optional() private _dir?: Directionality) {
+              private _changeDetectorRef: ChangeDetectorRef) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -130,7 +114,6 @@ export class SatYearView<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._init();
-    this._focusActiveCell();
   }
 
   /** Handles when a new month is selected. */
@@ -147,56 +130,6 @@ export class SatYearView<D> implements AfterContentInit {
         Math.min(this._dateAdapter.getDate(this.activeDate), daysInMonth)));
   }
 
-  /** Handles keydown events on the calendar body when calendar is in year view. */
-  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
-    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
-    // disabled ones from being selected. This may not be ideal, we should look into whether
-    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
-
-    const isRtl = this._isRtl();
-
-    switch (event.keyCode) {
-      case LEFT_ARROW:
-        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? 1 : -1);
-        break;
-      case RIGHT_ARROW:
-        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, isRtl ? -1 : 1);
-        break;
-      case UP_ARROW:
-        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, -4);
-        break;
-      case DOWN_ARROW:
-        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate, 4);
-        break;
-      case HOME:
-        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate,
-            -this._dateAdapter.getMonth(this._activeDate));
-        break;
-      case END:
-        this.activeDate = this._dateAdapter.addCalendarMonths(this._activeDate,
-            11 - this._dateAdapter.getMonth(this._activeDate));
-        break;
-      case PAGE_UP:
-        this.activeDate =
-            this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? -10 : -1);
-        break;
-      case PAGE_DOWN:
-        this.activeDate =
-            this._dateAdapter.addCalendarYears(this._activeDate, event.altKey ? 10 : 1);
-        break;
-      case ENTER:
-        this._monthSelected(this._dateAdapter.getMonth(this._activeDate));
-        break;
-      default:
-        // Don't prevent default or focus active cell on keys that we don't explicitly handle.
-        return;
-    }
-
-    this._focusActiveCell();
-    // Prevent unexpected default actions such as form submission.
-    event.preventDefault();
-  }
-
   /** Initializes this year view. */
   _init() {
     this._selectedMonth = this._getMonthInCurrentYear(this.selected);
@@ -210,11 +143,6 @@ export class SatYearView<D> implements AfterContentInit {
     this._changeDetectorRef.markForCheck();
   }
 
-  /** Focuses the active cell after the microtask queue is empty. */
-  private _focusActiveCell() {
-    this._matCalendarBody._focusActiveCell();
-  }
-
   /**
    * Gets the month in this year that the given Date falls on.
    * Returns null if the given Date is in another year.
@@ -224,12 +152,12 @@ export class SatYearView<D> implements AfterContentInit {
         this._dateAdapter.getMonth(date) : null;
   }
 
-  /** Creates an MatCalendarCell for the given month. */
+  /** Creates an SatCalendarCell for the given month. */
   private _createCellForMonth(month: number, monthName: string) {
     let ariaLabel = this._dateAdapter.format(
         this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
         this._dateFormats.display.monthYearA11yLabel);
-    return new MatCalendarCell(
+    return new SatCalendarCell(
         month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
   }
 
@@ -297,10 +225,5 @@ export class SatYearView<D> implements AfterContentInit {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
-  }
-
-  /** Determines whether the user has the RTL layout direction. */
-  private _isRtl() {
-    return this._dir && this._dir.value === 'rtl';
   }
 }

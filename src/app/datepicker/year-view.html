@@ -12,7 +12,6 @@
          [numCols]="4"
          [cellAspectRatio]="4 / 7"
          [activeCell]="_dateAdapter.getMonth(activeDate)"
-         (selectedValueChange)="_monthSelected($event)"
-         (keydown)="_handleCalendarBodyKeydown($event)">
+         (selectedValueChange)="_monthSelected($event)">
   </tbody>
 </table>

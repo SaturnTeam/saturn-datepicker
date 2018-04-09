@@ -75,7 +75,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    */
   useUtcForDisplay: boolean = true;
 
-  constructor(@Inject(MAT_DATE_LOCALE) matDateLocale: string, platform: Platform) {
+  constructor(@Optional() @Inject(MAT_DATE_LOCALE) matDateLocale: string, platform: Platform) {
     super();
     super.setLocale(matDateLocale);
 

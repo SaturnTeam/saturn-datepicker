@@ -1,4 +1,4 @@
-# Saturn datepicker
+# Material range datepicker
 Material datepicker with range support
 ## What is this?
 
@@ -20,6 +20,9 @@ I created this repository and this package due to it takes a lot of time to cont
 2) May not work with moment.js date object
 
 ##Changelog
+
+### 1.0.7
+Roll back to angular material 5.2 source code
 
 ### 1.0
 

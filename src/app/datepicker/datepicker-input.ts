@@ -63,7 +63,7 @@ export interface SatDatepickerRangeValue<D> {
 /**
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
- * calendar popup. For consistency, we always use MatDatepickerInputEvent instead.
+ * calendar popup. For consistency, we always use SatDatepickerInputEvent instead.
  */
 export class SatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
@@ -79,7 +79,7 @@ export class SatDatepickerInputEvent<D> {
 }
 
 
-/** Directive used to connect an input to a MatDatepicker. */
+/** Directive used to connect an input to a SatDatepicker. */
 @Directive({
   selector: 'input[satDatepicker]',
   providers: [
@@ -118,8 +118,8 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
-  set matDatepickerFilter(filter: (date: D | null) => boolean) {
-    this._dateFilter = filter;
+  set matDatepickerFilter(value: (date: D | null) => boolean) {
+    this._dateFilter = value;
     this._validatorOnChange();
   }
   _dateFilter: (date: SatDatepickerRangeValue<D> | D | null) => boolean;
@@ -198,19 +198,17 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   get disabled(): boolean { return !!this._disabled; }
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
-    const element = this._elementRef.nativeElement;
 
     if (this._disabled !== newValue) {
       this._disabled = newValue;
       this._disabledChange.emit(newValue);
     }
 
-    // We need to null check the `blur` method, because it's undefined during SSR.
-    if (newValue && element.blur) {
+    if (newValue) {
       // Normally, native input elements automatically blur if they turn disabled. This behavior
       // is problematic, because it would mean that it triggers another change detection cycle,
       // which then causes a changed after checked error if the input element was focused before.
-      element.blur();
+      this._elementRef.nativeElement.blur();
     }
   }
   private _disabled: boolean;
@@ -347,7 +345,7 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   ngAfterContentInit() {
     if (this._datepicker) {
       this._datepickerSubscription =
-          this._datepicker._selectedChanged.subscribe((selected: SatDatepickerRangeValue<D> | D) => {
+          this._datepicker.selectedChanged.subscribe((selected: SatDatepickerRangeValue<D> | D) => {
             this.value = selected;
             this._cvaOnChange(selected);
             this._onTouched();
@@ -375,19 +373,11 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   /**
-   * @deprecated
-   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
-   */
-  getPopupConnectionElementRef(): ElementRef {
-    return this.getConnectedOverlayOrigin();
-  }
-
-  /**
    * Gets the element that the datepicker popup should be connected to.
    * @return The element to connect the popup to.
    */
   getConnectedOverlayOrigin(): ElementRef {
-    return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
+    return this._formField ? this._formField.underlineRef : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor
@@ -449,11 +439,6 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   _onChange() {
     this.dateChange.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
-  }
-
-  /** Returns the palette used by the input's form field, if any. */
-  _getThemePalette() {
-    return this._formField ? this._formField.color : undefined;
   }
 
   /**

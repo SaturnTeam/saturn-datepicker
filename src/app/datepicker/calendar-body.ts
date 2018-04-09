@@ -9,20 +9,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   Output,
-  ViewEncapsulation,
-  NgZone,
+  ViewEncapsulation
 } from '@angular/core';
-import {take} from 'rxjs/operators/take';
+
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
  */
-export class MatCalendarCell {
+export class SatCalendarCell {
   constructor(public value: number,
               public displayValue: string,
               public ariaLabel: string,
@@ -46,6 +44,7 @@ export class MatCalendarCell {
   },
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
+  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SatCalendarBody {
@@ -53,7 +52,7 @@ export class SatCalendarBody {
   @Input() label: string;
 
   /** The cells to display in the table. */
-  @Input() rows: MatCalendarCell[][];
+  @Input() rows: SatCalendarCell[][];
 
   /** The value in the table that corresponds to today. */
   @Input() todayValue: number;
@@ -98,9 +97,7 @@ export class SatCalendarBody {
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private _elementRef: ElementRef, private _ngZone: NgZone) { }
-
-  _cellClicked(cell: MatCalendarCell): void {
+  _cellClicked(cell: SatCalendarCell): void {
     if (!this.allowDisabledSelection && !cell.enabled) {
       return;
     }
@@ -144,13 +141,5 @@ export class SatCalendarBody {
     }
     return date > <number>this.begin && date < <number>this.end;
   }
-  
-  /** Focuses the active cell after the microtask queue is empty. */
-  _focusActiveCell() {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
-      });
-    });
-  }
+
 }
