@@ -10,42 +10,43 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {
-    Overlay,
-    OverlayConfig,
-    OverlayRef, RepositionScrollStrategy, ScrollStrategy,
+  FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+  PositionStrategy,
+  ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {ComponentPortal} from '@angular/cdk/portal';
+import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
+import {take, filter} from 'rxjs/operators';
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ComponentRef,
-    ElementRef,
-    EventEmitter,
-    Inject,
-    InjectionToken,
-    Input,
-    NgZone,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    ViewChild,
-    ViewContainerRef,
-    ViewEncapsulation,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentRef,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  inject,
+  InjectionToken,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {merge} from 'rxjs/observable/merge';
-import {filter} from 'rxjs/operators/filter';
-import {take} from 'rxjs/operators/take';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
-import {SatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
+import {merge, Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
+import {SatCalendar} from './calendar';
 import {SatDatepickerInput, SatDatepickerRangeValue} from './datepicker-input';
 import {DateAdapter} from '../datetime';
 
@@ -54,20 +55,13 @@ let datepickerUid = 0;
 
 /** Injection token that determines the scroll handling while the calendar is open. */
 export const MAT_DATEPICKER_SCROLL_STRATEGY =
-    new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy');
-
-/** @docs-private */
-export function MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-() => RepositionScrollStrategy {
-    return () => overlay.scrollStrategies.reposition();
-}
-
-/** @docs-private */
-export const MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER = {
-    provide: MAT_DATEPICKER_SCROLL_STRATEGY,
-    deps: [Overlay],
-    useFactory: MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY,
-};
+    new InjectionToken<() => ScrollStrategy>('mat-datepicker-scroll-strategy', {
+      providedIn: 'root',
+      factory: () => {
+        const overlay = inject(Overlay);
+        return () => overlay.scrollStrategies.reposition();
+      }
+    });
 
 // Boilerplate for applying mixins to MatDatepickerContent.
 /** @docs-private */
@@ -130,6 +124,19 @@ export class SatDatepickerContent<D> extends _MatDatepickerContentMixinBase
       return;
     }
 
+    const positionStrategy =
+      this.datepicker._popupRef.getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+
+    this._positionChange = positionStrategy.positionChanges.subscribe(change => {
+      const isAbove = change.connectionPair.overlayY === 'bottom';
+
+      if (isAbove !== this._isAbove) {
+        this._ngZone.run(() => {
+          this._isAbove = isAbove;
+          this._changeDetectorRef.markForCheck();
+        });
+      }
+    });
   }
 
   ngAfterContentInit() {
@@ -167,6 +174,8 @@ export class SatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   encapsulation: ViewEncapsulation.None,
 })
 export class SatDatepicker<D> implements OnDestroy, CanColor {
+  /** An input indicating the type of the custom header component for the calendar, if set. */
+  @Input() calendarHeaderComponent: ComponentType<any>;
 
   /** Whenever datepicker is for selecting range of dates. */
   @Input()
@@ -516,6 +525,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** Create the popup. */
   private _createPopup(): void {
     const overlayConfig = new OverlayConfig({
+      positionStrategy: this._createPopupPositionStrategy(),
       hasBackdrop: true,
       backdropClass: 'mat-overlay-transparent-backdrop',
       direction: this._dir ? this._dir.value : 'ltr',
@@ -532,6 +542,41 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
     ).subscribe(() => this.close());
   }
 
+  /** Create the popup PositionStrategy. */
+  private _createPopupPositionStrategy(): PositionStrategy {
+    return this._overlay.position()
+      .flexibleConnectedTo(this._datepickerInput.getPopupConnectionElementRef())
+      .withFlexibleHeight(false)
+      .withFlexibleWidth(false)
+      .withViewportMargin(8)
+      .withPush(false)
+      .withPositions([
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        },
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom'
+        },
+        {
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top'
+        },
+        {
+          originX: 'end',
+          originY: 'top',
+          overlayX: 'end',
+          overlayY: 'bottom'
+        }
+      ]);
+  }
 
   /**
    * @param obj The object to check.

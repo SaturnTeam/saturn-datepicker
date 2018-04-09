@@ -16,7 +16,7 @@ import {
   ViewEncapsulation,
   NgZone,
 } from '@angular/core';
-import {take} from 'rxjs/operators/take';
+import {take} from 'rxjs/operators';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -144,7 +144,7 @@ export class SatCalendarBody {
     }
     return date > <number>this.begin && date < <number>this.end;
   }
-  
+
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
     this._ngZone.runOutsideAngular(() => {

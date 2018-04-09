@@ -8,21 +8,21 @@
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnChanges,
-    OnDestroy,
-    SimpleChanges,
-    ViewEncapsulation,
-    Directive,
-    ContentChild,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  ViewEncapsulation,
+  Directive,
+  ContentChild,
 } from '@angular/core';
-import {merge} from 'rxjs/observable/merge';
-import {of as observableOf} from 'rxjs/observable/of';
-import {Subscription} from 'rxjs/Subscription';
+import {merge} from 'rxjs';
+import {of as observableOf} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {SatDatepicker} from './datepicker';
 import {SatDatepickerIntl} from './datepicker-intl';
 

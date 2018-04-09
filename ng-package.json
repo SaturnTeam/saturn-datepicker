@@ -1,6 +1,12 @@
 {
   "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
   "lib": {
-    "entryFile": "src/app/public-api"
-  }
+    "entryFile": "src/app/public-api",
+    "languageLevel": [
+      "es2017",
+      "es2015",
+      "dom"
+    ]
+  },
+   "tsconfig": "src/tsconfig.app.json"
 }

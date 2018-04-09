@@ -33,10 +33,10 @@ import {
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../datetime';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
-import {Subscription} from 'rxjs/Subscription';
 import {SatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
 import {SatDatepickerRangeValue} from './datepicker-input';
+import {Subscription} from "rxjs/index";
 
 
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {

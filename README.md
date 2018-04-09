@@ -29,7 +29,7 @@ API has been completely changed.
 
 As easy as pie.
 Installation: `yarn add saturn-datepicker` or `npm install saturn-datepicker`
-Import `SatDatepickerModule`, `SatNativeDateModule` and `MatDatepickerModule`
+Import `SatDatepickerModule`, ``SatNativeDateModule``
 ```angular2html
   <mat-form-field>
     <input matInput [satDatepicker]="resultPicker">
@@ -75,7 +75,7 @@ Add styles somewhere (example for default pink theme):
 
 ## ngModel/formControl value have this interface:
 ```typescript
-export interface SaturnDatepickerRangeValue<D> {
+export interface SatDatepickerRangeValue<D> {
   begin: D | null;
   end: D | null;
 }

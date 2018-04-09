@@ -7,11 +7,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 
 
 /** Datepicker data that requires internationalization. */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class SatDatepickerIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify

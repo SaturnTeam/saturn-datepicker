@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/angular-package-builder/angular-package.schema.json",
+  "entryFile": "./src/app/public-api.ts",
+  "outDir": "./dist",
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": false
+  }
+}
