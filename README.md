@@ -24,7 +24,11 @@ I tied from trying to build this package without bugs.
 So, I strongly recommend you clone this repository and use it's source code instead of package.
  
 I hope I will be able to pack library after release of angular 6.0.1
-##Changelog
+
+## Changelog
+
+### 1.1.0
+Introduce first day of the week depends on locale
 
 ### 1.0.7
 Roll back to angular material 5.2 source code
