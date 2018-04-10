@@ -37,6 +37,19 @@ const DEFAULT_DAY_OF_WEEK_NAMES = {
   'narrow': ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 };
 
+/** First day of week according locale.
+ * Taken form moment.js source code https://github.com/moment/moment/tree/develop/src/locale
+ */
+const FIRST_DAY_OF_WEEK = {
+  af:1, ar:6, 'ar-ly':6, 'ar-ma':6, 'ar-tn':1, az:1, be:1, bg:1, bm:1, br:1, bs:1, ca:1, cs:1, cv:1,
+  cy:1, da:1, de:1, 'de-at':1, 'de-ch':1, el:1, 'en-au':1, 'en-gb':1, 'en-ie':1, 'en-nz':1, eo:1,
+  es:1, 'es-do':1, et:1, eu:1, fa:6, fi:1, fo:1, fr:1, 'fr-ch':1, fy:1, gd:1, gl:1, 'gom-latn':1,
+  hr:1, hu:1, 'hy-am':1, id:1, is:1, it:1, jv:1, ka:1, kk:1, km:1, ky:1, lb:1, lt:1, lv:1, me:1,
+  mi:1, mk:1, ms:1, 'ms-my':1, mt:1, my:1, nb:1, nl:1, 'nl-be':1, nn:1, pl:1, pt:1, ro:1, ru:1,
+  sd:1, se:1, sk:1, sl:1, sq:1, sr:1, 'sr-cyrl':1, ss:1, sv:1, sw:1, 'tet':1, tg:1, 'tl-ph':1,
+  'tlh':1, tr:1, 'tzl':1, 'tzm':6, 'tzm-latn':6, 'ug-cn':1, uk:1, ur:1, uz:1, 'uz-latn':1, vi:1,
+  'x-pseudo':1, yo:1, 'zh-cn':1,
+};
 
 /**
  * Matches strings that have the form of a valid RFC 3339 string
@@ -136,8 +149,11 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   getFirstDayOfWeek(): number {
-    // We can't tell using native JS Date what the first day of the week is, we default to Sunday.
-    return 0;
+    // We can't tell using native JS Date what the first day of the week is.
+    // Sometimes people use excess language definition, e.g. ru-RU,
+    // so we use fallback to two-letter language code
+    const locale = this.locale.toLowerCase();
+    return FIRST_DAY_OF_WEEK[locale] || FIRST_DAY_OF_WEEK[locale.substr(0, 2)] || 0;
   }
 
   getNumDaysInMonth(date: Date): number {
