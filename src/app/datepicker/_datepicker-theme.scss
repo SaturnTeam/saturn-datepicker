@@ -1,7 +1,4 @@
-@import '../core/theming/palette';
-@import '../core/theming/theming';
-@import '../core/typography/typography-utils';
-
+@import '~@angular/material/theming';
 
 $mat-calendar-body-font-size: 13px !default;
 $mat-calendar-weekday-table-font-size: 11px !default;
@@ -73,12 +70,12 @@ $mat-calendar-weekday-table-font-size: 11px !default;
 
   .mat-calendar-body-begin-range:not(.mat-calendar-body-end-range) {
     border-radius: 100% 0 0 100%;
-    background-color: mat-color($primary, 100);
+    background-color: mat-color($primary, 50);
   }
 
   .mat-calendar-body-end-range:not(.mat-calendar-body-begin-range) {
     border-radius: 0 100% 100% 0;
-    background-color: mat-color($primary, 100);
+    background-color: mat-color($primary, 50);
   }
 
   .mat-calendar-body > tr .mat-calendar-cell-semi-selected ~ .mat-calendar-cell-semi-selected {
@@ -86,7 +83,7 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   }
 
   .mat-calendar-cell-semi-selected {
-    background-color: mat-color($primary, 100);
+    background-color: mat-color($primary, 50);
   }
 
   .mat-calendar-body-disabled > .mat-calendar-body-selected {
