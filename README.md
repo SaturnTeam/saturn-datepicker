@@ -94,7 +94,7 @@ File with theme is here [src/app/datepicker/_datepicker-theme.scss](src/app/date
 
 ## ngModel/formControl value have this interface:
 ```typescript
-export interface SaturnDatepickerRangeValue<D> {
+export interface SatDatepickerRangeValue<D> {
   begin: D | null;
   end: D | null;
 }
