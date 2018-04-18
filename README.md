@@ -26,7 +26,8 @@ So, I strongly recommend you clone this repository and use it's source code inst
 I hope I will be able to pack library after release of angular 6.0.1
 
 ## Changelog
-
+### 2018/04/18
+Datepicker theme supports dark themes. How to use it read below
 ### 1.1.0
 Introduce first day of the week depends on locale
 
@@ -84,6 +85,11 @@ Add styles somewhere (example for default pink theme):
 .mat-calendar-cell-semi-selected {
   background-color: #e8eaf6; }
 ```
+For dark and other themes create `datepicker.scss` somewhere and import it in your main `styles.scss` 
+```scss
+@import "assets/css/datepicker"; 
+```
+File with theme is here [src/app/datepicker/_datepicker-theme.scss](src/app/datepicker/_datepicker-theme.scss)
 
 ## ngModel/formControl value have this interface:
 ```typescript
