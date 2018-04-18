@@ -88,6 +88,7 @@ Add styles somewhere (example for default pink theme):
 For dark and other themes create `datepicker.scss` somewhere and import it in your main `styles.scss` 
 ```scss
 @import "assets/css/datepicker"; 
+@include mat-datepicker-theme($eltex-theme);
 ```
 File with theme is here [src/app/datepicker/_datepicker-theme.scss](src/app/datepicker/_datepicker-theme.scss)
 
