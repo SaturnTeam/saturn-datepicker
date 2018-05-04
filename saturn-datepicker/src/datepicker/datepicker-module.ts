@@ -8,16 +8,14 @@
 
 import {A11yModule} from '@angular/cdk/a11y';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {SatCalendar} from './calendar';
+import {SatCalendar, SatCalendarHeader} from './calendar';
 import {SatCalendarBody} from './calendar-body';
-import {
-    MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER, SatDatepicker,
-    SatDatepickerContent
-} from './datepicker';
+import {SatDatepicker, SatDatepickerContent} from './datepicker';
 import {SatDatepickerInput} from './datepicker-input';
 import {SatDatepickerIntl} from './datepicker-intl';
 import {SatDatepickerToggle, SatDatepickerToggleIcon} from './datepicker-toggle';
@@ -28,11 +26,12 @@ import {SatYearView} from './year-view';
 
 @NgModule({
     imports: [
-        A11yModule,
         CommonModule,
         MatButtonModule,
         MatDialogModule,
         OverlayModule,
+        A11yModule,
+        PortalModule,
     ],
     exports: [
         SatCalendar,
@@ -45,6 +44,7 @@ import {SatYearView} from './year-view';
         SatMonthView,
         SatYearView,
         SatMultiYearView,
+        SatCalendarHeader,
     ],
     declarations: [
         SatCalendar,
@@ -57,13 +57,14 @@ import {SatYearView} from './year-view';
         SatMonthView,
         SatYearView,
         SatMultiYearView,
+        SatCalendarHeader,
     ],
     providers: [
         SatDatepickerIntl,
-        MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER,
     ],
     entryComponents: [
         SatDatepickerContent,
+        SatCalendarHeader,
     ]
 })
 export class SatDatepickerModule {}

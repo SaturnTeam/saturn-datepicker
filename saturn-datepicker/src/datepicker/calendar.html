@@ -1,0 +1,40 @@
+
+<ng-template [cdkPortalOutlet]="_calendarHeaderPortal"></ng-template>
+
+<div class="mat-calendar-content" [ngSwitch]="currentView" cdkMonitorSubtreeFocus tabindex="-1">
+  <sat-month-view
+      *ngSwitchCase="'month'"
+      [(activeDate)]="activeDate"
+      [selected]="selected"
+      [beginDate]="beginDate"
+      [endDate]="endDate"
+      [rangeMode]="rangeMode"
+      [dateFilter]="dateFilter"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
+      (selectedChange)="_dateSelected($event)"
+      (_userSelection)="_userSelected()">
+  </sat-month-view>
+
+  <sat-year-view
+      *ngSwitchCase="'year'"
+      [activeDate]="activeDate"
+      [selected]="selected"
+      [dateFilter]="dateFilter"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
+      (monthSelected)="_monthSelectedInYearView($event)"
+      (selectedChange)="_goToDateInView($event, 'month')">
+  </sat-year-view>
+
+  <sat-multi-year-view
+      *ngSwitchCase="'multi-year'"
+      [activeDate]="activeDate"
+      [selected]="selected"
+      [dateFilter]="dateFilter"
+      [maxDate]="maxDate"
+      [minDate]="minDate"
+      (yearSelected)="_yearSelectedInMultiYearView($event)"
+      (selectedChange)="_goToDateInView($event, 'year')">
+  </sat-multi-year-view>
+</div>

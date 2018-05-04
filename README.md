@@ -18,14 +18,13 @@ I created this repository and this package due to it takes a lot of time to cont
 ## Disadvantages
 1) Requires manual styles insertions
 2) May not work with moment.js date object
-## WARNING
-I tied from trying to build this package without bugs. 
-
-So, I strongly recommend you clone this repository and use it's source code instead of package.
- 
-I hope I will be able to pack library after release of angular 6.0.1
 
 ## Changelog
+## 1.1.7
+Update to angular material 6.0.0 (2018/05/04)
+
+Now package can be compiled for production. Internal styles - soon!
+
 ### 2018/04/18
 Datepicker theme supports dark themes. How to use it read below
 ### 1.1.0

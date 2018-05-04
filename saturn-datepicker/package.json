@@ -1,0 +1,19 @@
+{
+  "name": "saturn-datepicker",
+  "version": "1.1.7",
+  "repository": "https://github.com/TheSaturn/saturn-datepicker",
+  "author": "saturn <saturn@saturn.team>",
+  "license": "MIT",
+  "private": false,
+  "peerDependencies": {
+    "@angular/core": ">=6.0.0-rc.5",
+    "@angular/common": ">=6.0.0-rc.5"
+  },
+  "ngPackage": {
+    "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+    "lib": {
+      "entryFile": "src/public-api.ts"
+    },
+    "dest": "../dist"
+  }
+}

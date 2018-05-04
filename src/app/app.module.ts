@@ -1,8 +1,7 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 
 
 import {MatDatepickerModule} from "./datepicker";
-import {MatFormFieldModule} from '@angular/material';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 
@@ -12,10 +11,6 @@ import {AppComponent} from './app.component';
   ],
   imports: [
       BrowserModule,
-
-      MatDatepickerModule,
-      MatFormFieldModule,
-
   ],
   providers: [],
   bootstrap: [AppComponent]

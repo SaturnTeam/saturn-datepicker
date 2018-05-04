@@ -7,14 +7,16 @@
  */
 
 import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewEncapsulation
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgZone,
+    Output,
+    ViewEncapsulation,
 } from '@angular/core';
-
+import {take} from 'rxjs/operators';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -44,7 +46,6 @@ export class SatCalendarCell {
   },
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SatCalendarBody {
@@ -97,6 +98,8 @@ export class SatCalendarBody {
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
+  constructor(private _elementRef: ElementRef, private _ngZone: NgZone) { }
+
   _cellClicked(cell: SatCalendarCell): void {
     if (!this.allowDisabledSelection && !cell.enabled) {
       return;
@@ -142,4 +145,12 @@ export class SatCalendarBody {
     return date > <number>this.begin && date < <number>this.end;
   }
 
+    /** Focuses the active cell after the microtask queue is empty. */
+    _focusActiveCell() {
+        this._ngZone.runOutsideAngular(() => {
+            this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
+                this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
+            });
+        });
+    }
 }

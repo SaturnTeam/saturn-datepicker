@@ -9,34 +9,34 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOWN_ARROW} from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  Inject,
-  Input,
-  OnDestroy,
-  Optional,
-  Output,
+    AfterContentInit,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Inject,
+    Input,
+    OnDestroy,
+    Optional,
+    Output,
 } from '@angular/core';
 import {
-  AbstractControl,
-  ControlValueAccessor,
-  NG_VALIDATORS,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  ValidatorFn,
-  Validators
+    AbstractControl,
+    ControlValueAccessor,
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator,
+    ValidatorFn,
+    Validators
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '../datetime';
+import {DateAdapter} from '../datetime/date-adapter';
+import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {SatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
-import {SatDatepickerRangeValue} from './datepicker-input';
 
 
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -95,10 +95,10 @@ export class SatDatepickerInputEvent<D> {
     '[disabled]': 'disabled',
     '(input)': '_onInput($event.target.value)',
     '(change)': '_onChange()',
-    '(blur)': '_onTouched()',
+    '(blur)': '_onBlur()',
     '(keydown)': '_onKeydown($event)',
   },
-  exportAs: 'satDatepickerInput',
+  exportAs: 'matDatepickerInput',
 })
 export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
     Validator {
@@ -198,17 +198,19 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   get disabled(): boolean { return !!this._disabled; }
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
+    const element = this._elementRef.nativeElement;
 
     if (this._disabled !== newValue) {
       this._disabled = newValue;
       this._disabledChange.emit(newValue);
     }
 
-    if (newValue) {
+    // We need to null check the `blur` method, because it's undefined during SSR.
+    if (newValue && element.blur) {
       // Normally, native input elements automatically blur if they turn disabled. This behavior
       // is problematic, because it would mean that it triggers another change detection cycle,
       // which then causes a changed after checked error if the input element was focused before.
-      this._elementRef.nativeElement.blur();
+      element.blur();
     }
   }
   private _disabled: boolean;
@@ -326,7 +328,7 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   constructor(
       private _elementRef: ElementRef,
-      public _dateAdapter: DateAdapter<D>,
+      @Optional() public _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField) {
     if (!this._dateAdapter) {
@@ -345,7 +347,7 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   ngAfterContentInit() {
     if (this._datepicker) {
       this._datepickerSubscription =
-          this._datepicker.selectedChanged.subscribe((selected: SatDatepickerRangeValue<D> | D) => {
+          this._datepicker._selectedChanged.subscribe((selected: SatDatepickerRangeValue<D> | D) => {
             this.value = selected;
             this._cvaOnChange(selected);
             this._onTouched();
@@ -373,11 +375,19 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   /**
+   * @deprecated
+   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
+   */
+  getPopupConnectionElementRef(): ElementRef {
+    return this.getConnectedOverlayOrigin();
+  }
+
+  /**
    * Gets the element that the datepicker popup should be connected to.
    * @return The element to connect the popup to.
    */
   getConnectedOverlayOrigin(): ElementRef {
-    return this._formField ? this._formField.underlineRef : this._elementRef;
+    return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
   }
 
   // Implemented as part of ControlValueAccessor
@@ -439,6 +449,39 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   _onChange() {
     this.dateChange.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
+  }
+
+  /** Returns the palette used by the input's form field, if any. */
+  _getThemePalette() {
+    return this._formField ? this._formField.color : undefined;
+  }
+
+  /** Handles blur events on the input. */
+  _onBlur() {
+    // Reformat the input only if we have a valid value.
+    if (this.value) {
+      this._formatValue(this.value);
+    }
+
+    this._onTouched();
+  }
+
+  /** Formats a value and sets it on the input element. */
+  private _formatValue(value: SatDatepickerRangeValue<D> | D | null) {
+      if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) {
+          value = value as SatDatepickerRangeValue<D>
+          this._elementRef.nativeElement.value =
+              value && value.begin && value.end
+                  ? this._dateAdapter.format(value.begin, this._dateFormats.display.dateInput) +
+                  ' - ' +
+                  this._dateAdapter.format(value.end, this._dateFormats.display.dateInput)
+                  : ''
+      }
+      else {
+            value = value as D | null
+          this._elementRef.nativeElement.value =
+              value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
+      }
   }
 
   /**
