@@ -37,7 +37,7 @@ export class SatDatepickerToggleIcon {
     moduleId: module.id,
     selector: 'sat-datepicker-toggle',
     templateUrl: 'datepicker-toggle.html',
-    styleUrls: ['datepicker-toggle.scss'],
+    styleUrls: ['datepicker-toggle.css'],
     host: {
         'class': 'mat-datepicker-toggle',
         '[class.mat-datepicker-toggle-active]': 'datepicker && datepicker.opened',

@@ -1,0 +1,43 @@
+@import '~@angular/material/theming';
+
+@mixin sat-datepicker-theme($theme) {
+  @include mat-datepicker-theme($theme);
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  $mat-datepicker-selected-today-box-shadow-width: 1px;
+  $mat-datepicker-selected-fade-amount: 0.6;
+  $mat-datepicker-today-fade-amount: 0.2;
+
+  :not(.mat-calendar-body-disabled):hover,
+  .cdk-keyboard-focused .mat-calendar-body-active,
+  .cdk-program-focused .mat-calendar-body-active {
+    & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-semi-selected) {
+      background-color: mat-color($background, hover);
+    }
+
+    & > .mat-calendar-body-semi-selected {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+    }
+  }
+
+  .mat-calendar-body-begin-range:not(.mat-calendar-body-end-range) {
+    border-radius: 100% 0 0 100%;
+    background-color: mat-color($primary, 100);
+  }
+
+  .mat-calendar-body-end-range:not(.mat-calendar-body-begin-range) {
+    border-radius: 0 100% 100% 0;
+    background-color: mat-color($primary, 100);
+  }
+
+  .mat-calendar-body > tr .mat-calendar-cell-semi-selected ~ .mat-calendar-cell-semi-selected {
+    border-radius: 0;
+  }
+
+  .mat-calendar-cell-semi-selected {
+    background-color: mat-color($primary, 100);
+  }
+}

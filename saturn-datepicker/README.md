@@ -67,10 +67,3 @@ export interface SatDatepickerRangeValue<D> {
 ```
 
 Licence: MIT
-
-A little note for myself
-```shell
-npm run packagr
-(cd dist ; npm pack)
-yarn add range-0.0.1.tgz 
-```
