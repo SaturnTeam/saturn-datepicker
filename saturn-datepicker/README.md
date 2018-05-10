@@ -16,6 +16,8 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Changelog
+## 6.0.1
+Updated to material datepicker 6.0.1
 ## 6.0.0
 Styles included! Read below
 ## 1.1.7
@@ -67,3 +69,10 @@ export interface SatDatepickerRangeValue<D> {
 ```
 
 Licence: MIT
+
+A little note for myself
+```shell
+npm run packagr
+(cd dist ; npm pack)
+yarn add range-0.0.1.tgz 
+```

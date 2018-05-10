@@ -9,6 +9,7 @@
 import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 import {
     AfterContentInit,
+    AfterViewChecked,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -34,6 +35,12 @@ import {SatYearView} from './year-view';
 import {SatDatepickerRangeValue} from './datepicker-input';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
+
+/**
+ * Possible views for the calendar.
+ * @docs-private
+ */
+export type SatCalendarView = 'month' | 'year' | 'multi-year';
 
 /** Default header for SatCalendar */
 @Component({
@@ -165,7 +172,7 @@ export class SatCalendarHeader<D> {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
+export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
 
     /** Beginning of date range. */
     @Input()
@@ -201,6 +208,13 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
   private _intlChanges: Subscription;
 
+  /**
+   * Used for scheduling that focus should be moved to the active cell on the next tick.
+   * We need to schedule it, rather than do it immediately, because we have to wait
+   * for Angular to re-evaluate the view children.
+   */
+  private _moveFocusOnNextTick = false;
+
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
   get startAt(): D | null { return this._startAt; }
@@ -210,7 +224,7 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   private _startAt: D | null;
 
   /** Whether the calendar should be started in month or year view. */
-  @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
+  @Input() startView: SatCalendarView = 'month';
 
   /** The currently selected date. */
   @Input()
@@ -278,7 +292,12 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
   private _clampedActiveDate: D;
 
   /** Whether the calendar is in month view. */
-  currentView: 'month' | 'year' | 'multi-year';
+  get currentView(): SatCalendarView { return this._currentView; }
+  set currentView(value: SatCalendarView) {
+    this._currentView = value;
+    this._moveFocusOnNextTick = true;
+  }
+  private _currentView: SatCalendarView;
 
   /**
    * Emits whenever there is a state change that the header may need to respond to.
@@ -308,7 +327,16 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || SatCalendarHeader);
 
     this.activeDate = this.startAt || this._dateAdapter.today();
-    this.currentView = this.startView;
+
+    // Assign to the private property since we don't want to move focus on init.
+    this._currentView = this.startView;
+  }
+
+  ngAfterViewChecked() {
+    if (this._moveFocusOnNextTick) {
+      this._moveFocusOnNextTick = false;
+      this.focusActiveCell();
+    }
   }
 
   ngOnDestroy() {
@@ -320,7 +348,7 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     const change = changes.minDate || changes.maxDate || changes.dateFilter;
 
     if (change && !change.firstChange) {
-      const view = this.monthView || this.yearView || this.multiYearView;
+      const view = this._getCurrentViewComponent();
 
       if (view) {
         view._init();
@@ -328,6 +356,10 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     this.stateChanges.next();
+  }
+
+  focusActiveCell() {
+    this._getCurrentViewComponent()._focusActiveCell();
   }
 
   /** Handles date selection in the month view. */
@@ -376,5 +408,10 @@ export class SatCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Returns the component instance that corresponds to the current calendar view. */
+  private _getCurrentViewComponent() {
+    return this.monthView || this.yearView || this.multiYearView;
   }
 }

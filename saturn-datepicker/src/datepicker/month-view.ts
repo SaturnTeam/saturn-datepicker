@@ -190,7 +190,6 @@ export class SatMonthView<D> implements AfterContentInit {
 
   ngAfterContentInit() {
     this._init();
-    this._focusActiveCell();
   }
 
   /** Handles when a new date is selected. */
@@ -303,7 +302,7 @@ export class SatMonthView<D> implements AfterContentInit {
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
-  private _focusActiveCell() {
+  _focusActiveCell() {
     this._matCalendarBody._focusActiveCell();
   }
 

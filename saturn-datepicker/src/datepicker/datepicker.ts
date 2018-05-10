@@ -21,7 +21,7 @@ import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {filter, take} from 'rxjs/operators';
 import {
-    AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -101,7 +101,7 @@ export const _SatDatepickerContentMixinBase = mixinColor(SatDatepickerContentBas
   inputs: ['color'],
 })
 export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
-  implements AfterContentInit, CanColor, OnInit, OnDestroy {
+  implements AfterViewInit, CanColor, OnInit, OnDestroy {
 
   /** Subscription to changes in the overlay's position. */
   private _positionChange: Subscription|null;
@@ -142,17 +142,8 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
     });
   }
 
-  ngAfterContentInit() {
-    this._focusActiveCell();
-  }
-
-  /** Focuses the active cell after the microtask queue is empty. */
-  private _focusActiveCell() {
-    this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._elementRef.nativeElement.querySelector('.mat-calendar-body-active').focus();
-      });
-    });
+  ngAfterViewInit() {
+    this._calendar.focusActiveCell();
   }
 
   ngOnDestroy() {
