@@ -9,26 +9,26 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOWN_ARROW} from '@angular/cdk/keycodes';
 import {
-    AfterContentInit,
-    Directive,
-    ElementRef,
-    EventEmitter,
-    forwardRef,
-    Inject,
-    Input,
-    OnDestroy,
-    Optional,
-    Output,
+  AfterContentInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  Inject,
+  Input,
+  OnDestroy,
+  Optional,
+  Output,
 } from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator,
-    ValidatorFn,
-    Validators
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators
 } from '@angular/forms';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';

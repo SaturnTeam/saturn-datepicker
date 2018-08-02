@@ -6,7 +6,7 @@
   "commitMessage": "{{semanticPrefix}}update {{depName}} to version {{newVersion}}",
   "packageFiles": [
     "package.json",
-    "my-lib/package.json"
+    "saturn-datepicker/package.json"
   ],
   "packages": [
     {

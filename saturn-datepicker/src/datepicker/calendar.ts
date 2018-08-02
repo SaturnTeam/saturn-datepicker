@@ -8,22 +8,22 @@
 
 import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
 import {
-    AfterContentInit,
-    AfterViewChecked,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    forwardRef,
-    Inject,
-    Input,
-    OnChanges,
-    OnDestroy,
-    Optional,
-    Output,
-    SimpleChanges,
-    ViewChild,
-    ViewEncapsulation,
+  AfterContentInit,
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Optional,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -307,7 +307,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   constructor(_intl: SatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              changeDetectorRef: ChangeDetectorRef) {
+              private _changeDetectorRef: ChangeDetectorRef) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -318,14 +318,13 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     }
 
     this._intlChanges = _intl.changes.subscribe(() => {
-      changeDetectorRef.markForCheck();
+      _changeDetectorRef.markForCheck();
       this.stateChanges.next();
     });
   }
 
   ngAfterContentInit() {
     this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || SatCalendarHeader);
-
     this.activeDate = this.startAt || this._dateAdapter.today();
 
     // Assign to the private property since we don't want to move focus on init.
@@ -351,6 +350,9 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       const view = this._getCurrentViewComponent();
 
       if (view) {
+        // We need to `detectChanges` manually here, because the `minDate`, `maxDate` etc. are
+        // passed down to the view via data bindings which won't be up-to-date when we call `_init`.
+        this._changeDetectorRef.detectChanges();
         view._init();
       }
     }

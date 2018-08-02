@@ -1,14 +1,14 @@
-import { AppPage } from './app.po';
+import { NgPackagedPage } from './app.po';
 
-describe('range App', () => {
-  let page: AppPage;
+describe('ng-packaged App', () => {
+  let page: NgPackagedPage;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new NgPackagedPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display message saying app works', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    expect(page.getParagraphText()).toEqual('app works!');
   });
 });

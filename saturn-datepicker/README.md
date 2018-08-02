@@ -6,7 +6,7 @@ This is a based on Material source code (March 22, 2018) implementation of Mater
 I created this repository and this package due to it takes a lot of time to contribute to material2 repository.
 [Issue in material2 repo.](https://github.com/angular/material2/issues/4763)
 ![Material date range picker](screenshot.png)
-## [DEMO](https://stackblitz.com/edit/angular-b23dak)
+## [DEMO](https://stackblitz.com/edit/angular-4cfnyl)
 ## Advantages
 1) Dates range selecting in datepicker 
 2) Have special attribute to turn on range mode on datepicker
@@ -16,6 +16,10 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Changelog
+## 6.0.2
+* Updated to material datepicker 6.4.2
+* Fixed the issue with `[value]` and `[formControl]` binding
+* Added FAQ to popular questions
 ## 6.0.1
 Updated to material datepicker 6.0.1
 ## 6.0.0
@@ -54,7 +58,7 @@ Import `SatDatepickerModule`, `SatNativeDateModule` and `MatDatepickerModule`
 
 Add styles:
 * If you are using CSS: copy-paste or include somehow the file `saturn-datepicker/bundle.css`
-* If you are using SCSS: 
+* If you are using SCSS (preferable): 
 ```scss
 @import '~saturn-datepicker/theming';
 @include sat-datepicker-theme($theme); # material theme data structure https://material.angular.io/guide/theming#defining-a-custom-theme
@@ -67,7 +71,31 @@ export interface SatDatepickerRangeValue<D> {
   end: D | null;
 }
 ```
+## FAQ
+### How to change date format or locale?
+As same as for material, but with more code, just import constants from 'saturn-datepicker'.
 
+Also you need to install `@angular/material-moment-adapter` package.
+```
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, SatDatepickerModule } from 'saturn-datepicker'
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter'
+
+
+@NgModule({
+    imports: [
+        SatDatepickerModule,
+    ],
+    providers: [
+        MyReportsService,
+        {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+        {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+    ],
+})
+export class MyModule {
+}
+
+For advanced formatting, please look through material documentation.
+```
 Licence: MIT
 
 A little note for myself

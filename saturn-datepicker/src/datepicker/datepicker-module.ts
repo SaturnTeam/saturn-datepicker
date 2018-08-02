@@ -15,7 +15,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {SatCalendar, SatCalendarHeader} from './calendar';
 import {SatCalendarBody} from './calendar-body';
-import {SatDatepicker, SatDatepickerContent} from './datepicker';
+import {
+  SatDatepicker,
+  SatDatepickerContent,
+  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+} from './datepicker';
 import {SatDatepickerInput} from './datepicker-input';
 import {SatDatepickerIntl} from './datepicker-intl';
 import {SatDatepickerToggle, SatDatepickerToggleIcon} from './datepicker-toggle';
@@ -25,46 +29,47 @@ import {SatYearView} from './year-view';
 
 
 @NgModule({
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatDialogModule,
-        OverlayModule,
-        A11yModule,
-        PortalModule,
-    ],
-    exports: [
-        SatCalendar,
-        SatCalendarBody,
-        SatDatepicker,
-        SatDatepickerContent,
-        SatDatepickerInput,
-        SatDatepickerToggle,
-        SatDatepickerToggleIcon,
-        SatMonthView,
-        SatYearView,
-        SatMultiYearView,
-        SatCalendarHeader,
-    ],
-    declarations: [
-        SatCalendar,
-        SatCalendarBody,
-        SatDatepicker,
-        SatDatepickerContent,
-        SatDatepickerInput,
-        SatDatepickerToggle,
-        SatDatepickerToggleIcon,
-        SatMonthView,
-        SatYearView,
-        SatMultiYearView,
-        SatCalendarHeader,
-    ],
-    providers: [
-        SatDatepickerIntl,
-    ],
-    entryComponents: [
-        SatDatepickerContent,
-        SatCalendarHeader,
-    ]
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatDialogModule,
+    OverlayModule,
+    A11yModule,
+    PortalModule,
+  ],
+  exports: [
+    SatCalendar,
+    SatCalendarBody,
+    SatDatepicker,
+    SatDatepickerContent,
+    SatDatepickerInput,
+    SatDatepickerToggle,
+    SatDatepickerToggleIcon,
+    SatMonthView,
+    SatYearView,
+    SatMultiYearView,
+    SatCalendarHeader,
+  ],
+  declarations: [
+    SatCalendar,
+    SatCalendarBody,
+    SatDatepicker,
+    SatDatepickerContent,
+    SatDatepickerInput,
+    SatDatepickerToggle,
+    SatDatepickerToggleIcon,
+    SatMonthView,
+    SatYearView,
+    SatMultiYearView,
+    SatCalendarHeader,
+  ],
+  providers: [
+    SatDatepickerIntl,
+    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+  ],
+  entryComponents: [
+    SatDatepickerContent,
+    SatCalendarHeader,
+  ]
 })
 export class SatDatepickerModule {}

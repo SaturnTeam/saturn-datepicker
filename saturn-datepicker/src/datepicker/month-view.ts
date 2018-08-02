@@ -7,28 +7,28 @@
  */
 
 import {
-    DOWN_ARROW,
-    END,
-    ENTER,
-    HOME,
-    LEFT_ARROW,
-    PAGE_DOWN,
-    PAGE_UP,
-    RIGHT_ARROW,
-    UP_ARROW,
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  PAGE_DOWN,
+  PAGE_UP,
+  RIGHT_ARROW,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-    AfterContentInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Inject,
-    Input,
-    Optional,
-    Output,
-    ViewChild,
-    ViewEncapsulation,
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  Optional,
+  Output,
+  ViewEncapsulation,
+  ViewChild,
 } from '@angular/core';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
@@ -141,7 +141,7 @@ export class SatMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SatCalendarBody) _matCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody: SatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -226,8 +226,8 @@ export class SatMonthView<D> implements AfterContentInit {
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
 
     const oldActiveDate = this._activeDate;
-
     const isRtl = this._isRtl();
+
     switch (event.keyCode) {
       case LEFT_ARROW:
         this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? 1 : -1);

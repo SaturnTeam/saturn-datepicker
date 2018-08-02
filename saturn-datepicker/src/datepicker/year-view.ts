@@ -97,6 +97,9 @@ export class SatYearView<D> implements AfterContentInit {
   /** Emits the selected month. This doesn't imply a change on the selected date */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
+  /** Emits when any date is activated. */
+  @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
+
   /** The body of calendar table */
   @ViewChild(SatCalendarBody) _matCalendarBody: SatCalendarBody;
 
@@ -153,6 +156,7 @@ export class SatYearView<D> implements AfterContentInit {
     // disabled ones from being selected. This may not be ideal, we should look into whether
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
 
+    const oldActiveDate = this._activeDate;
     const isRtl = this._isRtl();
 
     switch (event.keyCode) {
@@ -190,6 +194,10 @@ export class SatYearView<D> implements AfterContentInit {
       default:
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.
         return;
+    }
+
+    if (this._dateAdapter.compareDate(oldActiveDate, this.activeDate)) {
+      this.activeDateChange.emit(this.activeDate);
     }
 
     this._focusActiveCell();

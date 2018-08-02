@@ -7,14 +7,14 @@
  */
 
 import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    NgZone,
-    Output,
-    ViewEncapsulation,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+  NgZone,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 

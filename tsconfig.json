@@ -17,7 +17,7 @@
       "dom"
     ],
     "paths": {
-      "saturn-datepicker": [ "../dist" ]
+      "saturn-datepicker": [ "../dist/saturn-datepicker" ]
     }
   },
   "exclude": [

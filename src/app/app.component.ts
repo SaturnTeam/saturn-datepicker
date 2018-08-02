@@ -1,10 +1,29 @@
 import { Component } from '@angular/core';
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  template: `
+      <form [formGroup]="form">
+          <mat-form-field>
+              <input matInput
+                     placeholder="Choose a date"
+                     [satDatepicker]="picker"
+                     formControlName="date">
+              <sat-datepicker #picker [rangeMode]="true">
+              </sat-datepicker>
+              <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+          </mat-form-field>
+      </form>
+`,
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app';
+    form: FormGroup;
+    constructor(fb: FormBuilder) {
+        this.form = fb.group({
+            date: [{ begin: new Date(2018, 7, 5), end: new Date(2018, 7, 25) }]
+        });
+    }
+
 }

@@ -38,6 +38,7 @@
       [class.mat-calendar-cell-semi-selected]="_isSemiSelected(item.value)"
       [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
+      [attr.aria-selected]="selectedValue === item.value"
       (click)="_cellClicked(item)"
       [style.width.%]="100 / numCols"
       [style.paddingTop.%]="50 * cellAspectRatio / numCols"
