@@ -16,6 +16,8 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Changelog
+## 6.0.4
+The week for `pt-BR` starts from Sunday
 ## 6.0.2
 * Updated to material datepicker 6.4.2
 * Fixed the issue with `[value]` and `[formControl]` binding
@@ -26,20 +28,6 @@ Updated to material datepicker 6.0.1
 Styles included! Read below
 ## 1.1.7
 Update to angular material 6.0.0 (2018/05/04)
-
-Now package can be compiled for production. Internal styles - soon!
-
-### 2018/04/18
-Datepicker theme supports dark themes. How to use it read below
-### 1.1.0
-Introduce first day of the week depends on locale
-
-### 1.0.7
-Roll back to angular material 5.2 source code
-
-### 1.0
-
-API has been completely changed.
 
 ## It's awesome, but how to use it?
 
