@@ -1,6 +1,6 @@
 {
   "name": "saturn-datepicker",
-  "version": "6.0.4",
+  "version": "6.0.5",
   "repository": "https://github.com/SaturnTeam/saturn-datepicker",
   "keywords": ["angular", "material", "datepicker", "range datepicker"],
   "author": "saturn <saturn@saturn.team>",

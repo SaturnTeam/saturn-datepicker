@@ -16,6 +16,8 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Changelog
+## 6.0.5
+Return back style files
 ## 6.0.4
 The week for `pt-BR` starts from Sunday
 ## 6.0.2
@@ -88,7 +90,8 @@ Licence: MIT
 
 A little note for myself
 ```shell
-npm run packagr
+npm run build:lib
+cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist   
 (cd dist ; npm pack)
-yarn add range-0.0.1.tgz 
+(cd dist ; npm publish)
 ```
