@@ -251,6 +251,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** Enables datepicker closing after selection */
   @Input() closeAfterSelection = true
 
+  /** Order the views when clicking on period label button */
+  @Input() orderPeriodLabel: 'month' | 'multi-year' = 'multi-year';
+
   /** Whether the calendar is open. */
   @Input()
   get opened(): boolean { return this._opened; }

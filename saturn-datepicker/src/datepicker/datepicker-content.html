@@ -11,6 +11,7 @@
               [rangeMode]="datepicker.rangeMode"
               [selected]="datepicker._selected"
               [@fadeInCalendar]="'enter'"
+              [orderPeriodLabel]="datepicker.orderPeriodLabel"
               (selectedChange)="datepicker._select($event)"
               (dateRangesChange)="datepicker._selectRange($event)"
               (yearSelected)="datepicker._selectYear($event)"
