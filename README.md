@@ -16,7 +16,7 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Changelog
-## 6.0.6
+## 6.1.0
 Merged #31
 * Add option to sort views when clicking on period label button (month -> year or year -> month)
 * Add option to enable closing datepicker after date selection #30 
