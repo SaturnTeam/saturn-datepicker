@@ -86,6 +86,22 @@ export class MyModule {
 
 For advanced formatting, please look through material documentation.
 ```
+
+### How disable closing datepicker after date selection ?
+`closeAfterSelection` option enables or disables datepicker closing after date selections. By default the option is true
+
+```angular2html
+  <mat-form-field>
+    <input matInput [satDatepicker]="resultPicker">
+    <sat-datepicker
+        #resultPicker
+        [rangeMode]="true"
+        [closeAfterSelection]="false">
+    </sat-datepicker>
+   </mat-form-field>
+```
+
+---
 Licence: MIT
 
 A little note for myself

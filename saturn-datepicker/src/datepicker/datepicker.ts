@@ -248,6 +248,8 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits when the datepicker has been closed. */
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
 
+  /** Enables datepicker closing after selection */
+  @Input() closeAfterSelection = true
 
   /** Whether the calendar is open. */
   @Input()
