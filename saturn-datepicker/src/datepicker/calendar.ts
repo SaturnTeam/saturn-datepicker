@@ -271,7 +271,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Input() dateFilter: (date: D) => boolean;
 
   /** Order the views when clicking on period label button */
-  @Input() orderPeriodLabel: 'multi-year' | 'month' = 'multi-year'
+  @Input() orderPeriodLabel: 'multi-year' | 'month' = 'multi-year';
 
   /** Emits when the currently selected date changes. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();

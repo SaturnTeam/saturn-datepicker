@@ -10,7 +10,8 @@ import {FormBuilder, FormGroup} from "@angular/forms";
                      placeholder="Choose a date"
                      [satDatepicker]="picker"
                      formControlName="date">
-              <sat-datepicker #picker [rangeMode]="true">
+              <sat-datepicker #picker [rangeMode]="true"
+                              [closeAfterSelection]="false">
               </sat-datepicker>
               <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
           </mat-form-field>

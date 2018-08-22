@@ -8,7 +8,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:app": "cpr dist/saturn-datepicker src/saturn-datepicker && ng build packages && rimraf src/@my",
-    "build:lib": "rimraf dist && ng-packagr -p saturn-datepicker/package.json",
+    "build:lib": "rimraf dist && ng-packagr -p saturn-datepicker/package.json && cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

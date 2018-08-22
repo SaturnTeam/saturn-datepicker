@@ -117,6 +117,12 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
   ngAfterViewInit() {
     this._calendar.focusActiveCell();
   }
+
+  close() {
+    if (this.datepicker.closeAfterSelection) {
+      this.datepicker.close();
+    }
+  }
 }
 
 
@@ -249,7 +255,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
 
   /** Enables datepicker closing after selection */
-  @Input() closeAfterSelection = true
+  @Input() closeAfterSelection = true;
 
   /** Order the views when clicking on period label button */
   @Input() orderPeriodLabel: 'month' | 'multi-year' = 'multi-year';
