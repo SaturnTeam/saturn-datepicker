@@ -86,6 +86,38 @@ export class MyModule {
 
 For advanced formatting, please look through material documentation.
 ```
+
+### How to add option to sort views when clicking on period label button ?
+`orderPeriodLabel` option sort the label period views.
+- Default [multi-year]: multi-year then back to month
+- Month [month]: month > year > multi-year
+
+```angular2html
+  <mat-form-field>
+    <input matInput [satDatepicker]="resultPicker">
+    <sat-datepicker
+        #resultPicker
+        [rangeMode]="true"
+        orderPeriodLabel="month">
+    </sat-datepicker>
+   </mat-form-field>
+```
+
+### How disable closing datepicker after date selection ?
+`closeAfterSelection` option enables or disables datepicker closing after date selections. By default the option is true
+
+```angular2html
+  <mat-form-field>
+    <input matInput [satDatepicker]="resultPicker">
+    <sat-datepicker
+        #resultPicker
+        [rangeMode]="true"
+        [closeAfterSelection]="false">
+    </sat-datepicker>
+   </mat-form-field>
+```
+
+---
 Licence: MIT
 
 A little note for myself

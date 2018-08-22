@@ -102,9 +102,26 @@ export class SatCalendarHeader<D> {
     }[this.calendar.currentView];
   }
 
-  /** Handles user clicks on the period label. */
+  /** Handles user clicks on the period label.
+   * Option`calendar.orderPeriodLabel` sort the label period views.
+   * - Default [multi-year]: multi-year then back to month
+   * - Month [month]: month > year > multi-year
+   */
   currentPeriodClicked(): void {
-    this.calendar.currentView = this.calendar.currentView == 'month' ? 'multi-year' : 'month';
+    const mouthFirstOrder: SatCalendarView[] = ['month', 'year', 'multi-year'];
+    const defaultOrder: SatCalendarView[] = ['month', 'multi-year', 'month'];
+    const orderPeriod = this.calendar.orderPeriodLabel === 'month' ? mouthFirstOrder : defaultOrder;
+    switch (this.calendar.currentView) {
+      case 'month':
+        this.calendar.currentView = orderPeriod[1];
+        break;
+      case 'year':
+          this.calendar.currentView = orderPeriod[2]
+          break;
+      default:
+        this.calendar.currentView = orderPeriod[0]
+        break;
+    }
   }
 
   /** Handles user clicks on the previous button. */
@@ -252,6 +269,9 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
+
+  /** Order the views when clicking on period label button */
+  @Input() orderPeriodLabel: 'multi-year' | 'month' = 'multi-year'
 
   /** Emits when the currently selected date changes. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
