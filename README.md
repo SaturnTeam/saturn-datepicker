@@ -44,12 +44,13 @@ Installation: `yarn add saturn-datepicker` or `npm install saturn-datepicker`
 Import `SatDatepickerModule`, `SatNativeDateModule` and `MatDatepickerModule`
 ```angular2html
   <mat-form-field>
-    <input matInput [satDatepicker]="resultPicker">
-    <sat-datepicker
-        #resultPicker
-        [rangeMode]="true">
-    </sat-datepicker>
-   </mat-form-field>
+    <input matInput
+        placeholder="Choose a date"
+        [satDatepicker]="picker"
+        [value]="date">
+    <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+    <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+  </mat-form-field>
 ```
 
 Add styles:
