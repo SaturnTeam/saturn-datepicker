@@ -16,6 +16,8 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Changelog
+## 7.0
+Updated to angular material 7.1
 ## 6.1.1
 Fixed a bug with ignoring `calendarHeaderComponent`
 ## 6.1.0
