@@ -16,6 +16,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
+  SPACE,
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -33,7 +34,7 @@ import {
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
 import {Directionality} from '@angular/cdk/bidi';
-import {SatCalendarBody, SatCalendarCell} from './calendar-body';
+import {SatCalendarBody, SatCalendarCell, SatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -128,8 +129,11 @@ export class SatMonthView<D> implements AfterContentInit {
   }
   private _maxDate: D | null;
 
-  /** A function used to filter which dates are selectable. */
+  /** Function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
+
+  /** Function that can be used to add custom CSS classes to dates. */
+  @Input() dateClass: (date: D) => SatCalendarCellCssClasses;
 
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -261,6 +265,7 @@ export class SatMonthView<D> implements AfterContentInit {
             this._dateAdapter.addCalendarMonths(this._activeDate, 1);
         break;
       case ENTER:
+      case SPACE:
         if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._dateAdapter.getDate(this._activeDate));
           this._userSelection.emit();
@@ -321,8 +326,10 @@ export class SatMonthView<D> implements AfterContentInit {
             this._dateAdapter.getMonth(this.activeDate), i + 1);
       const enabled = this._shouldEnableDate(date);
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
+      const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
+
       this._weeks[this._weeks.length - 1]
-          .push(new SatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
+          .push(new SatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled, cellClasses));
     }
   }
 
@@ -357,10 +364,10 @@ export class SatMonthView<D> implements AfterContentInit {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 
-    /** Determines whether the user has the RTL layout direction. */
-    private _isRtl() {
-        return this._dir && this._dir.value === 'rtl';
-    }
+  /** Determines whether the user has the RTL layout direction. */
+  private _isRtl() {
+    return this._dir && this._dir.value === 'rtl';
+  }
   /** Updates range full parameter on each begin or end of interval update.
    * Necessary to display calendar-body correctly
    */

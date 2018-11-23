@@ -16,12 +16,14 @@ I created this repository and this package due to it takes a lot of time to cont
 6) Supports keyboard handling
  
 ## Changelog
+## 7.0
+Updated to angular material 7.1
 ## 6.1.1
 Fixed a bug with ignoring `calendarHeaderComponent`
 ## 6.1.0
 Merged #31
 * Add option to sort views when clicking on period label button (month -> year or year -> month)
-* Add option to enable closing datepicker after date selection #30 
+* Add option to enable closing datepicker after date selection #30
 ## 6.0.5
 Return back style files
 ## 6.0.4
@@ -44,12 +46,13 @@ Installation: `yarn add saturn-datepicker` or `npm install saturn-datepicker`
 Import `SatDatepickerModule`, `SatNativeDateModule` and `MatDatepickerModule`
 ```angular2html
   <mat-form-field>
-    <input matInput [satDatepicker]="resultPicker">
-    <sat-datepicker
-        #resultPicker
-        [rangeMode]="true">
-    </sat-datepicker>
-   </mat-form-field>
+    <input matInput
+        placeholder="Choose a date"
+        [satDatepicker]="picker"
+        [value]="date">
+    <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+    <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+  </mat-form-field>
 ```
 
 Add styles:

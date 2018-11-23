@@ -9,7 +9,6 @@
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOWN_ARROW} from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   Directive,
   ElementRef,
   EventEmitter,
@@ -28,24 +27,23 @@ import {
   ValidationErrors,
   Validator,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
-import {DateAdapter} from '../datetime/date-adapter';
-import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 import {SatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
 
-
+/** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SatDatepickerInput),
   multi: true
 };
 
-
+/** @docs-private */
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => SatDatepickerInput),
@@ -100,21 +98,27 @@ export class SatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAccessor, OnDestroy,
-    Validator {
+export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set satDatepicker(value: SatDatepicker<D>) {
-    this.registerDatepicker(value);
+    if (!value) {
+      return;
+    }
+
+    this._datepicker = value;
+    this._datepicker._registerInput(this);
+    this._datepickerSubscription.unsubscribe();
+
+    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
+      this.value = selected;
+      this._cvaOnChange(selected);
+      this._onTouched();
+      this.dateInput.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      this.dateChange.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    });
   }
   _datepicker: SatDatepicker<D>;
-
-  private registerDatepicker(value: SatDatepicker<D>) {
-    if (value) {
-      this._datepicker = value;
-      this._datepicker._registerInput(this);
-    }
-  }
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
@@ -327,7 +331,7 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   private _lastValueValid = false;
 
   constructor(
-      private _elementRef: ElementRef,
+      private _elementRef: ElementRef<HTMLInputElement>,
       @Optional() public _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
       @Optional() private _formField: MatFormField) {
@@ -342,19 +346,6 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
       this.value = this.value;
     });
-  }
-
-  ngAfterContentInit() {
-    if (this._datepicker) {
-      this._datepickerSubscription =
-          this._datepicker._selectedChanged.subscribe((selected: SatDatepickerRangeValue<D> | D) => {
-            this.value = selected;
-            this._cvaOnChange(selected);
-            this._onTouched();
-            this.dateInput.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
-            this.dateChange.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
-          });
-    }
   }
 
   ngOnDestroy() {
@@ -376,7 +367,7 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
 
   /**
    * @deprecated
-   * @deletion-target 7.0.0 Use `getConnectedOverlayOrigin` instead
+   * @breaking-change 8.0.0 Use `getConnectedOverlayOrigin` instead
    */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();
@@ -411,7 +402,9 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   _onKeydown(event: KeyboardEvent) {
-    if (event.altKey && event.keyCode === DOWN_ARROW) {
+    const isAltDownArrow = event.altKey && event.keyCode === DOWN_ARROW;
+
+    if (this._datepicker && isAltDownArrow && !this._elementRef.nativeElement.readOnly) {
       this._datepicker.open();
       event.preventDefault();
     }
@@ -452,7 +445,7 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   }
 
   /** Returns the palette used by the input's form field, if any. */
-  _getThemePalette() {
+  _getThemePalette(): ThemePalette {
     return this._formField ? this._formField.color : undefined;
   }
 
@@ -469,7 +462,7 @@ export class SatDatepickerInput<D> implements AfterContentInit, ControlValueAcce
   /** Formats a value and sets it on the input element. */
   private _formatValue(value: SatDatepickerRangeValue<D> | D | null) {
       if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) {
-          value = value as SatDatepickerRangeValue<D>
+          value = value as SatDatepickerRangeValue<D>;
           this._elementRef.nativeElement.value =
               value && value.begin && value.end
                   ? this._dateAdapter.format(value.begin, this._dateFormats.display.dateInput) +

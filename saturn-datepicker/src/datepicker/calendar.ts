@@ -31,6 +31,7 @@ import {SatDatepickerIntl} from './datepicker-intl';
 import {SatMonthView} from './month-view';
 import {SatMultiYearView, yearsPerPage} from './multi-year-view';
 import {SatYearView} from './year-view';
+import {SatCalendarCellCssClasses} from './calendar-body';
 
 import {SatDatepickerRangeValue} from './datepicker-input';
 import {DateAdapter} from '../datetime/date-adapter';
@@ -267,8 +268,11 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
   private _maxDate: D | null;
 
-  /** A function used to filter which dates are selectable. */
+  /** Function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
+
+  /** Function that can be used to add custom CSS classes to dates. */
+  @Input() dateClass: (date: D) => SatCalendarCellCssClasses;
 
   /** Order the views when clicking on period label button */
   @Input() orderPeriodLabel: 'multi-year' | 'month' = 'multi-year';
@@ -382,6 +386,14 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   focusActiveCell() {
     this._getCurrentViewComponent()._focusActiveCell();
+  }
+
+  /** Updates today's date after an update of the active date */
+  updateTodaysDate() {
+    let view = this.currentView == 'month' ? this.monthView :
+            (this.currentView == 'year' ? this.yearView : this.multiYearView);
+
+    view.ngAfterContentInit();
   }
 
   /** Handles date selection in the month view. */

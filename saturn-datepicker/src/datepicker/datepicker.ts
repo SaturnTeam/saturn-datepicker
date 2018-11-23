@@ -18,7 +18,6 @@ import {
 } from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
-import {take, filter} from 'rxjs/operators';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -30,19 +29,26 @@ import {
   InjectionToken,
   Input,
   NgZone,
+  OnDestroy,
   Optional,
   Output,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  OnDestroy,
 } from '@angular/core';
-import {CanColor, mixinColor, ThemePalette} from '@angular/material/core';
+import {
+  CanColor,
+  CanColorCtor,
+  mixinColor,
+  ThemePalette,
+} from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
+import {filter, take} from 'rxjs/operators';
 import {SatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
+import {SatCalendarCellCssClasses} from './calendar-body';
 import {SatDatepickerInput, SatDatepickerRangeValue} from './datepicker-input';
 import {DateAdapter} from '../datetime/date-adapter';
 
@@ -70,7 +76,8 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 export class SatDatepickerContentBase {
   constructor(public _elementRef: ElementRef) { }
 }
-export const _SatDatepickerContentMixinBase = mixinColor(SatDatepickerContentBase);
+export const _SatDatepickerContentMixinBase: CanColorCtor & typeof SatDatepickerContentBase =
+    mixinColor(SatDatepickerContentBase);
 
 /**
  * Component used as the content for the datepicker dialog and popup. We use this instead of using
@@ -116,12 +123,6 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
 
   ngAfterViewInit() {
     this._calendar.focusActiveCell();
-  }
-
-  close() {
-    if (this.datepicker.closeAfterSelection) {
-      this.datepicker.close();
-    }
   }
 }
 
@@ -173,8 +174,10 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   }
   _endDate: D | null;
 
-    /** An input indicating the type of the custom header component for the calendar, if set. */
-    @Input() calendarHeaderComponent: ComponentType<any>;
+  private _scrollStrategy: () => ScrollStrategy;
+
+  /** An input indicating the type of the custom header component for the calendar, if set. */
+  @Input() calendarHeaderComponent: ComponentType<any>;
 
   /** The date to open the calendar to initially. */
   @Input()
@@ -193,7 +196,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   private _startAt: D | null;
 
   /** The view that the calendar should start in. */
-  @Input() startView: 'month' | 'year' = 'month';
+  @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
 
   /** Color palette to use on the datepicker's calendar. */
   @Input()
@@ -247,6 +250,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
+
+  /** Function that can be used to add custom CSS classes to dates. */
+  @Input() dateClass: (date: D) => SatCalendarCellCssClasses;
 
   /** Emits when the datepicker has been opened. */
   @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
@@ -319,13 +325,15 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
-              @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
+              @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
+
+    this._scrollStrategy = scrollStrategy;
   }
 
   ngOnDestroy() {
@@ -340,7 +348,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Selects the given date */
-  _select(date: D): void {
+  select(date: D): void {
     let oldValue = this._selected;
     this._selected = date;
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
@@ -458,6 +466,14 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Open the calendar as a dialog. */
   private _openAsDialog(): void {
+    // Usually this would be handled by `open` which ensures that we can only have one overlay
+    // open at a time, however since we reset the variables in async handlers some overlays
+    // may slip through if the user opens and closes multiple times in quick succession (e.g.
+    // by holding down the enter key).
+    if (this._dialogRef) {
+      this._dialogRef.close();
+    }
+
     this._dialogRef = this._dialog.open<SatDatepickerContent<D>>(SatDatepickerContent, {
       direction: this._dir ? this._dir.value : 'ltr',
       viewContainerRef: this._viewContainerRef,
@@ -524,7 +540,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)
-      .withPush(false)
+      .withLockedPosition()
       .withPositions([
         {
           originX: 'start',
