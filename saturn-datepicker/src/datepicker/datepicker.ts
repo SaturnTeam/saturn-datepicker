@@ -124,6 +124,12 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
   ngAfterViewInit() {
     this._calendar.focusActiveCell();
   }
+
+  close() {
+    if (this.datepicker.closeAfterSelection) {
+      this.datepicker.close();
+    }
+  }
 }
 
 

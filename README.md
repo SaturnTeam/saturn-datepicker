@@ -13,6 +13,8 @@ I created this repository and this package due to it takes a lot of time to cont
 3) **You can use all original material attributes: min, max, formControl and others**
  
 ## Changelog
+## 7.0.2
+Fixed the issue with non-working close after selection
 ## 7.0
 Updated to angular material 7.1
 ## 6.1.1

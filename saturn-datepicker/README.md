@@ -2,20 +2,19 @@
 Material datepicker with range support
 ## What is this?
 
-This is a based on Material source code (March 22, 2018) implementation of Material Datepicker for Angular.
+This is patched version of Material Datepicker for Angular with range selection support.
 I created this repository and this package due to it takes a lot of time to contribute to material2 repository.
 [Issue in material2 repo.](https://github.com/angular/material2/issues/4763)
 ![Material date range picker](screenshot.png)
 ## [DEMO](https://stackblitz.com/edit/angular-4cfnyl)
 ## Advantages
-1) Dates range selecting in datepicker 
-2) Have special attribute to turn on range mode on datepicker
-3) Value managing as easy as it in `MatDatepicker`
-4) *You can use all attributes: min, max, formControl and others*
-5) Supports input from keyboard
-6) Supports keyboard handling
- 
+1) You can change order of views: month, year and multi-year
+2) You can keep calendar to be opened after selecting a date (in singular range mode) or a range of dates (in range mode)
+3) **You can use all original material attributes: min, max, formControl and others**
+
 ## Changelog
+## 7.0.2
+Fixed the issue with non-working close after selection
 ## 7.0
 Updated to angular material 7.1
 ## 6.1.1
