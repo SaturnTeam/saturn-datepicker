@@ -212,6 +212,7 @@ export class SatMonthView<D> implements AfterContentInit {
         this.selectedChange.emit(selectedDate);
         this._userSelection.emit();
       }
+      this._createWeekCells();
     } else if (this._selectedDate != date) {
 
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
@@ -220,6 +221,7 @@ export class SatMonthView<D> implements AfterContentInit {
 
       this.selectedChange.emit(selectedDate);
       this._userSelection.emit();
+      this._createWeekCells();
     }
   }
 
