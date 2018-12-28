@@ -82,6 +82,9 @@ export class SatCalendarBody implements OnChanges {
   /** Whenever user already selected start of dates interval. */
   @Input() beginSelected: boolean;
 
+  /** Whenever the current month is before the date already selected */
+  @Input() isBeforeSelected: boolean;
+
   /** Whether to mark all dates as semi-selected. */
   @Input() rangeFull: boolean;
 
@@ -183,9 +186,12 @@ export class SatCalendarBody implements OnChanges {
   }
 
   /** Whenever to mark cell as semi-selected before the second date is selected (between the begin cell and the hovered cell). */
-  _isBetweenOverAndBegin(date: number) {
+  _isBetweenOverAndBegin(date: number): boolean {
     if (!this._cellOver) {
       return false;
+    }
+    if (this.isBeforeSelected && !this.begin) {
+      return date > this._cellOver;
     }
     if (this._cellOver > this.begin) {
       return date > this.begin && date < this._cellOver;
@@ -194,6 +200,24 @@ export class SatCalendarBody implements OnChanges {
       return date < this.begin && date > this._cellOver;
     }
     return false;
+  }
+
+  /** Whenever to mark cell as begin of the range. */
+  _isBegin(date: number): boolean {
+    if (this.isBeforeSelected) {
+      return (this._cellOver === date);
+    }
+    return (this.begin === date && !(this._cellOver && this._cellOver < this.begin)) ||
+      (this._cellOver === date && this._cellOver < this.begin);
+  }
+
+  /** Whenever to mark cell as end of the range. */
+  _isEnd(date: number): boolean {
+    if (this.isBeforeSelected) {
+      return false;
+    }
+    return (this.end === date && !(this._cellOver && this._cellOver > this.begin)) ||
+      (this._cellOver === date && this._cellOver > this.begin);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

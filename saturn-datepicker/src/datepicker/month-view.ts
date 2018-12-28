@@ -86,7 +86,7 @@ export class SatMonthView<D> implements AfterContentInit {
   _rangeFull: boolean | null = false;
 
   /** Whenever user already selected start of dates interval. */
-  _beginDateSelected = false;
+  _beginDateSelected: number | boolean = false;
 
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
@@ -205,7 +205,7 @@ export class SatMonthView<D> implements AfterContentInit {
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
       if (!this._beginDateSelected) { // At first click emit the same start and end of interval
-        this._beginDateSelected = true;
+        this._beginDateSelected = selectedDate.valueOf() as number;
         this.selectedChange.emit(selectedDate);
       } else {
         this._beginDateSelected = false;
