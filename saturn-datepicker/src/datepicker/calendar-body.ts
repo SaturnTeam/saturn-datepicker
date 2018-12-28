@@ -79,6 +79,9 @@ export class SatCalendarBody implements OnChanges {
    */
   @Input() end: number|null;
 
+  /** Whenever user already selected start of dates interval. */
+  @Input() beginSelected: boolean;
+
   /** Whether to mark all dates as semi-selected. */
   @Input() rangeFull: boolean;
 
@@ -112,11 +115,21 @@ export class SatCalendarBody implements OnChanges {
   /** Width of an individual cell. */
   _cellWidth: string;
 
+  _cellOver: number;
+
   constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
 
   _cellClicked(cell: SatCalendarCell): void {
     if (cell.enabled) {
       this.selectedValueChange.emit(cell.value);
+    }
+  }
+
+  _mouseOverCell(cell: SatCalendarCell): void {
+    if (this.beginSelected && this.rangeMode) {
+      this._cellOver = cell.value;
+    } else {
+      this._cellOver = null;
     }
   }
 
@@ -167,6 +180,20 @@ export class SatCalendarBody implements OnChanges {
       return date < this.end;
     }
     return date > <number>this.begin && date < <number>this.end;
+  }
+
+  /** Whenever to mark cell as semi-selected before the second date is selected (between the begin cell and the hovered cell). */
+  _isBetweenOverAndBegin(date: number) {
+    if (!this._cellOver) {
+      return false;
+    }
+    if (this._cellOver > this.begin) {
+      return date > this.begin && date < this._cellOver;
+    }
+    if (this._cellOver < this.begin) {
+      return date < this.begin && date > this._cellOver;
+    }
+    return false;
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

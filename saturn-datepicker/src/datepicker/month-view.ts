@@ -86,7 +86,7 @@ export class SatMonthView<D> implements AfterContentInit {
   _rangeFull: boolean | null = false;
 
   /** Whenever user already selected start of dates interval. */
-  private _beginDateSelected = false;
+  _beginDateSelected = false;
 
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
