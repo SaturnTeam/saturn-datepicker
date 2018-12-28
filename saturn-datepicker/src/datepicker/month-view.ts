@@ -212,7 +212,7 @@ export class SatMonthView<D> implements AfterContentInit {
         this.selectedChange.emit(selectedDate);
         this._userSelection.emit();
       }
-      this._createWeekCells();
+      this._refreshCssClasses();
     } else if (this._selectedDate != date) {
 
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
@@ -221,7 +221,7 @@ export class SatMonthView<D> implements AfterContentInit {
 
       this.selectedChange.emit(selectedDate);
       this._userSelection.emit();
-      this._createWeekCells();
+      this._refreshCssClasses();
     }
   }
 
@@ -333,6 +333,18 @@ export class SatMonthView<D> implements AfterContentInit {
       this._weeks[this._weeks.length - 1]
           .push(new SatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled, cellClasses));
     }
+  }
+
+  private _refreshCssClasses() {
+    this._weeks.forEach((line) => {
+      line.forEach((item) => {
+        const date = this._dateAdapter.createDate(
+          this._dateAdapter.getYear(this.activeDate),
+          this._dateAdapter.getMonth(this.activeDate), item.value);
+        const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
+        item.cssClasses = cellClasses;
+      });
+    });
   }
 
   /** Date filter for the month */
