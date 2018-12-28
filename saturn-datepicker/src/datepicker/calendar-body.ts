@@ -205,7 +205,7 @@ export class SatCalendarBody implements OnChanges {
   /** Whenever to mark cell as begin of the range. */
   _isBegin(date: number): boolean {
     if (this.isBeforeSelected && !this.begin) {
-      return (this._cellOver === date);
+      return this._cellOver === date;
     }
     return (this.begin === date && !(this._cellOver && this._cellOver < this.begin)) ||
       (this._cellOver === date && this._cellOver < this.begin);
