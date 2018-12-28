@@ -129,11 +129,7 @@ export class SatCalendarBody implements OnChanges {
   }
 
   _mouseOverCell(cell: SatCalendarCell): void {
-    if (this.beginSelected && this.rangeMode) {
-      this._cellOver = cell.value;
-    } else {
-      this._cellOver = null;
-    }
+    this._setCellOver(cell.value);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -150,6 +146,10 @@ export class SatCalendarBody implements OnChanges {
 
     if (columnChanges || !this._cellWidth) {
       this._cellWidth = `${100 / numCols}%`;
+    }
+
+    if (changes.activeCell) {
+      this._setCellOver(this.activeCell + 1);
     }
   }
 
@@ -232,5 +232,13 @@ export class SatCalendarBody implements OnChanges {
         }
       });
     });
+  }
+
+  private _setCellOver(value: number): void {
+    if (this.beginSelected && this.rangeMode) {
+      this._cellOver = value;
+    } else {
+      this._cellOver = null;
+    }
   }
 }
