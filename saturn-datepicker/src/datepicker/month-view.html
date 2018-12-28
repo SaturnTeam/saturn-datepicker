@@ -14,7 +14,6 @@
          [rangeMode]="rangeMode"
          [labelMinRequiredCells]="3"
          [activeCell]="_dateAdapter.getDate(activeDate) - 1"
-         (selectedValueChange)="_dateSelected($event)"
-         (keydown)="_handleCalendarBodyKeydown($event)">
+         (selectedValueChange)="_dateSelected($event)">
   </tbody>
 </table>

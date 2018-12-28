@@ -30,6 +30,7 @@ import {
   Output,
   ViewEncapsulation,
   ViewChild,
+  HostListener,
 } from '@angular/core';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
@@ -212,7 +213,7 @@ export class SatMonthView<D> implements AfterContentInit {
         this.selectedChange.emit(selectedDate);
         this._userSelection.emit();
       }
-      this._refreshCssClasses();
+      this._createWeekCells();
     } else if (this._selectedDate != date) {
 
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
@@ -221,12 +222,12 @@ export class SatMonthView<D> implements AfterContentInit {
 
       this.selectedChange.emit(selectedDate);
       this._userSelection.emit();
-      this._refreshCssClasses();
+      this._createWeekCells();
     }
   }
 
   /** Handles keydown events on the calendar body when calendar is in month view. */
-  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+  @HostListener('document:keydown', ['$event']) _handleCalendarBodyKeydown(event: KeyboardEvent): void {
     // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
     // disabled ones from being selected. This may not be ideal, we should look into whether
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
@@ -333,18 +334,6 @@ export class SatMonthView<D> implements AfterContentInit {
       this._weeks[this._weeks.length - 1]
           .push(new SatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled, cellClasses));
     }
-  }
-
-  private _refreshCssClasses() {
-    this._weeks.forEach((line) => {
-      line.forEach((item) => {
-        const date = this._dateAdapter.createDate(
-          this._dateAdapter.getYear(this.activeDate),
-          this._dateAdapter.getMonth(this.activeDate), item.value);
-        const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
-        item.cssClasses = cellClasses;
-      });
-    });
   }
 
   /** Date filter for the month */
