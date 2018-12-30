@@ -76,6 +76,9 @@ export class SatMonthView<D> implements AfterContentInit {
   /** Allow selecting range of dates. */
   @Input() rangeMode = false;
 
+  /** Enables datepicker closing after selection */
+  @Input() closeAfterSelection = true;
+
   /** First day of interval. */
   _beginDateNumber: number | null;
 
@@ -270,7 +273,12 @@ export class SatMonthView<D> implements AfterContentInit {
       case SPACE:
         if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._dateAdapter.getDate(this._activeDate));
-          this._userSelection.emit();
+          if (!this._beginDateSelected) {
+            this._userSelection.emit();
+          }
+          if (this._beginDateSelected || !this.closeAfterSelection) {
+            this._focusActiveCell();
+          }
           // Prevent unexpected default actions such as form submission.
           event.preventDefault();
         }
