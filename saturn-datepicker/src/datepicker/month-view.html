@@ -10,6 +10,8 @@
          [selectedValue]="_selectedDate"
          [begin]="_beginDateNumber"
          [end]="_endDateNumber"
+         [beginSelected]="!!_beginDateSelected"
+         [isBeforeSelected]="_beginDateSelected && _dateAdapter.compareDate(activeDate, _beginDateSelected) < 0"
          [rangeFull]="_rangeFull"
          [rangeMode]="rangeMode"
          [labelMinRequiredCells]="3"

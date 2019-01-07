@@ -79,6 +79,12 @@ export class SatCalendarBody implements OnChanges {
    */
   @Input() end: number|null;
 
+  /** Whenever user already selected start of dates interval. */
+  @Input() beginSelected: boolean;
+
+  /** Whenever the current month is before the date already selected */
+  @Input() isBeforeSelected: boolean;
+
   /** Whether to mark all dates as semi-selected. */
   @Input() rangeFull: boolean;
 
@@ -112,12 +118,19 @@ export class SatCalendarBody implements OnChanges {
   /** Width of an individual cell. */
   _cellWidth: string;
 
+  /** The cell number of the hovered cell */
+  private _cellOver: number;
+
   constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
 
   _cellClicked(cell: SatCalendarCell): void {
     if (cell.enabled) {
       this.selectedValueChange.emit(cell.value);
     }
+  }
+
+  _mouseOverCell(cell: SatCalendarCell): void {
+    this._cellOver = cell.value;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -134,6 +147,10 @@ export class SatCalendarBody implements OnChanges {
 
     if (columnChanges || !this._cellWidth) {
       this._cellWidth = `${100 / numCols}%`;
+    }
+
+    if (changes.activeCell) {
+      this._cellOver = this.activeCell + 1;
     }
   }
 
@@ -167,6 +184,49 @@ export class SatCalendarBody implements OnChanges {
       return date < this.end;
     }
     return date > <number>this.begin && date < <number>this.end;
+  }
+
+  /** Whenever to mark cell as semi-selected before the second date is selected (between the begin cell and the hovered cell). */
+  _isBetweenOverAndBegin(date: number): boolean {
+    if (!this._cellOver || !this.rangeMode || !this.beginSelected) {
+      return false;
+    }
+    if (this.isBeforeSelected && !this.begin) {
+      return date > this._cellOver;
+    }
+    if (this._cellOver > this.begin) {
+      return date > this.begin && date < this._cellOver;
+    }
+    if (this._cellOver < this.begin) {
+      return date < this.begin && date > this._cellOver;
+    }
+    return false;
+  }
+
+  /** Whenever to mark cell as begin of the range. */
+  _isBegin(date: number): boolean {
+    if (this.rangeMode && this.beginSelected && this._cellOver) {
+      if (this.isBeforeSelected && !this.begin) {
+        return this._cellOver === date;
+      } else {
+        return (this.begin === date && !(this._cellOver < this.begin)) ||
+          (this._cellOver === date && this._cellOver < this.begin)
+      }
+    }
+    return this.begin === date;
+  }
+
+  /** Whenever to mark cell as end of the range. */
+  _isEnd(date: number): boolean {
+    if (this.rangeMode && this.beginSelected && this._cellOver) {
+      if (this.isBeforeSelected && !this.begin) {
+        return false;
+      } else {
+        return (this.end === date && !(this._cellOver > this.begin)) ||
+          (this._cellOver === date && this._cellOver > this.begin)
+      }
+    }
+    return this.end === date;
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

@@ -40,4 +40,8 @@
   .mat-calendar-cell-semi-selected {
     background-color: mat-color($primary, 100);
   }
+
+  .mat-calendar-cell-over > .mat-calendar-body-cell-content {
+    border: mat-color($primary) 1px solid;
+  }
 }
