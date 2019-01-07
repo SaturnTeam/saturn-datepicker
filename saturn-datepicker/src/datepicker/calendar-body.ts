@@ -118,7 +118,8 @@ export class SatCalendarBody implements OnChanges {
   /** Width of an individual cell. */
   _cellWidth: string;
 
-  _cellOver: number;
+  /** The cell number of the hovered cell */
+  private _cellOver: number;
 
   constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
 
