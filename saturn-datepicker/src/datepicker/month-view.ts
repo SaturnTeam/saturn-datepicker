@@ -30,7 +30,6 @@ import {
   Output,
   ViewEncapsulation,
   ViewChild,
-  HostListener,
 } from '@angular/core';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
@@ -76,6 +75,9 @@ export class SatMonthView<D> implements AfterContentInit {
 
   /** Allow selecting range of dates. */
   @Input() rangeMode = false;
+
+  /** Enables datepicker closing after selection */
+  @Input() closeAfterSelection = true;
 
   /** First day of interval. */
   _beginDateNumber: number | null;
@@ -227,7 +229,7 @@ export class SatMonthView<D> implements AfterContentInit {
   }
 
   /** Handles keydown events on the calendar body when calendar is in month view. */
-  @HostListener('document:keydown', ['$event']) _handleCalendarBodyKeydown(event: KeyboardEvent): void {
+  _handleCalendarBodyKeydown(event: KeyboardEvent): void {
     // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
     // disabled ones from being selected. This may not be ideal, we should look into whether
     // navigation should skip over disabled dates, and if so, how to implement that efficiently.
@@ -271,7 +273,12 @@ export class SatMonthView<D> implements AfterContentInit {
       case SPACE:
         if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._dateAdapter.getDate(this._activeDate));
-          this._userSelection.emit();
+          if (!this._beginDateSelected) {
+            this._userSelection.emit();
+          }
+          if (this._beginDateSelected || !this.closeAfterSelection) {
+            this._focusActiveCell();
+          }
           // Prevent unexpected default actions such as form submission.
           event.preventDefault();
         }
