@@ -219,7 +219,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
 
     /** Whenever user already selected start of dates interval. */
-    private _beginDateSelected = false;
+    beginDateSelected: D | boolean = false;
 
     /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
@@ -402,12 +402,12 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Handles date selection in the month view. */
   _dateSelected(date: D): void {
     if (this.rangeMode) {
-        if (!this._beginDateSelected) {
-          this._beginDateSelected = true;
+        if (!this.beginDateSelected) {
+          this.beginDateSelected = date;
           this.beginDate = date;
           this.endDate = date;
         } else {
-          this._beginDateSelected = false;
+          this.beginDateSelected = false;
           if (this._dateAdapter.compareDate(<D>this.beginDate, date) <= 0) {
             this.dateRangesChange.emit({begin: <D>this.beginDate, end: date});
           } else {
