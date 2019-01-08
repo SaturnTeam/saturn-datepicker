@@ -13,6 +13,8 @@ I created this repository and this package due to it takes a lot of time to cont
 3) **You can use all original material attributes: min, max, formControl and others**
  
 ## Changelog
+## 7.1.1
+Fixed range selection using multi-year view
 ## 7.1.0
 Range selection have a preview now.
 ## 7.0.2
