@@ -92,7 +92,7 @@ export class SatMonthView<D> implements AfterContentInit {
   @Input() beginDateSelected: D | boolean = false;
 
   /** Whenever user already selected start of dates interval. An inner property that avoid asynchronism problems */
-  private _beginDateSelected: D | boolean = false;
+  private _beginDateSelected: boolean = false;
 
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
