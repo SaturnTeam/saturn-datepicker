@@ -242,4 +242,9 @@ export class SatCalendarBody implements OnChanges {
       });
     });
   }
+
+  /** Whenever to highlight the target cell when selecting the second date in range mode */
+  _previewCellOver(date: number): boolean {
+    return this._cellOver === date && this.rangeMode && this.beginSelected;
+  }
 }
