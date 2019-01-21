@@ -11,7 +11,8 @@ import {FormBuilder, FormGroup} from "@angular/forms";
                      [satDatepicker]="picker"
                      formControlName="date">
               <sat-datepicker #picker [rangeMode]="true"
-                              [closeAfterSelection]="false">
+                              [selectFirstDateOnClose]="true"
+                              [closeAfterSelection]="true">
               </sat-datepicker>
               <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
           </mat-form-field>
