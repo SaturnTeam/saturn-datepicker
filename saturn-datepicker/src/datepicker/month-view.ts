@@ -89,7 +89,7 @@ export class SatMonthView<D> implements AfterContentInit {
   _rangeFull: boolean | null = false;
 
   /** Whenever user already selected start of dates interval. */
-  @Input() set beginDateSelected(value: D | false) { this._beginDateSelected = value } ;
+  @Input() set beginDateSelected(value: D | null) { this._beginDateSelected = value } ;
 
   /** Whenever user already selected start of dates interval. An inner property that avoid asynchronous problems */
   _beginDateSelected: D | null;
