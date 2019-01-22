@@ -37,7 +37,7 @@
       [class.mat-calendar-body-begin-range]="_isBegin(item.value)"
       [class.mat-calendar-body-end-range]="_isEnd(item.value)"
       [class.mat-calendar-cell-semi-selected]="_isSemiSelected(item.value) || _isBetweenOverAndBegin(item.value)"
-      [class.mat-calendar-cell-over]="_cellOver === item.value"
+      [class.mat-calendar-cell-over]="_previewCellOver(item.value)"
       [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
       [attr.aria-selected]="selectedValue === item.value"
