@@ -19,3 +19,6 @@
 .mat-calendar-cell-semi-selected {
     background-color: #c5cae9;
 }
+.mat-calendar-cell-over > .mat-calendar-body-cell-content {
+    border: #3f51b5 1px solid;
+}
