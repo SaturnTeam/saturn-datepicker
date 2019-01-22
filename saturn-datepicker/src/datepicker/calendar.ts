@@ -222,7 +222,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     beginDateSelected: D | boolean = false;
 
     /** Emits when a new start date has been selected in range mode. */
-    @Output() beginDateSelectedStream = new EventEmitter<D>();
+    @Output() beginDateSelectedChange = new EventEmitter<D>();
 
     /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
@@ -409,7 +409,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
           this.beginDateSelected = date;
           this.beginDate = date;
           this.endDate = date;
-          this.beginDateSelectedStream.emit(date);
+          this.beginDateSelectedChange.emit(date);
         } else {
           this.beginDateSelected = false;
           if (this._dateAdapter.compareDate(<D>this.beginDate, date) <= 0) {
