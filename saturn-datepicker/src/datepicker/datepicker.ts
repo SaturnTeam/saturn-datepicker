@@ -333,7 +333,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   readonly _selectedChanged = new Subject<SatDatepickerRangeValue<D>|D>();
 
   /** The date already selected by the user in range mode. */
-  private beginDateSelected: D;
+  private _beginDateSelected: D | null;
 
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
@@ -373,7 +373,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date range */
   _selectRange(dates: SatDatepickerRangeValue<D>): void {
-    this.beginDateSelected = null;
+    this._beginDateSelected = null;
     if (!this._dateAdapter.sameDate(dates.begin, this.beginDate) ||
       !this._dateAdapter.sameDate(dates.end, this.endDate)) {
       this._selectedChanged.next(dates);
@@ -454,8 +454,8 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
     if (this._calendarPortal && this._calendarPortal.isAttached) {
       this._calendarPortal.detach();
     }
-    if (this.beginDateSelected && this.selectFirstDateOnClose ) {
-      this._selectRange({begin: this.beginDateSelected, end: this.beginDateSelected});
+    if (this._beginDateSelected && this.selectFirstDateOnClose ) {
+      this._selectRange({begin: this._beginDateSelected, end: this._beginDateSelected});
     }
 
     const completeClose = () => {
@@ -483,7 +483,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   setBeginDateSelected(date: D): void {
-    this.beginDateSelected = date;
+    this._beginDateSelected = date;
   }
 
   /** Open the calendar as a dialog. */

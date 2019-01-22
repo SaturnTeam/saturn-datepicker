@@ -92,7 +92,7 @@ export class SatMonthView<D> implements AfterContentInit {
   @Input() set beginDateSelected(value: D | false) { this._beginDateSelected = value } ;
 
   /** Whenever user already selected start of dates interval. An inner property that avoid asynchronous problems */
-  _beginDateSelected: D | boolean = false;
+  _beginDateSelected: D | null;
 
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
@@ -214,7 +214,7 @@ export class SatMonthView<D> implements AfterContentInit {
         this._beginDateSelected = selectedDate;
         this.selectedChange.emit(selectedDate);
       } else {
-        this._beginDateSelected = false;
+        this._beginDateSelected = null;
         this.selectedChange.emit(selectedDate);
         this._userSelection.emit();
       }
