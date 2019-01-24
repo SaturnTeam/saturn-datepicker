@@ -15,36 +15,12 @@ I created this repository and this package due to it takes a lot of time to cont
 ## Changelog
 ## 7.2.0
 Select first date on close feature
-## 7.1.2
-Fixed style applying and keyboard navigation
-## 7.1.1
-Fixed range selection using multi-year view
 ## 7.1.0
 Range selection have a preview now.
-## 7.0.2
-Fixed the issue with non-working close after selection
-## 7.0
-Updated to angular material 7.1
-## 6.1.1
-Fixed a bug with ignoring `calendarHeaderComponent`
 ## 6.1.0
 Merged #31
 * Add option to sort views when clicking on period label button (month -> year or year -> month)
 * Add option to enable closing datepicker after date selection #30
-## 6.0.5
-Return back style files
-## 6.0.4
-The week for `pt-BR` starts from Sunday
-## 6.0.2
-* Updated to material datepicker 6.4.2
-* Fixed the issue with `[value]` and `[formControl]` binding
-* Added FAQ to popular questions
-## 6.0.1
-Updated to material datepicker 6.0.1
-## 6.0.0
-Styles included! Read below
-## 1.1.7
-Update to angular material 6.0.0 (2018/05/04)
 
 ## It's awesome, but how to use it?
 
