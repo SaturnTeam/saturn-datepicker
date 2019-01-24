@@ -71,4 +71,23 @@
         </mat-form-field>
     </section>
     <hr>
+    <section>
+            <h2>Select first date on close</h2>
+            <div>
+                <span class="code">selectFirstDateOnClose</span> option enables or disables the selection of the first date when closing
+                the datepicker before selecting another date.
+                By default the option is <span class="code">false</span>
+            </div>
+            <mat-form-field>
+                <input matInput
+                       placeholder="Choose a date"
+                       [satDatepicker]="picker5"
+                       formControlName="date">
+                <sat-datepicker #picker5 [rangeMode]="true"
+                                [selectFirstDateOnClose]="true">
+                </sat-datepicker>
+                <sat-datepicker-toggle matSuffix [for]="picker5"></sat-datepicker-toggle>
+            </mat-form-field>
+        </section>
+        <hr>
 </form>

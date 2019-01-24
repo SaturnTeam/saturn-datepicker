@@ -269,6 +269,11 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** Enables datepicker closing after selection */
   @Input() closeAfterSelection = true;
 
+  /** In range mod, enable datepicker to select the first date selected as a one-day-range,
+   * if the user closes the picker before selecting another date
+   */
+  @Input() selectFirstDateOnClose = false;
+
   /** Order the views when clicking on period label button */
   @Input() orderPeriodLabel: 'month' | 'multi-year' = 'multi-year';
 
@@ -327,6 +332,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<SatDatepickerRangeValue<D>|D>();
 
+  /** The date already selected by the user in range mode. */
+  private _beginDateSelected: D | null;
+
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
               private _ngZone: NgZone,
@@ -365,6 +373,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date range */
   _selectRange(dates: SatDatepickerRangeValue<D>): void {
+    this._beginDateSelected = null;
     if (!this._dateAdapter.sameDate(dates.begin, this.beginDate) ||
       !this._dateAdapter.sameDate(dates.end, this.endDate)) {
       this._selectedChanged.next(dates);
@@ -445,6 +454,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
     if (this._calendarPortal && this._calendarPortal.isAttached) {
       this._calendarPortal.detach();
     }
+    if (this._beginDateSelected && this.selectFirstDateOnClose ) {
+      this._selectRange({begin: this._beginDateSelected, end: this._beginDateSelected});
+    }
 
     const completeClose = () => {
       // The `_opened` could've been reset already if
@@ -468,6 +480,10 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
     } else {
       completeClose();
     }
+  }
+
+  setBeginDateSelected(date: D): void {
+    this._beginDateSelected = date;
   }
 
   /** Open the calendar as a dialog. */

@@ -62,7 +62,7 @@ Import `SatDatepickerModule`, `SatNativeDateModule` and `MatDatepickerModule`
 
 Add styles:
 * If you are using CSS: copy-paste or include somehow the file `saturn-datepicker/bundle.css`
-* If you are using SCSS (preferable): 
+* If you are using SCSS (preferable):
 ```scss
 @import '~saturn-datepicker/theming';
 @include sat-datepicker-theme($theme); # material theme data structure https://material.angular.io/guide/theming#defining-a-custom-theme
@@ -131,13 +131,28 @@ For advanced formatting, please look through material documentation.
    </mat-form-field>
 ```
 
+### In range mode, how to select the first date selected if the user closes the picker without selecting another ?
+`selectFirstDateOnClose` option enables or disables the selection of the first date when closing the datepicker before selecting another date.
+By default the option is false
+
+```angular2html
+  <mat-form-field>
+    <input matInput [satDatepicker]="resultPicker">
+    <sat-datepicker
+        #resultPicker
+        [rangeMode]="true"
+        [selectFirstDateOnClose]="true">
+    </sat-datepicker>
+   </mat-form-field>
+```
+
 ---
 Licence: MIT
 
 A little note for myself
 ```shell
 npm run build:lib
-cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist   
+cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist
 (cd dist ; npm pack)
 (cd dist ; npm publish)
 ```
