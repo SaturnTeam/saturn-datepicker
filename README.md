@@ -79,6 +79,9 @@ export class MyModule {
 }
 
 For advanced formatting, please look through material documentation.
+
+Also you can see [#78](https://github.com/SaturnTeam/saturn-datepicker/issues/78) [#81](https://github.com/SaturnTeam/saturn-datepicker/issues/81) [#53](https://github.com/SaturnTeam/saturn-datepicker/issues/53)
+
 ```
 
 ### How to add option to sort views when clicking on period label button ?
