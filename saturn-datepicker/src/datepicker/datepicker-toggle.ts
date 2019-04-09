@@ -66,7 +66,11 @@ export class SatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   /** Whether the toggle button is disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled === undefined ? this.datepicker.disabled : !!this._disabled;
+    if (this._disabled === undefined && this.datepicker) {
+      return this.datepicker.disabled;
+    }
+
+    return !!this._disabled;
   }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
@@ -92,7 +96,7 @@ export class SatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.datepicker) {
+    if (changes['datepicker']) {
       this._watchStateChanges();
     }
   }

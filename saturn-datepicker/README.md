@@ -13,6 +13,8 @@ I created this repository and this package due to it takes a lot of time to cont
 3) **You can use all original material attributes: min, max, formControl and others**
 
 ## Changelog
+## 7.2.1
+Update to datepicker material 7.3.1
 ## 7.2.0
 Select first date on close feature
 ## 7.1.0

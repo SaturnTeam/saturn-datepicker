@@ -134,14 +134,14 @@ export class SatCalendarBody implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const columnChanges = changes.numCols;
+    const columnChanges = changes['numCols'];
     const {rows, numCols} = this;
 
-    if (changes.rows || columnChanges) {
+    if (changes['rows'] || columnChanges) {
       this._firstRowOffset = rows && rows.length && rows[0].length ? numCols - rows[0].length : 0;
     }
 
-    if (changes.cellAspectRatio || columnChanges || !this._cellPadding) {
+    if (changes['cellAspectRatio'] || columnChanges || !this._cellPadding) {
       this._cellPadding = `${50 * this.cellAspectRatio / numCols}%`;
     }
 

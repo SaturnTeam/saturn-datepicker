@@ -318,6 +318,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   set activeDate(value: D) {
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
     this.stateChanges.next();
+    this._changeDetectorRef.markForCheck();
   }
   private _clampedActiveDate: D;
 
@@ -326,6 +327,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   set currentView(value: SatCalendarView) {
     this._currentView = value;
     this._moveFocusOnNextTick = true;
+    this._changeDetectorRef.markForCheck();
   }
   private _currentView: SatCalendarView;
 
@@ -374,7 +376,8 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const change = changes.minDate || changes.maxDate || changes.dateFilter;
+    const change =
+        changes['minDate'] || changes['maxDate'] || changes['dateFilter'];
 
     if (change && !change.firstChange) {
       const view = this._getCurrentViewComponent();
