@@ -6,51 +6,23 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE, UP_ARROW} from '@angular/cdk/keycodes';
-import {
-  Overlay,
-  OverlayConfig,
-  OverlayRef,
-  PositionStrategy,
-  ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
-import {DOCUMENT} from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ComponentRef,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  InjectionToken,
-  Input,
-  NgZone,
-  OnDestroy,
-  Optional,
-  Output,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
-  CanColor,
-  CanColorCtor,
-  mixinColor,
-  ThemePalette,
-} from '@angular/material/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {merge, Subject, Subscription} from 'rxjs';
-import {filter, take} from 'rxjs/operators';
-import {SatCalendar} from './calendar';
-import {matDatepickerAnimations} from './datepicker-animations';
-import {createMissingDateImplError} from './datepicker-errors';
-import {SatCalendarCellCssClasses} from './calendar-body';
-import {SatDatepickerInput, SatDatepickerRangeValue} from './datepicker-input';
-import {DateAdapter} from '../datetime/date-adapter';
+import { Directionality } from '@angular/cdk/bidi';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ESCAPE, UP_ARROW } from '@angular/cdk/keycodes';
+import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ComponentRef, ElementRef, EventEmitter, Inject, InjectionToken, Input, NgZone, OnDestroy, Optional, Output, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { CanColor, CanColorCtor, mixinColor, ThemePalette } from '@angular/material/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { merge, Subject, Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
+import { DateAdapter } from '../datetime/date-adapter';
+import { SatCalendar } from './calendar';
+import { SatCalendarCellCssClasses } from './calendar-body';
+import { matDatepickerAnimations } from './datepicker-animations';
+import { createMissingDateImplError } from './datepicker-errors';
+import { SatDatepickerInput, SatDatepickerRangeValue } from './datepicker-input';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -185,6 +157,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
 
+  /** An input indicating the type of the custom footer component for the calendar, if set. */
+  @Input() calendarFooterComponent: ComponentType<any>;
+
   /** The date to open the calendar to initially. */
   @Input()
   get startAt(): D | null {
@@ -284,7 +259,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   private _opened = false;
 
   /** The id for the datepicker calendar. */
-  id: string = `sat-datepicker-${datepickerUid++}`;
+  id = `sat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
   get _selected(): D | null { return this._validSelected; }
@@ -363,7 +338,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date */
   select(date: D): void {
-    let oldValue = this._selected;
+    const oldValue = this._selected;
     this._selected = date;
     if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
       this._selectedChanged.next(date);

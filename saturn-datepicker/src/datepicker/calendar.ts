@@ -6,36 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
-import {
-  AfterContentInit,
-  AfterViewChecked,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  forwardRef,
-  Inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Optional,
-  Output,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
-import {createMissingDateImplError} from './datepicker-errors';
-import {SatDatepickerIntl} from './datepicker-intl';
-import {SatMonthView} from './month-view';
-import {SatMultiYearView, yearsPerPage} from './multi-year-view';
-import {SatYearView} from './year-view';
-import {SatCalendarCellCssClasses} from './calendar-body';
+import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
+import { AfterContentInit, AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Inject, Input, OnChanges, OnDestroy, Optional, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { DateAdapter } from '../datetime/date-adapter';
+import { MatDateFormats, MAT_DATE_FORMATS } from '../datetime/date-formats';
+import { SatCalendarCellCssClasses } from './calendar-body';
+import { createMissingDateImplError } from './datepicker-errors';
+import { SatDatepickerRangeValue } from './datepicker-input';
+import { SatDatepickerIntl } from './datepicker-intl';
+import { SatMonthView } from './month-view';
+import { SatMultiYearView, yearsPerPage } from './multi-year-view';
+import { SatYearView } from './year-view';
 
-import {SatDatepickerRangeValue} from './datepicker-input';
-import {DateAdapter} from '../datetime/date-adapter';
-import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
 
 /**
  * Possible views for the calendar.
@@ -174,6 +157,18 @@ export class SatCalendarHeader<D> {
   }
 }
 
+/** Default footer for SatCalendar */
+@Component({
+  moduleId: module.id,
+  selector: 'sat-calendar-footer',
+  templateUrl: 'calendar-footer.html',
+  exportAs: 'matCalendarFooter',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SatCalendarFooter<D> {
+}
+
 /**
  * A calendar that is used as part of the datepicker.
  * @docs-private
@@ -229,6 +224,12 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** A portal containing the header component type for this calendar. */
   _calendarHeaderPortal: Portal<any>;
+
+  /** An input indicating the type of the footer component, if set. */
+  @Input() footerComponent: ComponentType<any>;
+
+  /** A portal containing the footer component type for this calendar. */
+  _calendarFooterPortal: Portal<any>;
 
   private _intlChanges: Subscription;
 
@@ -357,6 +358,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   ngAfterContentInit() {
     this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || SatCalendarHeader);
+    this._calendarFooterPortal = new ComponentPortal(this.footerComponent || SatCalendarFooter);
     this.activeDate = this.startAt || this._dateAdapter.today();
 
     // Assign to the private property since we don't want to move focus on init.
@@ -399,7 +401,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** Updates today's date after an update of the active date */
   updateTodaysDate() {
-    let view = this.currentView == 'month' ? this.monthView :
+    const view = this.currentView == 'month' ? this.monthView :
             (this.currentView == 'year' ? this.yearView : this.multiYearView);
 
     view.ngAfterContentInit();

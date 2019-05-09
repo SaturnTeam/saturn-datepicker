@@ -90,4 +90,23 @@
             </mat-form-field>
         </section>
         <hr>
+    <section>
+            <h2>Custom Footer (Default Ranges)</h2>
+            <div>
+                <span class="code">calendarFooterComponent</span> option allows you to define a footer in the calendar simalar to custom headers.
+            </div>
+            <mat-form-field>
+                <input matInput
+                       placeholder="Choose a date"
+                       [satDatepicker]="picker6"
+                       formControlName="date">
+                <sat-datepicker #picker6 [rangeMode]="true"
+                                panelClass="range-datepicker"
+                                [calendarFooterComponent]="rangesFooter"
+                                [selectFirstDateOnClose]="true">
+                </sat-datepicker>
+                <sat-datepicker-toggle matSuffix [for]="picker6"></sat-datepicker-toggle>
+            </mat-form-field>
+        </section>
+        <hr>
 </form>
