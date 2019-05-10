@@ -15,6 +15,7 @@ I created this repository and this package due to it takes a lot of time to cont
 ## Changelog
 ## 7.3.0
 Introducing footer component for calendar. See demo for example usage.
+Thanks [@paullryan](https://github.com/paullryan) for this feature
 ## 7.2.1
 Update to datepicker material 7.3.1
 ## 7.2.0
