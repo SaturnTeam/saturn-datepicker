@@ -6,18 +6,36 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
-import { AfterContentInit, AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, forwardRef, Inject, Input, OnChanges, OnDestroy, Optional, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { DateAdapter } from '../datetime/date-adapter';
-import { MatDateFormats, MAT_DATE_FORMATS } from '../datetime/date-formats';
-import { SatCalendarCellCssClasses } from './calendar-body';
-import { createMissingDateImplError } from './datepicker-errors';
-import { SatDatepickerRangeValue } from './datepicker-input';
-import { SatDatepickerIntl } from './datepicker-intl';
-import { SatMonthView } from './month-view';
-import { SatMultiYearView, yearsPerPage } from './multi-year-view';
-import { SatYearView } from './year-view';
+import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
+import {
+  AfterContentInit,
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Optional,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {Subject, Subscription} from 'rxjs';
+import {createMissingDateImplError} from './datepicker-errors';
+import {SatDatepickerIntl} from './datepicker-intl';
+import {SatMonthView} from './month-view';
+import {SatMultiYearView, yearsPerPage} from './multi-year-view';
+import {SatYearView} from './year-view';
+import {SatCalendarCellCssClasses} from './calendar-body';
+
+import {SatDatepickerRangeValue} from './datepicker-input';
+import {DateAdapter} from '../datetime/date-adapter';
+import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
 
 
 /**
