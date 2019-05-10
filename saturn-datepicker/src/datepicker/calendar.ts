@@ -37,7 +37,6 @@ import {SatDatepickerRangeValue} from './datepicker-input';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
 
-
 /**
  * Possible views for the calendar.
  * @docs-private
@@ -419,7 +418,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** Updates today's date after an update of the active date */
   updateTodaysDate() {
-    const view = this.currentView == 'month' ? this.monthView :
+    let view = this.currentView == 'month' ? this.monthView :
             (this.currentView == 'year' ? this.yearView : this.multiYearView);
 
     view.ngAfterContentInit();
