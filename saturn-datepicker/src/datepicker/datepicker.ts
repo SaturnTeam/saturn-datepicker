@@ -185,6 +185,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
 
+  /** An input indicating the type of the custom footer component for the calendar, if set. */
+  @Input() calendarFooterComponent: ComponentType<any>;
+
   /** The date to open the calendar to initially. */
   @Input()
   get startAt(): D | null {

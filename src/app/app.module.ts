@@ -1,23 +1,26 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SatDatepickerModule } from '../../saturn-datepicker/src/datepicker';
+import { SatNativeDateModule } from '../../saturn-datepicker/src/datetime';
+import { AppComponent } from './app.component';
+import { RangesFooter } from './ranges-footer.component';
 
-import {AppComponent} from './app.component';
-import {SatDatepickerModule} from "../../saturn-datepicker/src/datepicker";
-import {SatNativeDateModule} from "../../saturn-datepicker/src/datetime";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule} from "@angular/material";
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        RangesFooter
     ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule, ReactiveFormsModule, MatDatepickerModule,
         MatNativeDateModule, MatFormFieldModule, MatInputModule,
-        SatDatepickerModule, SatNativeDateModule
+        MatButtonModule, SatDatepickerModule, SatNativeDateModule
     ],
+    entryComponents: [RangesFooter],
     providers: [],
     bootstrap: [AppComponent]
 })

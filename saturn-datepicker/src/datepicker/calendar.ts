@@ -174,6 +174,18 @@ export class SatCalendarHeader<D> {
   }
 }
 
+/** Default footer for SatCalendar */
+@Component({
+  moduleId: module.id,
+  selector: 'sat-calendar-footer',
+  templateUrl: 'calendar-footer.html',
+  exportAs: 'matCalendarFooter',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SatCalendarFooter<D> {
+}
+
 /**
  * A calendar that is used as part of the datepicker.
  * @docs-private
@@ -229,6 +241,12 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** A portal containing the header component type for this calendar. */
   _calendarHeaderPortal: Portal<any>;
+
+  /** An input indicating the type of the footer component, if set. */
+  @Input() footerComponent: ComponentType<any>;
+
+  /** A portal containing the footer component type for this calendar. */
+  _calendarFooterPortal: Portal<any>;
 
   private _intlChanges: Subscription;
 
@@ -357,6 +375,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   ngAfterContentInit() {
     this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || SatCalendarHeader);
+    this._calendarFooterPortal = new ComponentPortal(this.footerComponent || SatCalendarFooter);
     this.activeDate = this.startAt || this._dateAdapter.today();
 
     // Assign to the private property since we don't want to move focus on init.

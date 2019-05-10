@@ -27,3 +27,17 @@ $eltex-background: map-get($eltex-theme, background);
 
 @include mat-datepicker-theme($eltex-theme);
 @include sat-datepicker-theme($eltex-theme);
+
+
+.mat-datepicker-content .mat-calendar.range-datepicker {
+    height: auto;
+
+    .mat-calendar-footer {
+        padding-bottom: 1rem;
+        padding-left: 0.5rem;
+        margin-left: -0.5rem;
+        button {
+            margin-left: 0.5rem;
+        }
+    }
+}

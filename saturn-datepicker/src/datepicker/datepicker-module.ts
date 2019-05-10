@@ -13,7 +13,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {SatCalendar, SatCalendarHeader} from './calendar';
+import {SatCalendar, SatCalendarHeader, SatCalendarFooter} from './calendar';
 import {SatCalendarBody} from './calendar-body';
 import {
   SatDatepicker,
@@ -49,6 +49,7 @@ import {SatYearView} from './year-view';
     SatYearView,
     SatMultiYearView,
     SatCalendarHeader,
+    SatCalendarFooter,
   ],
   declarations: [
     SatCalendar,
@@ -62,6 +63,7 @@ import {SatYearView} from './year-view';
     SatYearView,
     SatMultiYearView,
     SatCalendarHeader,
+    SatCalendarFooter,
   ],
   providers: [
     SatDatepickerIntl,
@@ -70,6 +72,7 @@ import {SatYearView} from './year-view';
   entryComponents: [
     SatDatepickerContent,
     SatCalendarHeader,
+    SatCalendarFooter,
   ]
 })
 export class SatDatepickerModule {}
