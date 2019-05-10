@@ -13,6 +13,8 @@ I created this repository and this package due to it takes a lot of time to cont
 3) **You can use all original material attributes: min, max, formControl and others**
 
 ## Changelog
+## 7.3.0
+Introducing footer component for calendar. See demo for example usage.
 ## 7.2.1
 Update to datepicker material 7.3.1
 ## 7.2.0
@@ -131,11 +133,3 @@ By default the option is false
 
 ---
 Licence: MIT
-
-A little note for myself
-```shell
-npm run build:lib
-cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist
-(cd dist ; npm pack)
-(cd dist ; npm publish)
-```
