@@ -435,10 +435,12 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
         } else {
           this.beginDateSelected = false;
           if (this._dateAdapter.compareDate(<D>this.beginDate, date) <= 0) {
-            this.dateRangesChange.emit({begin: <D>this.beginDate, end: date});
+            this.endDate = date;
           } else {
-            this.dateRangesChange.emit({begin: date, end: <D>this.beginDate});
+            this.endDate = this.beginDate;
+            this.beginDate = date;
           }
+          this.dateRangesChange.emit({begin: <D>this.beginDate, end: this.endDate});
         }
     } else if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
