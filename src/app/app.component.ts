@@ -10,10 +10,16 @@ import { RangesFooter } from './ranges-footer.component';
 export class AppComponent {
   form: FormGroup;
   rangesFooter = RangesFooter;
+  inlineRange;
 
   constructor(fb: FormBuilder) {
     this.form = fb.group({
       date: [{begin: new Date(2018, 7, 5), end: new Date(2018, 7, 25)}]
     });
   }
+
+  inlineRangeChange($event) {
+    this.inlineRange = $event;
+  }
+
 }
