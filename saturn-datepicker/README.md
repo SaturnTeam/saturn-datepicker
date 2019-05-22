@@ -13,6 +13,9 @@ I created this repository and this package due to it takes a lot of time to cont
 3) **You can use all original material attributes: min, max, formControl and others**
 
 ## Changelog
+## 7.4.0
+Inline usage of calendar. See demo.
+Thanks to [@beyondsanity](https://github.com/beyondsanity) for this feature
 ## 7.3.0
 Introducing footer component for calendar. See demo for example usage.
 Thanks [@paullryan](https://github.com/paullryan) for this feature
