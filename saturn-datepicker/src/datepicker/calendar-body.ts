@@ -88,8 +88,11 @@ export class SatCalendarBody implements OnChanges {
   /** Whether to mark all dates as semi-selected. */
   @Input() rangeFull: boolean;
 
-  /** Whether to use date range selection behaviour.*/
-  @Input() rangeMode = false;
+  /** Selection mode */
+  @Input() selectionMode = '';
+
+  /** Possible selection modes, in the order that they should appear */
+  @Input() selectionModes = [];
 
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;
@@ -167,7 +170,11 @@ export class SatCalendarBody implements OnChanges {
 
   /** Whenever to mark cell as semi-selected (inside dates interval). */
   _isSemiSelected(date: number) {
-    if (!this.rangeMode) {
+    if (
+      !['range', 'since', 'until'].includes(this.selectionMode) &&
+      this.begin === null &&
+      this.end === null
+    ) {
       return false;
     }
     if (this.rangeFull) {
@@ -188,7 +195,7 @@ export class SatCalendarBody implements OnChanges {
 
   /** Whenever to mark cell as semi-selected before the second date is selected (between the begin cell and the hovered cell). */
   _isBetweenOverAndBegin(date: number): boolean {
-    if (!this._cellOver || !this.rangeMode || !this.beginSelected) {
+    if (!this._cellOver || !['range', 'since', 'until'].includes(this.selectionMode) || !this.beginSelected) {
       return false;
     }
     if (this.isBeforeSelected && !this.begin) {
@@ -205,7 +212,7 @@ export class SatCalendarBody implements OnChanges {
 
   /** Whenever to mark cell as begin of the range. */
   _isBegin(date: number): boolean {
-    if (this.rangeMode && this.beginSelected && this._cellOver) {
+    if (['range', 'since', 'until'].includes(this.selectionMode) && this.beginSelected && this._cellOver) {
       if (this.isBeforeSelected && !this.begin) {
         return this._cellOver === date;
       } else {
@@ -218,7 +225,7 @@ export class SatCalendarBody implements OnChanges {
 
   /** Whenever to mark cell as end of the range. */
   _isEnd(date: number): boolean {
-    if (this.rangeMode && this.beginSelected && this._cellOver) {
+    if (['range', 'since', 'until'].includes(this.selectionMode) && this.beginSelected && this._cellOver) {
       if (this.isBeforeSelected && !this.begin) {
         return false;
       } else {
@@ -245,6 +252,6 @@ export class SatCalendarBody implements OnChanges {
 
   /** Whenever to highlight the target cell when selecting the second date in range mode */
   _previewCellOver(date: number): boolean {
-    return this._cellOver === date && this.rangeMode && this.beginSelected;
+    return this._cellOver === date && ['range', 'since', 'until'].includes(this.selectionMode) && this.beginSelected;
   }
 }

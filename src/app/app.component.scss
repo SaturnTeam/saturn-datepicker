@@ -5,10 +5,37 @@
   margin: 0;
   padding: .2em .4em;
 }
+
 section > div {
   margin-bottom: 15px;
 }
 
 .inlineCalendarContainer {
   width: 300px;
+}
+
+.option {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.example-title {
+  font-size: 16px;
+  font-weight: bold;
+  display: inline-block;
+  padding: 5px;
+  background-color: #ffcc8e;
+}
+
+.optional-option {
+  &::after {
+    background-color: #d6e1ff;
+    content: "[optional]";
+    font-size: 12px;
+  }
 }

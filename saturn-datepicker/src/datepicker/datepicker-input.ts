@@ -38,6 +38,8 @@ import {Subscription} from 'rxjs';
 import {SatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
 
+const INFINITY_SYMBOL = '∞';
+
 /** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -56,8 +58,8 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
  * Special interface to input and output dates interval.
  */
 export interface SatDatepickerRangeValue<D> {
-  begin: D | null;
-  end: D | null;
+  begin: D | null | number;
+  end: D | null | number;
 }
 
 /**
@@ -67,7 +69,7 @@ export interface SatDatepickerRangeValue<D> {
  */
 export class SatDatepickerInputEvent<D> {
   /** The new value for the target datepicker input. */
-  value: SatDatepickerRangeValue<D> | D | null;
+  value: SatDatepickerRangeValue<D | number> | D | null;
 
   constructor(
     /** Reference to the datepicker input component that emitted the event. */
@@ -77,7 +79,6 @@ export class SatDatepickerInputEvent<D> {
     this.value = this.target.value;
   }
 }
-
 
 /** Directive used to connect an input to a SatDatepicker. */
 @Directive({
@@ -112,7 +113,7 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._datepicker._registerInput(this);
     this._datepickerSubscription.unsubscribe();
 
-    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
+    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: any) => {
       this.value = selected;
       this._cvaOnChange(selected);
       this._onTouched();
@@ -120,7 +121,6 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       this.dateChange.emit(new SatDatepickerInputEvent(this, this._elementRef.nativeElement));
     });
   }
-  _datepicker: SatDatepicker<D>;
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
@@ -128,76 +128,77 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._dateFilter = value;
     this._validatorOnChange();
   }
-  _dateFilter: (date: SatDatepickerRangeValue<D> | D | null) => boolean;
 
   /** The value of the input. */
   @Input()
-  get value(): SatDatepickerRangeValue<D> | D | null {
-    return this._value;
-  }
-  set value(value:  SatDatepickerRangeValue<D> | D | null) {
-    if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) {
-      /** Range mode */
-      const rangeValue = <SatDatepickerRangeValue<D>>value;
+  get value() { return this._value; }
+  set value(value) {
+    if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) { // [Range, Since, Until] mode
+      const rangeValue = <SatDatepickerRangeValue<D | number>>value;
       rangeValue.begin = this._dateAdapter.deserialize(rangeValue.begin);
       rangeValue.end = this._dateAdapter.deserialize(rangeValue.end);
       this._lastValueValid = !rangeValue.begin || !rangeValue.end ||
-          this._dateAdapter.isValid(rangeValue.begin) && this._dateAdapter.isValid(rangeValue.end);
+        this._dateAdapter.isValid(rangeValue.begin) && this._dateAdapter.isValid(rangeValue.end);
       rangeValue.begin = this._getValidDateOrNull(rangeValue.begin);
       rangeValue.end = this._getValidDateOrNull(rangeValue.end);
-      let oldDate = <SatDatepickerRangeValue<D> | null>this.value;
+      let oldDate = <SatDatepickerRangeValue<D | number> | null>this.value;
+      const mask1 = rangeValue.begin === Infinity
+        ? INFINITY_SYMBOL : this._dateAdapter.format(rangeValue.begin, this._dateFormats.display.dateInput);
+      const mask2 = rangeValue.end === Infinity
+        ? INFINITY_SYMBOL : this._dateAdapter.format(rangeValue.end, this._dateFormats.display.dateInput);
       this._elementRef.nativeElement.value =
-          rangeValue && rangeValue.begin && rangeValue.end
-              ? this._dateAdapter.format(rangeValue.begin, this._dateFormats.display.dateInput) +
-                ' - ' +
-                this._dateAdapter.format(rangeValue.end, this._dateFormats.display.dateInput)
-              : '';
+        rangeValue && rangeValue.begin && rangeValue.end ? `${mask1} - ${mask2}` : '';
+
       if (oldDate == null && rangeValue != null || oldDate != null && rangeValue == null ||
-          !this._dateAdapter.sameDate((<SatDatepickerRangeValue<D>>oldDate).begin,
-              rangeValue.begin) ||
-          !this._dateAdapter.sameDate((<SatDatepickerRangeValue<D>>oldDate).end,
-              rangeValue.end)) {
-        if (rangeValue.end && rangeValue.begin &&
-            this._dateAdapter
-                .compareDate(rangeValue.begin, rangeValue.end ) > 0) { // if begin > end
+        !this._dateAdapter.sameDate((<SatDatepickerRangeValue<D | number>>oldDate).begin,
+          rangeValue.begin) ||
+        !this._dateAdapter.sameDate((<SatDatepickerRangeValue<D | number>>oldDate).end,
+          rangeValue.end)) {
+        if (
+          rangeValue.end &&
+          rangeValue.begin &&
+          this._dateAdapter.compareDate(rangeValue.begin, rangeValue.end) > 0 &&
+          rangeValue.begin !== Infinity &&
+          rangeValue.end !== Infinity
+        ) { // if begin > end
           value = null;
         }
+
         this._value = value;
         this._valueChange.emit(value);
       }
-    } else {
-      /** Not range mode */
+    } else { // [Date] mode
       value = this._dateAdapter.deserialize(value);
       this._lastValueValid = !value || this._dateAdapter.isValid(value);
       value = this._getValidDateOrNull(value);
-      let oldDate = this.value;
+      const oldDate = this.value;
       this._value = value;
       this._elementRef.nativeElement.value =
-          value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
-      if (!this._dateAdapter.sameDate(<D>oldDate, value)) {
+        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
+      if (
+        (oldDate && oldDate.hasOwnProperty('begin') && oldDate.hasOwnProperty('end')) ||
+        !this._dateAdapter.sameDate(oldDate, value)
+        ) {
         this._valueChange.emit(value);
       }
     }
   }
-  private _value: SatDatepickerRangeValue<D> | D | null;
 
   /** The minimum valid date. */
   @Input()
-  get min(): D | null { return this._min; }
-  set min(value: D | null) {
+  get min(): D | number | null { return this._min; }
+  set min(value: D | number | null) {
     this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
-  private _min: D | null;
 
   /** The maximum valid date. */
   @Input()
-  get max(): D | null { return this._max; }
-  set max(value: D | null) {
+  get max(): D | number | null { return this._max; }
+  set max(value: D | number | null) {
     this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
-  private _max: D | null;
 
   /** Whether the datepicker-input is disabled. */
   @Input()
@@ -219,7 +220,16 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       element.blur();
     }
   }
+
   private _disabled: boolean;
+  private _max: D | number | null;
+  private _min: D | number | null;
+  private _value;
+  public _dateFilter: (date: SatDatepickerRangeValue<D | number> | D | number | null) => boolean;
+  public _datepicker: SatDatepicker<D>;
+
+  /** Whether the last value set on the input was valid. */
+  private _lastValueValid = false;
 
   /** Emits when a `change` event is fired on this `<input>`. */
   @Output() readonly dateChange: EventEmitter<SatDatepickerInputEvent<D>> =
@@ -230,30 +240,32 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       new EventEmitter<SatDatepickerInputEvent<D>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange = new EventEmitter<SatDatepickerRangeValue<D>|D|null>();
+  _valueChange = new EventEmitter<SatDatepickerRangeValue<D|number>|D|null>();
 
   /** Emits when the disabled state has changed */
   _disabledChange = new EventEmitter<boolean>();
-
-  _onTouched = () => {};
-
-  private _cvaOnChange: (value: any) => void = () => {};
-
-  private _validatorOnChange = () => {};
 
   private _datepickerSubscription = Subscription.EMPTY;
 
   private _localeSubscription = Subscription.EMPTY;
 
+  /** The combined form control validator for this input. */
+  private _validator: ValidatorFn | null;
+
+  private _cvaOnChange: (value: any) => void = () => {};
+
+  private _validatorOnChange = () => {};
+
+  _onTouched = () => {};
+
   /** The form control validator for whether the input parses. */
-  private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
-    return this._lastValueValid ?
-        null : {'matDatepickerParse': {'text': this._elementRef.nativeElement.value}};
-  }
+  private _parseValidator: ValidatorFn = (): ValidationErrors | null =>
+    this._lastValueValid ?
+      null : {'matDatepickerParse': {'text': this._elementRef.nativeElement.value}};
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    if (this._datepicker.rangeMode && control.value) {
+    if (this._datepicker.selectionMode === 'range' && control.value) {
       const beginDate =
           this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
       const endDate =
@@ -276,7 +288,7 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    if (this._datepicker.rangeMode && control.value) {
+    if (this._datepicker.selectionMode === 'range' && control.value) {
       const beginDate =
           this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
       const endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.end));
@@ -298,7 +310,7 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    if (this._datepicker.rangeMode && control.value) {
+    if (this._datepicker.selectionMode === 'range' && control.value) {
       const beginDate =
           this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
       const endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.end));
@@ -313,7 +325,7 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The form control validator for the date filter. */
   private _rangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    if (this._datepicker.rangeMode && control.value) {
+    if (this._datepicker.selectionMode === 'range' && control.value) {
       const beginDate =
           this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.begin));
       const endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value.end));
@@ -322,15 +334,6 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     }
     return null;
   }
-
-  /** The combined form control validator for this input. */
-  private _validator: ValidatorFn | null =
-      Validators.compose(
-          [this._parseValidator, this._minValidator, this._maxValidator,
-            this._filterValidator, this._rangeValidator]);
-
-  /** Whether the last value set on the input was valid. */
-  private _lastValueValid = false;
 
   constructor(
       private _elementRef: ElementRef<HTMLInputElement>,
@@ -343,6 +346,10 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     if (!this._dateFormats) {
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
+
+    this._validator = Validators.compose(
+      [this._parseValidator, this._minValidator, this._maxValidator,
+        this._filterValidator, this._rangeValidator]);
 
     // Update the displayed date when the locale changes.
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
@@ -413,8 +420,8 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   _onInput(value: string) {
-    let date: SatDatepickerRangeValue<D>|D|null = null;
-    if (this._datepicker.rangeMode) {
+    let date = null;
+    if (['range', 'since', 'until'].includes(this._datepicker.selectionMode)) {
       const parts = value.split('-');
       if (parts.length > 1) {
           const position = Math.floor(parts.length / 2);
@@ -462,28 +469,28 @@ export class SatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   /** Formats a value and sets it on the input element. */
-  private _formatValue(value: SatDatepickerRangeValue<D> | D | null) {
-      if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) {
-          value = value as SatDatepickerRangeValue<D>;
-          this._elementRef.nativeElement.value =
-              value && value.begin && value.end
-                  ? this._dateAdapter.format(value.begin, this._dateFormats.display.dateInput) +
-                  ' - ' +
-                  this._dateAdapter.format(value.end, this._dateFormats.display.dateInput)
-                  : ''
-      }
-      else {
-            value = value as D | null
-          this._elementRef.nativeElement.value =
-              value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
-      }
+  private _formatValue(value) {
+    if (value && value.hasOwnProperty('begin') && value.hasOwnProperty('end')) {
+      const mask1 = value.begin === Infinity
+        ? INFINITY_SYMBOL : this._dateAdapter.format(value.begin, this._dateFormats.display.dateInput);
+      const mask2 = value.end === Infinity
+        ? INFINITY_SYMBOL : this._dateAdapter.format(value.end, this._dateFormats.display.dateInput);
+
+      value = value as SatDatepickerRangeValue<D>;
+        this._elementRef.nativeElement.value =
+            value && value.begin && value.end ? mask1 + ' - ' + mask2 : ''
+    } else {
+      value = value as D | null;
+      this._elementRef.nativeElement.value =
+        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
+    }
   }
 
   /**
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  private _getValidDateOrNull(obj): D | null | number {
+    return (obj === Infinity || (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj))) ? obj : null;
   }
 }

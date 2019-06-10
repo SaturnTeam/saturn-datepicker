@@ -1,129 +1,223 @@
 <form [formGroup]="form">
-    <h1>SatDatepicker features</h1>
-    <section>
-        <h3><a href="https://material.angular.io/components/datepicker/overview">Features from original datepicker</a>
-        </h3>
-        <mat-form-field>
-            <input matInput
-                   placeholder="Choose a date"
-                   [satDatepicker]="picker3"
-                   value="">
-            <sat-datepicker #picker3>
-            </sat-datepicker>
-            <sat-datepicker-toggle matSuffix [for]="picker3"></sat-datepicker-toggle>
-        </mat-form-field>
-    </section>
-    <hr>
-    <section>
-        <h2>Range selection</h2>
-        <div>
-            <span class="code">rangeMode</span> option enables or disables range mode. Default is <span class="code">false</span>
-        </div>
-        <mat-form-field>
-            <input matInput
-                   placeholder="Choose a date"
-                   [satDatepicker]="picker2"
-                   formControlName="date">
-            <sat-datepicker #picker2 [rangeMode]="true">
-            </sat-datepicker>
-            <sat-datepicker-toggle matSuffix [for]="picker2"></sat-datepicker-toggle>
-        </mat-form-field>
-    </section>
-    <hr>
-    <section>
-        <h2>Close after selection</h2>
-        <div>
-            <span class="code">closeAfterSelection</span> option enables or disables datepicker closing after date
-            selections. By
-            default the option is <span class="code">true</span>
-        </div>
-        <mat-form-field>
-            <input matInput
-                   placeholder="Choose a date"
-                   [satDatepicker]="picker"
-                   formControlName="date">
-            <sat-datepicker #picker [rangeMode]="true"
-                            [closeAfterSelection]="false">
-            </sat-datepicker>
-            <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
-        </mat-form-field>
-    </section>
-    <hr>
-    <section>
-        <h2>Calendar view order</h2>
-        <div>
-            <span class="code">orderPeriodLabel</span> option sorts the label period views.
-            <ul>
-                <li>Default [<span class="code">multi-year</span>]: multi-year then back to month
-                </li>
-                <li>Month [<span class="code">month</span>]: month > year > multi-year</li>
-            </ul>
-        </div>
-        <mat-form-field>
-            <input matInput
-                   placeholder="Choose a date"
-                   [satDatepicker]="picker4"
-                   formControlName="date">
-            <sat-datepicker #picker4 [rangeMode]="true"
-                            orderPeriodLabel="month">
-            </sat-datepicker>
-            <sat-datepicker-toggle matSuffix [for]="picker4"></sat-datepicker-toggle>
-        </mat-form-field>
-    </section>
-    <hr>
-    <section>
-            <h2>Select first date on close</h2>
-            <div>
-                <span class="code">selectFirstDateOnClose</span> option enables or disables the selection of the first date when closing
-                the datepicker before selecting another date.
-                By default the option is <span class="code">false</span>
-            </div>
-            <mat-form-field>
-                <input matInput
-                       placeholder="Choose a date"
-                       [satDatepicker]="picker5"
-                       formControlName="date">
-                <sat-datepicker #picker5 [rangeMode]="true"
-                                [selectFirstDateOnClose]="true">
-                </sat-datepicker>
-                <sat-datepicker-toggle matSuffix [for]="picker5"></sat-datepicker-toggle>
-            </mat-form-field>
-        </section>
-        <hr>
-    <section>
-        <h2>Custom Footer (Default Ranges)</h2>
-        <div>
-            <span class="code">calendarFooterComponent</span> option allows you to define a footer in the calendar simalar to custom headers.
-        </div>
-        <mat-form-field>
-            <input matInput
-                    placeholder="Choose a date"
-                    [satDatepicker]="picker6"
-                    formControlName="date">
-            <sat-datepicker #picker6 [rangeMode]="true"
-                            panelClass="range-datepicker"
-                            [calendarFooterComponent]="rangesFooter"
-                            [selectFirstDateOnClose]="true">
-            </sat-datepicker>
-            <sat-datepicker-toggle matSuffix [for]="picker6"></sat-datepicker-toggle>
-        </mat-form-field>
-    </section>
-    <hr>
-    <section>
-      <h2>Inline Usage</h2>
-      <div>
-          The <span class="code">sat-calendar</span> component with its <span class="code">dateRangesChange</span> output binding can be used as an inline range date picker.
-      </div>
-      <span class="code" *ngIf="inlineRange">
-        {{ inlineRange.begin | date }}
-        {{ inlineRange.end | date }}
-      </span>
-      <div class="inlineCalendarContainer">
-        <sat-calendar [rangeMode]="true"
-                      (dateRangesChange)="inlineRangeChange($event)"
-                      [selected]="selectedDate">
-        </sat-calendar>
-      </div>
-    </section>
-    <hr>
+  <h1>SatDatepicker features</h1>
+  <section>
+    <h3><a href="https://material.angular.io/components/datepicker/overview">Features from original datepicker</a></h3>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Choose a date"
+        [satDatepicker]="picker1"
+        formControlName="picker1">
+      <sat-datepicker #picker1></sat-datepicker>
+      <sat-datepicker-toggle matSuffix [for]="picker1"></sat-datepicker-toggle>
+    </mat-form-field>
+  </section>
+  <hr>
+  <section>
+    <span class="section-title">Range selection</span>
+
+    <p>
+      In order to enable range selection, just pass the option
+      <span class="code">selectionModes</span>
+      with the selection modes you want to enable on the calendar.
+      Additionally, you can pass the option
+      <span class="code">initialSelectionMode</span>
+      to indicate the initial selection mode.
+    </p>
+
+    <br>
+
+    <div>
+      <p>
+        <span class="code option">selectionModes</span>
+        Array indicating the selection modes available.  Possible values are:
+        <span class="code">date</span>,
+        <span class="code">range</span>,
+        <span class="code">since</span> and
+        <span class="code">until</span>.
+        The buttons for each selection
+        mode will be created in the order passed to the calendar, making it easy to order
+        them.
+      </p>
+
+      <p>
+        <span class="code option">initialSelectionMode</span>
+        <span class="optional-option"></span>
+        Sets the initial selection mode.
+        If the input already has a value, this option is ignored and the selection mode
+        is identified by the value.
+      </p>
+
+      <p>
+        <span class="example-title">Examples</span>
+      </p>
+
+      <p>Calendar with only range selection enabled: </p>
+
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Choose a period"
+          [satDatepicker]="picker2"
+          formControlName="picker2">
+        <sat-datepicker
+          #picker2
+          initialSelectionMode="range"
+          [selectionModes]="selectionModesRange">
+        </sat-datepicker>
+        <sat-datepicker-toggle matSuffix [for]="picker2"></sat-datepicker-toggle>
+      </mat-form-field>
+
+      <p>Calendar with only "since" and "until" selection modes: </p>
+
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Choose a period"
+          [satDatepicker]="picker3"
+          formControlName="picker3">
+        <sat-datepicker
+          #picker3
+          initialSelectionMode="range"
+          [selectionModes]="selectionModesSinceUntil">
+        </sat-datepicker>
+        <sat-datepicker-toggle matSuffix [for]="picker3"></sat-datepicker-toggle>
+      </mat-form-field>
+
+      <p>Calendar with all selection modes enabled: </p>
+
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Choose a period"
+          [satDatepicker]="picker4"
+          formControlName="picker4">
+        <sat-datepicker
+          #picker4
+          initialSelectionMode="range"
+          [selectionModes]="selectionModes">
+        </sat-datepicker>
+        <sat-datepicker-toggle matSuffix [for]="picker4"></sat-datepicker-toggle>
+      </mat-form-field>
+
+    </div>
+
+  </section>
+
+  <hr>
+  <section>
+    <h2>Close after selection</h2>
+    <div>
+      <span class="code">closeAfterSelection</span> option enables or disables datepicker closing after date
+      selections. By
+      default the option is <span class="code">true</span>
+    </div>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Choose a date"
+        [satDatepicker]="picker5"
+        formControlName="picker5">
+      <sat-datepicker
+        #picker5
+        initialSelectionMode="range"
+        [selectionModes]="selectionModesRange"
+        [closeAfterSelection]="false">
+      </sat-datepicker>
+      <sat-datepicker-toggle matSuffix [for]="picker5"></sat-datepicker-toggle>
+    </mat-form-field>
+  </section>
+  <hr>
+  <section>
+    <h2>Calendar view order</h2>
+    <div>
+      <span class="code">orderPeriodLabel</span> option sorts the label period views.
+      <ul>
+        <li>Default [<span class="code">multi-year</span>]: multi-year then back to month</li>
+        <li>Month [<span class="code">month</span>]: month > year > multi-year</li>
+      </ul>
+    </div>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Choose a date"
+        [satDatepicker]="picker6"
+        formControlName="picker6">
+      <sat-datepicker
+        #picker6
+        initialSelectionMode="range6"
+        [selectionModes]="selectionModesRange"
+        orderPeriodLabel="month">
+      </sat-datepicker>
+      <sat-datepicker-toggle matSuffix [for]="picker6"></sat-datepicker-toggle>
+    </mat-form-field>
+  </section>
+  <hr>
+  <section>
+    <h2>Select first date on close</h2>
+    <div>
+      <span class="code">selectFirstDateOnClose</span> option enables or disables the selection of the first date when closing
+      the datepicker before selecting another date.
+      By default the option is <span class="code">false</span>
+    </div>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Choose a date"
+        [satDatepicker]="picker7"
+        formControlName="picker7">
+      <sat-datepicker
+        #picker7
+        initialSelectionMode="range"
+        [selectionModes]="selectionModesRange"
+        [selectFirstDateOnClose]="true">
+      </sat-datepicker>
+      <sat-datepicker-toggle matSuffix [for]="picker7"></sat-datepicker-toggle>
+    </mat-form-field>
+  </section>
+  <hr>
+  <section>
+    <h2>Custom Footer (Default Ranges)</h2>
+    <div>
+      <span class="code">calendarFooterComponent</span> option allows you to define a footer in the calendar simalar to custom headers.
+    </div>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Choose a date"
+        [satDatepicker]="picker8"
+        formControlName="picker8">
+      <sat-datepicker
+        #picker8
+        initialSelectionMode="range"
+        [selectionModes]="selectionModesRange"
+        panelClass="range-datepicker"
+        [calendarFooterComponent]="rangesFooter"
+        [selectFirstDateOnClose]="true">
+      </sat-datepicker>
+      <sat-datepicker-toggle matSuffix [for]="picker8"></sat-datepicker-toggle>
+    </mat-form-field>
+  </section>
+
+  <section>
+    <h2>Inline Usage</h2>
+    <div>
+      The <span class="code">sat-calendar</span>
+      component with its <span class="code">dateRangesChange</span>
+      output binding can be used as an inline range date picker.
+    </div>
+    <span class="code" *ngIf="inlineRange">
+      {{ inlineRange.begin | date }}
+      {{ inlineRange.end | date }}
+    </span>
+    <div class="inlineCalendarContainer">
+      <sat-calendar
+        [selectionModes]="selectionModesRange"
+        (dateRangesChange)="inlineRangeChange($event)"
+        selectionMode="range"
+        [selected]="selectedDate">
+      </sat-calendar>
+    </div>
+  </section>
+  <hr>
 </form>

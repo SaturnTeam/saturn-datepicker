@@ -12,6 +12,7 @@ import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
+import {MatButtonToggleModule} from '@angular/material';
 import {MatDialogModule} from '@angular/material/dialog';
 import {SatCalendar, SatCalendarHeader, SatCalendarFooter} from './calendar';
 import {SatCalendarBody} from './calendar-body';
@@ -36,6 +37,7 @@ import {SatYearView} from './year-view';
     OverlayModule,
     A11yModule,
     PortalModule,
+    MatButtonToggleModule
   ],
   exports: [
     SatCalendar,

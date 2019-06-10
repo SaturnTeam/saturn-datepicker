@@ -12,6 +12,7 @@
     "publish": "(cd dist; npm publish)",
     "test": "ng test",
     "lint": "ng lint",
+    "lintFix": "prettier --write 'src/**/*.ts'  && tslint --fix 'src/**/*.ts'",
     "e2e": "ng e2e"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "@angular/platform-browser": "7.1.0",
     "@angular/platform-browser-dynamic": "7.1.0",
     "core-js": "^2.6.5",
+    "prettier": "^1.17.1",
     "rxjs": "^6.4.0",
     "zone.js": "0.8.26"
   },

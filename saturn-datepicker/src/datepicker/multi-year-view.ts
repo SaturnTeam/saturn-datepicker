@@ -55,43 +55,43 @@ export const yearsPerRow = 4;
 export class SatMultiYearView<D> implements AfterContentInit {
   /** The date to display in this multi-year view (everything other than the year is ignored). */
   @Input()
-  get activeDate(): D { return this._activeDate; }
-  set activeDate(value: D) {
+  get activeDate() { return this._activeDate; }
+  set activeDate(value) {
     let oldActiveDate = this._activeDate;
     const validDate =
         this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
-    if (Math.floor(this._dateAdapter.getYear(oldActiveDate) / yearsPerPage) !=
+    if (Math.floor(this._dateAdapter.getYear(oldActiveDate) / yearsPerPage) !==
         Math.floor(this._dateAdapter.getYear(this._activeDate) / yearsPerPage)) {
       this._init();
     }
   }
-  private _activeDate: D;
+  private _activeDate;
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
+  get selected() { return this._selected; }
+  set selected(value) {
     this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._selectedYear = this._selected && this._dateAdapter.getYear(this._selected);
   }
-  private _selected: D | null;
+  private _selected;
 
   /** The minimum selectable date. */
   @Input()
-  get minDate(): D | null { return this._minDate; }
-  set minDate(value: D | null) {
+  get minDate() { return this._minDate; }
+  set minDate(value) {
     this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  private _minDate;
 
   /** The maximum selectable date. */
   @Input()
-  get maxDate(): D | null { return this._maxDate; }
-  set maxDate(value: D | null) {
+  get maxDate() { return this._maxDate; }
+  set maxDate(value) {
     this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  private _maxDate;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
@@ -261,8 +261,8 @@ export class SatMultiYearView<D> implements AfterContentInit {
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  private _getValidDateOrNull(obj: any): D | null | number {
+    return (obj === Infinity || (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj))) ? obj : null;
   }
 
   /** Determines whether the user has the RTL layout direction. */
