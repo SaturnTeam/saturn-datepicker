@@ -1,4 +1,15 @@
-<sat-calendar cdkTrapFocus
+<div class="container">
+  <div class="preset-buttons" *ngIf="datepicker.showPresets">
+      <h3 class="preset-title">Presets</h3>
+      <button mat-button (click)="setPreset('today')">Today</button>
+      <button mat-button (click)="setPreset('yesterday')">Yesterday</button>
+      <button mat-button (click)="setPreset('two_days')">2 days ago</button>
+      <button mat-button (click)="setPreset('this_week')">This week</button>
+      <button mat-button (click)="setPreset('last_week')">Last week</button>
+      <button mat-button (click)="setPreset('this_month')">This month</button>
+      <button mat-button (click)="setPreset('last_month')">Last month</button>
+  </div>
+  <sat-calendar cdkTrapFocus
     [id]="datepicker.id"
     [ngClass]="datepicker.panelClass"
     [startAt]="datepicker.startAt"
@@ -22,4 +33,6 @@
     (dateRangesChange)="datepicker._selectRange($event)"
     (beginDateSelectedChange)="datepicker.setBeginDateSelected($event)"
     (_userSelection)="close()">
-</sat-calendar>
+  </sat-calendar>
+
+</div>

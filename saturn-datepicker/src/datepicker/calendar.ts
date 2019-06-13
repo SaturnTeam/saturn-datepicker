@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentPortal, ComponentType, Portal} from '@angular/cdk/portal';
+import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
 import {
   AfterContentInit,
   AfterViewChecked,
@@ -25,17 +25,17 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {Subject, Subscription} from 'rxjs';
-import {createMissingDateImplError} from './datepicker-errors';
-import {SatDatepickerIntl} from './datepicker-intl';
-import {SatMonthView} from './month-view';
-import {SatMultiYearView, yearsPerPage} from './multi-year-view';
-import {SatYearView} from './year-view';
-import {SatCalendarCellCssClasses} from './calendar-body';
+import { Subject, Subscription } from 'rxjs';
+import { createMissingDateImplError } from './datepicker-errors';
+import { SatDatepickerIntl } from './datepicker-intl';
+import { SatMonthView } from './month-view';
+import { SatMultiYearView, yearsPerPage } from './multi-year-view';
+import { SatYearView } from './year-view';
+import { SatCalendarCellCssClasses } from './calendar-body';
 
-import {SatDatepickerRangeValue} from './datepicker-input';
-import {DateAdapter} from '../datetime/date-adapter';
-import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
+import { SatDatepickerRangeValue } from './datepicker-input';
+import { DateAdapter } from '../datetime/date-adapter';
+import { MAT_DATE_FORMATS, MatDateFormats } from '../datetime/date-formats';
 
 /**
  * Possible views for the calendar.
@@ -54,10 +54,10 @@ export type SatCalendarView = 'month' | 'year' | 'multi-year';
 })
 export class SatCalendarHeader<D> {
   constructor(private _intl: SatDatepickerIntl,
-              @Inject(forwardRef(() => SatCalendar)) public calendar: SatCalendar<D>,
-              @Optional() private _dateAdapter: DateAdapter<D>,
-              @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              changeDetectorRef: ChangeDetectorRef) {
+    @Inject(forwardRef(() => SatCalendar)) public calendar: SatCalendar<D>,
+    @Optional() private _dateAdapter: DateAdapter<D>,
+    @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
+    changeDetectorRef: ChangeDetectorRef) {
 
     this.calendar.stateChanges.subscribe(() => changeDetectorRef.markForCheck());
   }
@@ -66,23 +66,23 @@ export class SatCalendarHeader<D> {
   get periodButtonText(): string {
     if (this.calendar.currentView == 'month') {
       return this._dateAdapter
-          .format(this.calendar.activeDate, this._dateFormats.display.monthYearLabel)
-              .toLocaleUpperCase();
+        .format(this.calendar.activeDate, this._dateFormats.display.monthYearLabel)
+        .toLocaleUpperCase();
     }
     if (this.calendar.currentView == 'year') {
       return this._dateAdapter.getYearName(this.calendar.activeDate);
     }
     const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
     const firstYearInView = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(activeYear - activeYear % 24, 0, 1));
+      this._dateAdapter.createDate(activeYear - activeYear % 24, 0, 1));
     const lastYearInView = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(activeYear + yearsPerPage - 1 - activeYear % 24, 0, 1));
+      this._dateAdapter.createDate(activeYear + yearsPerPage - 1 - activeYear % 24, 0, 1));
     return `${firstYearInView} \u2013 ${lastYearInView}`;
   }
 
   get periodButtonLabel(): string {
     return this.calendar.currentView == 'month' ?
-        this._intl.switchToMultiYearViewLabel : this._intl.switchToMonthViewLabel;
+      this._intl.switchToMultiYearViewLabel : this._intl.switchToMonthViewLabel;
   }
 
   /** The label for the the previous button. */
@@ -117,8 +117,8 @@ export class SatCalendarHeader<D> {
         this.calendar.currentView = orderPeriod[1];
         break;
       case 'year':
-          this.calendar.currentView = orderPeriod[2]
-          break;
+        this.calendar.currentView = orderPeriod[2]
+        break;
       default:
         this.calendar.currentView = orderPeriod[0]
         break;
@@ -128,20 +128,20 @@ export class SatCalendarHeader<D> {
   /** Handles user clicks on the previous button. */
   previousClicked(): void {
     this.calendar.activeDate = this.calendar.currentView == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
-            this._dateAdapter.addCalendarYears(
-                this.calendar.activeDate, this.calendar.currentView == 'year' ? -1 : -yearsPerPage
-            );
+      this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
+      this._dateAdapter.addCalendarYears(
+        this.calendar.activeDate, this.calendar.currentView == 'year' ? -1 : -yearsPerPage
+      );
   }
 
   /** Handles user clicks on the next button. */
   nextClicked(): void {
     this.calendar.activeDate = this.calendar.currentView == 'month' ?
-        this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
-            this._dateAdapter.addCalendarYears(
-                this.calendar.activeDate,
-                    this.calendar.currentView == 'year' ? 1 : yearsPerPage
-            );
+      this._dateAdapter.addCalendarMonths(this.calendar.activeDate, 1) :
+      this._dateAdapter.addCalendarYears(
+        this.calendar.activeDate,
+        this.calendar.currentView == 'year' ? 1 : yearsPerPage
+      );
   }
 
   /** Whether the previous period button is enabled. */
@@ -150,29 +150,40 @@ export class SatCalendarHeader<D> {
       return true;
     }
     return !this.calendar.minDate ||
-        !this._isSameView(this.calendar.activeDate, this.calendar.minDate);
+      !this._isSameView(this.calendar.activeDate, this.calendar.minDate);
   }
 
   /** Whether the next period button is enabled. */
   nextEnabled(): boolean {
     return !this.calendar.maxDate ||
-        !this._isSameView(this.calendar.activeDate, this.calendar.maxDate);
+      !this._isSameView(this.calendar.activeDate, this.calendar.maxDate);
   }
 
   /** Whether the two dates represent the same view in the current view mode (month or year). */
   private _isSameView(date1: D, date2: D): boolean {
     if (this.calendar.currentView == 'month') {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2) &&
-          this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2);
+        this._dateAdapter.getMonth(date1) == this._dateAdapter.getMonth(date2);
     }
     if (this.calendar.currentView == 'year') {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
     }
     // Otherwise we are in 'multi-year' view.
     return Math.floor(this._dateAdapter.getYear(date1) / yearsPerPage) ==
-        Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
+      Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
   }
 }
+
+/** Default presets component for SatCalendar */
+@Component({
+  moduleId: module.id,
+  selector: 'sat-calendar-presets',
+  templateUrl: 'calendar-presets.html',
+  exportAs: 'matCalendarPresets',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class SatCalendarPresets<D> { }
 
 /** Default footer for SatCalendar */
 @Component({
@@ -204,39 +215,39 @@ export class SatCalendarFooter<D> {
 })
 export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
 
-    /** Beginning of date range. */
-    @Input()
-    get beginDate(): D | null { return this._beginDate; }
-    set beginDate(value: D | null) {
-        this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    }
-    private _beginDate: D | null;
+  /** Beginning of date range. */
+  @Input()
+  get beginDate(): D | null { return this._beginDate; }
+  set beginDate(value: D | null) {
+    this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _beginDate: D | null;
 
-    /** Date range end. */
-    @Input()
-    get endDate(): D | null { return this._endDate; }
-    set endDate(value: D | null) {
-        this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    }
-    private _endDate: D | null;
+  /** Date range end. */
+  @Input()
+  get endDate(): D | null { return this._endDate; }
+  set endDate(value: D | null) {
+    this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _endDate: D | null;
 
-    /** Whenever datepicker is for selecting range of dates. */
-    @Input() rangeMode = false;
+  /** Whenever datepicker is for selecting range of dates. */
+  @Input() rangeMode = false;
 
-    /** Enables datepicker closing after selection */
-    @Input() closeAfterSelection = true;
+  /** Enables datepicker closing after selection */
+  @Input() closeAfterSelection = true;
 
-    /** Emits when new pair of dates selected. */
-    @Output() dateRangesChange = new EventEmitter<SatDatepickerRangeValue<D>>();
+  /** Emits when new pair of dates selected. */
+  @Output() dateRangesChange = new EventEmitter<SatDatepickerRangeValue<D>>();
 
 
-    /** Whenever user already selected start of dates interval. */
-    beginDateSelected: D | boolean = false;
+  /** Whenever user already selected start of dates interval. */
+  beginDateSelected: D | boolean = false;
 
-    /** Emits when a new start date has been selected in range mode. */
-    @Output() beginDateSelectedChange = new EventEmitter<D>();
+  /** Emits when a new start date has been selected in range mode. */
+  @Output() beginDateSelectedChange = new EventEmitter<D>();
 
-    /** An input indicating the type of the header component, if set. */
+  /** An input indicating the type of the header component, if set. */
   @Input() headerComponent: ComponentType<any>;
 
   /** A portal containing the header component type for this calendar. */
@@ -247,6 +258,11 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** A portal containing the footer component type for this calendar. */
   _calendarFooterPortal: Portal<any>;
+
+  /** An input indicating the type of the presets component, if set. */
+  @Input() presetsComponent: ComponentType<any>;
+
+  _calendarPresetsPortal: Portal<any>;
 
   private _intlChanges: Subscription;
 
@@ -355,9 +371,9 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   stateChanges = new Subject<void>();
 
   constructor(_intl: SatDatepickerIntl,
-              @Optional() private _dateAdapter: DateAdapter<D>,
-              @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              private _changeDetectorRef: ChangeDetectorRef) {
+    @Optional() private _dateAdapter: DateAdapter<D>,
+    @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
+    private _changeDetectorRef: ChangeDetectorRef) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -376,6 +392,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   ngAfterContentInit() {
     this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || SatCalendarHeader);
     this._calendarFooterPortal = new ComponentPortal(this.footerComponent || SatCalendarFooter);
+    this._calendarPresetsPortal = new ComponentPortal(this.presetsComponent || SatCalendarPresets);
     this.activeDate = this.startAt || this._dateAdapter.today();
 
     // Assign to the private property since we don't want to move focus on init.
@@ -396,7 +413,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   ngOnChanges(changes: SimpleChanges) {
     const change =
-        changes['minDate'] || changes['maxDate'] || changes['dateFilter'];
+      changes['minDate'] || changes['maxDate'] || changes['dateFilter'];
 
     if (change && !change.firstChange) {
       const view = this._getCurrentViewComponent();
@@ -419,7 +436,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Updates today's date after an update of the active date */
   updateTodaysDate() {
     let view = this.currentView == 'month' ? this.monthView :
-            (this.currentView == 'year' ? this.yearView : this.multiYearView);
+      (this.currentView == 'year' ? this.yearView : this.multiYearView);
 
     view.ngAfterContentInit();
   }
@@ -427,21 +444,21 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Handles date selection in the month view. */
   _dateSelected(date: D): void {
     if (this.rangeMode) {
-        if (!this.beginDateSelected) {
-          this.beginDateSelected = date;
-          this.beginDate = date;
+      if (!this.beginDateSelected) {
+        this.beginDateSelected = date;
+        this.beginDate = date;
+        this.endDate = date;
+        this.beginDateSelectedChange.emit(date);
+      } else {
+        this.beginDateSelected = false;
+        if (this._dateAdapter.compareDate(<D>this.beginDate, date) <= 0) {
           this.endDate = date;
-          this.beginDateSelectedChange.emit(date);
         } else {
-          this.beginDateSelected = false;
-          if (this._dateAdapter.compareDate(<D>this.beginDate, date) <= 0) {
-            this.endDate = date;
-          } else {
-            this.endDate = this.beginDate;
-            this.beginDate = date;
-          }
-          this.dateRangesChange.emit({begin: <D>this.beginDate, end: this.endDate});
+          this.endDate = this.beginDate;
+          this.beginDate = date;
         }
+        this.dateRangesChange.emit({ begin: <D>this.beginDate, end: this.endDate });
+      }
     } else if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }
