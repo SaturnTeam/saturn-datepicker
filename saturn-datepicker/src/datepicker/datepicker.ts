@@ -52,7 +52,7 @@ import { SatCalendarCellCssClasses } from './calendar-body';
 import { SatDatepickerInput, SatDatepickerRangeValue } from './datepicker-input';
 import { DateAdapter } from '../datetime/date-adapter';
 
-import * as moment from 'moment';
+const moment = require('moment');
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
