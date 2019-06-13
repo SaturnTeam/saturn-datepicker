@@ -24,9 +24,26 @@
                    placeholder="Choose a date"
                    [satDatepicker]="picker2"
                    formControlName="date">
-            <sat-datepicker #picker2 [rangeMode]="true" [showPresets]="true">
+            <sat-datepicker #picker2 [rangeMode]="true">
             </sat-datepicker>
             <sat-datepicker-toggle matSuffix [for]="picker2"></sat-datepicker-toggle>
+        </mat-form-field>
+    </section>
+
+    <hr>
+    <section>
+        <h2>Range selection with presets</h2>
+        <div>
+            <span class="code">showPresets</span> option enables or disables presets mode. Default is <span class="code">false</span>
+        </div>
+        <mat-form-field>
+            <input matInput
+                   placeholder="Choose a date"
+                   [satDatepicker]="pickerPresets"
+                   formControlName="date">
+            <sat-datepicker #pickerPresets [rangeMode]="true" [showPresets]="true">
+            </sat-datepicker>
+            <sat-datepicker-toggle matSuffix [for]="pickerPresets"></sat-datepicker-toggle>
         </mat-form-field>
     </section>
     <hr>
