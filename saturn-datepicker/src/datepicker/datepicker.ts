@@ -189,11 +189,6 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
     this._calendar.activeDate = this._calendar.beginDate;
     this._calendar.beginDateSelectedChange.emit(this._calendar.beginDate);
     this._calendar.dateRangesChange.emit({ begin: this._calendar.beginDate, end: this._calendar.endDate });
-
-    // close with delay, just to show user the selected range
-    setTimeout(() => {
-      this.datepicker.close();
-    }, 200);
   }
 }
 
