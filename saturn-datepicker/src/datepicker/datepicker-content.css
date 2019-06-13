@@ -53,14 +53,15 @@
   margin: 3px 0 14px 0;
   padding: 0;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   color: #484242
 }
 
 .preset-buttons button {
   margin-bottom: 4.6px;
-    text-align: left
+    text-align: left;
+    font-weight: 400;
 }
 
 .preset-buttons:last-child {
