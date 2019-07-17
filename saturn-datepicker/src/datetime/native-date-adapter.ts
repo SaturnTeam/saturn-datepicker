@@ -287,8 +287,8 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     return obj instanceof Date;
   }
 
-  isValid(date: Date) {
-    return !isNaN(date.getTime());
+  isValid(date: Date | number) {
+    return date === Infinity ? true : !isNaN(date.getTime());
   }
 
   invalid(): Date {

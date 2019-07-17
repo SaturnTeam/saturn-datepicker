@@ -42,21 +42,21 @@ export abstract class DateAdapter<D> {
    * @param date The date to extract the year from.
    * @returns The year component.
    */
-  abstract getYear(date: D): number;
+  abstract getYear(date: D | number): number;
 
   /**
    * Gets the month component of the given date.
    * @param date The date to extract the month from.
    * @returns The month component (0-indexed, 0 = January).
    */
-  abstract getMonth(date: D): number;
+  abstract getMonth(date: D | number): number;
 
   /**
    * Gets the date of the month component of the given date.
    * @param date The date to extract the date of the month from.
    * @returns The month component (1-indexed, 1 = first of month).
    */
-  abstract getDate(date: D): number;
+  abstract getDate(date: D | number): number;
 
   /**
    * Gets the day of the week component of the given date.
@@ -90,7 +90,7 @@ export abstract class DateAdapter<D> {
    * @param date The date to get the year name for.
    * @returns The name of the given year (e.g. '2017').
    */
-  abstract getYearName(date: D): string;
+  abstract getYearName(date: D | number): string;
 
   /**
    * Gets the first day of the week.
@@ -135,7 +135,7 @@ export abstract class DateAdapter<D> {
    *     (type is implementation-dependent).
    * @returns The parsed date.
    */
-  abstract parse(value: any, parseFormat: any): D | null;
+  abstract parse(value: any, parseFormat: any): D | number | null;
 
   /**
    * Formats a date as a string according to the given format.
@@ -143,7 +143,7 @@ export abstract class DateAdapter<D> {
    * @param displayFormat The format to use to display the date as a string.
    * @returns The formatted date string.
    */
-  abstract format(date: D, displayFormat: any): string;
+  abstract format(date: D | number, displayFormat: any): string;
 
   /**
    * Adds the given number of years to the date. Years are counted as if flipping 12 pages on the
@@ -153,7 +153,7 @@ export abstract class DateAdapter<D> {
    * @param years The number of years to add (may be negative).
    * @returns A new date equal to the given one with the specified number of years added.
    */
-  abstract addCalendarYears(date: D, years: number): D;
+  abstract addCalendarYears(date: D | number, years: number): D;
 
   /**
    * Adds the given number of months to the date. Months are counted as if flipping a page on the
@@ -163,7 +163,7 @@ export abstract class DateAdapter<D> {
    * @param months The number of months to add (may be negative).
    * @returns A new date equal to the given one with the specified number of months added.
    */
-  abstract addCalendarMonths(date: D, months: number): D;
+  abstract addCalendarMonths(date: D | number, months: number): D;
 
   /**
    * Adds the given number of days to the date. Days are counted as if moving one cell on the
@@ -195,7 +195,7 @@ export abstract class DateAdapter<D> {
    * @param date The date to check.
    * @returns Whether the date is valid.
    */
-  abstract isValid(date: D): boolean;
+  abstract isValid(date: D | number): boolean;
 
   /**
    * Gets date instance that is not valid.
@@ -215,8 +215,12 @@ export abstract class DateAdapter<D> {
    * @returns The deserialized date object, either a valid date, null if the value can be
    *     deserialized into a null date (e.g. the empty string), or an invalid date.
    */
-  deserialize(value: any): D | null {
-    if (value == null || this.isDateInstance(value) && this.isValid(value)) {
+  deserialize(value: any): D | number | null {
+    if (
+      value === null ||
+      value === Infinity ||
+      (this.isDateInstance(value) && this.isValid(value))
+    ) {
       return value;
     }
     return this.invalid();
@@ -238,10 +242,20 @@ export abstract class DateAdapter<D> {
    * @returns 0 if the dates are equal, a number less than 0 if the first date is earlier,
    *     a number greater than 0 if the first date is later.
    */
-  compareDate(first: D, second: D): number {
-    return this.getYear(first) - this.getYear(second) ||
+  compareDate(first: D | number, second: D | number): number {
+    if (first === Infinity && second === Infinity) {
+      return 0;
+    } else if (first === Infinity && second !== Infinity) {
+      return 1;
+    } else if (second === Infinity && first !== Infinity) {
+      return -1;
+    } else if (typeof first === 'object' && typeof second === 'object') {
+      return this.getYear(first) - this.getYear(second) ||
         this.getMonth(first) - this.getMonth(second) ||
         this.getDate(first) - this.getDate(second);
+    } else {
+      return 0;
+    }
   }
 
   /**
@@ -251,7 +265,7 @@ export abstract class DateAdapter<D> {
    * @returns Whether the two dates are equal.
    *     Null dates are considered equal to other null dates.
    */
-  sameDate(first: D | null, second: D | null): boolean {
+  sameDate(first: D | null | number, second: D | null | number): boolean {
     if (first && second) {
       let firstValid = this.isValid(first);
       let secondValid = this.isValid(second);
@@ -271,7 +285,7 @@ export abstract class DateAdapter<D> {
    * @returns `min` if `date` is less than `min`, `max` if date is greater than `max`,
    *     otherwise `date`.
    */
-  clampDate(date: D, min?: D | null, max?: D | null): D {
+  clampDate(date: D | number, min?: D | number | null, max?: D | number | null): D | number {
     if (min && this.compareDate(date, min) < 0) {
       return min;
     }

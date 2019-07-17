@@ -57,24 +57,29 @@ export class SatMonthView<D> implements AfterContentInit {
 
   /** Current start of interval. */
   @Input()
-  get beginDate(): D | null { return this._beginDate; }
-  set beginDate(value: D | null) {
+  get beginDate(): D | null | number { return this._beginDate; }
+  set beginDate(value: D | null | number) {
     this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this.updateRangeSpecificValues();
   }
-  private _beginDate: D | null;
+  private _beginDate: D | null | number;
 
   /** Current end of interval. */
   @Input()
-  get endDate(): D | null { return this._endDate; }
-  set endDate(value: D | null) {
+  get endDate(): D | null | number { return this._endDate; }
+  set endDate(value: D | null | number) {
     this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this.updateRangeSpecificValues();
   }
-  private _endDate: D | null;
+  private _endDate: D | null | number;
 
   /** Allow selecting range of dates. */
-  @Input() rangeMode = false;
+  @Input() selectionMode = '';
+
+  /** Possible selection modes, in the order that they should appear */
+  @Input() selectionModes = [];
+
+  @Input() initialSelectionMode;
 
   /** Enables datepicker closing after selection */
   @Input() closeAfterSelection = true;
@@ -98,8 +103,8 @@ export class SatMonthView<D> implements AfterContentInit {
    * The date to display in this month view (everything other than the month and year is ignored).
    */
   @Input()
-  get activeDate(): D { return this._activeDate; }
-  set activeDate(value: D) {
+  get activeDate() { return this._activeDate; }
+  set activeDate(value) {
     const oldActiveDate = this._activeDate;
     const validDate =
         this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
@@ -108,32 +113,32 @@ export class SatMonthView<D> implements AfterContentInit {
       this._init();
     }
   }
-  private _activeDate: D;
+  private _activeDate;
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
+  get selected() { return this._selected; }
+  set selected(value) {
     this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._selectedDate = this._getDateInCurrentMonth(this._selected);
   }
-  private _selected: D | null;
+  private _selected;
 
   /** The minimum selectable date. */
   @Input()
-  get minDate(): D | null { return this._minDate; }
-  set minDate(value: D | null) {
+  get minDate() { return this._minDate; }
+  set minDate(value) {
     this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  private _minDate;
 
   /** The maximum selectable date. */
   @Input()
-  get maxDate(): D | null { return this._maxDate; }
-  set maxDate(value: D | null) {
+  get maxDate() { return this._maxDate; }
+  set maxDate(value) {
     this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  private _maxDate;
 
   /** Function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
@@ -204,15 +209,18 @@ export class SatMonthView<D> implements AfterContentInit {
 
   /** Handles when a new date is selected. */
   _dateSelected(date: number) {
-
-    if (this.rangeMode) {
-
+    if (['range', 'since', 'until'].includes(this.selectionMode)) {
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
       if (!this._beginDateSelected) { // At first click emit the same start and end of interval
         this._beginDateSelected = selectedDate;
         this.selectedChange.emit(selectedDate);
+
+        // If the selection mode only requires one date selection then emit out
+        if (['since', 'until'].includes(this.selectionMode)) {
+          this._userSelection.emit();
+        }
       } else {
         this._beginDateSelected = null;
         this.selectedChange.emit(selectedDate);
@@ -360,40 +368,56 @@ export class SatMonthView<D> implements AfterContentInit {
    * Gets the date in this month that the given Date falls on.
    * Returns null if the given Date is in another month.
    */
-  private _getDateInCurrentMonth(date: D | null): number | null {
+  private _getDateInCurrentMonth(date: D | number | null): number | null {
+    if (date === Infinity) {
+      return null;
+    }
+
     return date && this._hasSameMonthAndYear(date, this.activeDate) ?
-        this._dateAdapter.getDate(date) : null;
+      this._dateAdapter.getDate(date) : null;
   }
 
   /** Checks whether the 2 dates are non-null and fall within the same month of the same year. */
-  private _hasSameMonthAndYear(d1: D | null, d2: D | null): boolean {
-    return !!(d1 && d2 && this._dateAdapter.getMonth(d1) == this._dateAdapter.getMonth(d2) &&
-              this._dateAdapter.getYear(d1) == this._dateAdapter.getYear(d2));
+  private _hasSameMonthAndYear(d1: D | number | null, d2: D | null): boolean {
+    return !!(d1 && d2 && this._dateAdapter.getMonth(d1) === this._dateAdapter.getMonth(d2) &&
+              this._dateAdapter.getYear(d1) === this._dateAdapter.getYear(d2));
   }
 
   /**
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  private _getValidDateOrNull(obj: any): D | null | number {
+    return (obj === Infinity || (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj))) ? obj : null;
   }
 
   /** Determines whether the user has the RTL layout direction. */
   private _isRtl() {
     return this._dir && this._dir.value === 'rtl';
   }
+
   /** Updates range full parameter on each begin or end of interval update.
    * Necessary to display calendar-body correctly
    */
   private updateRangeSpecificValues(): void {
-    if (this.rangeMode) {
-      this._beginDateNumber = this._getDateInCurrentMonth(this._beginDate);
-      this._endDateNumber = this._getDateInCurrentMonth(this._endDate);
-      this._rangeFull = this.beginDate && this.endDate && !this._beginDateNumber &&
+    if (['range', 'since', 'until'].includes(this.selectionMode)) {
+      this._beginDateNumber = this._beginDate === Infinity ? null : this._getDateInCurrentMonth(this._beginDate);
+      this._endDateNumber = this._endDate === Infinity ? null : this._getDateInCurrentMonth(this._endDate);
+      this._rangeFull =
+        this.beginDate &&
+        this.endDate &&
+        !this._beginDateNumber &&
         !this._endDateNumber &&
-        this._dateAdapter.compareDate(this.beginDate, this.activeDate) <= 0 &&
-        this._dateAdapter.compareDate(this.activeDate, this.endDate) <= 0;
+        (
+          (
+            this._dateAdapter.compareDate(this.beginDate, this.activeDate) <= 0 &&
+            this._dateAdapter.compareDate(this.activeDate, this.endDate) <= 0
+          ) ||
+          (
+            this._beginDate === Infinity &&
+            this._dateAdapter.compareDate(this.activeDate, this.endDate) <= 0 &&
+            this._dateAdapter.compareDate(this.activeDate, this.beginDate) <= 0
+          ));
     } else {
       this._beginDateNumber = this._endDateNumber = null;
       this._rangeFull = false;

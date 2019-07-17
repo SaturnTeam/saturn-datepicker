@@ -5,12 +5,8 @@ import { AppComponent } from './app.component';
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MyLibModule.forRoot()
-      ],
-      declarations: [
-        AppComponent
-      ],
+      imports: [MyLibModule.forRoot()],
+      declarations: [AppComponent]
     }).compileComponents();
   }));
 
@@ -19,5 +15,4 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
-
 });

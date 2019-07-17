@@ -1,3 +1,14 @@
+<div class="selection-wrapper" *ngIf="selectionModes && selectionModes.length > 1">
+  <mat-button-toggle-group
+    name="fontStyle"
+    aria-label="Selection type"
+    [(value)]="selectionMode"
+  >
+    <mat-button-toggle *ngFor="let sm of selectionModes;" [value]="sm">
+      <span class="selection-mode-title">{{ sm }}</span>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
 
 <ng-template [cdkPortalOutlet]="_calendarHeaderPortal"></ng-template>
 
@@ -8,7 +19,9 @@
       [selected]="selected"
       [beginDate]="beginDate"
       [endDate]="endDate"
-      [rangeMode]="rangeMode"
+      [selectionMode]="selectionMode"
+      [selectionModes]="selectionModes"
+      [initialSelectionMode]="initialSelectionMode"
       [closeAfterSelection]="closeAfterSelection"
       [dateFilter]="dateFilter"
       [maxDate]="maxDate"

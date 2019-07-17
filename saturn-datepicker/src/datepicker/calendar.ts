@@ -41,6 +41,14 @@ import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
  * Possible views for the calendar.
  * @docs-private
  */
+export enum SelectionModeType {
+  Date = 'date',
+  Range = 'range',
+  Since = 'since',
+  Until = 'until',
+
+  Default = Date
+};
 export type SatCalendarView = 'month' | 'year' | 'multi-year';
 
 /** Default header for SatCalendar */
@@ -204,24 +212,25 @@ export class SatCalendarFooter<D> {
 })
 export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
 
-    /** Beginning of date range. */
-    @Input()
-    get beginDate(): D | null { return this._beginDate; }
-    set beginDate(value: D | null) {
-        this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    }
-    private _beginDate: D | null;
+  /** Beginning of date range. */
+  @Input()
+  get beginDate() {
+    return this._beginDate;
+  }
+  set beginDate(value) {
+    this._beginDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _beginDate;
 
-    /** Date range end. */
-    @Input()
-    get endDate(): D | null { return this._endDate; }
-    set endDate(value: D | null) {
-        this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    }
-    private _endDate: D | null;
-
-    /** Whenever datepicker is for selecting range of dates. */
-    @Input() rangeMode = false;
+  /** Date range end. */
+  @Input()
+  get endDate() {
+    return this._endDate;
+  }
+  set endDate(value) {
+    this._endDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+  }
+  private _endDate;
 
     /** Enables datepicker closing after selection */
     @Input() closeAfterSelection = true;
@@ -259,11 +268,11 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** A date representing the period (month or year) to start the calendar in. */
   @Input()
-  get startAt(): D | null { return this._startAt; }
-  set startAt(value: D | null) {
+  get startAt(): D | number | null { return this._startAt; }
+  set startAt(value: D | number | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _startAt: D | null;
+  private _startAt: D | number | null;
 
   /** Whether the calendar should be started in month or year view. */
   @Input() startView: SatCalendarView = 'month';
@@ -301,6 +310,33 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Order the views when clicking on period label button */
   @Input() orderPeriodLabel: 'multi-year' | 'month' = 'multi-year';
 
+  /** Initial selectiom mode */
+  @Input()
+  get initialSelectionMode(): SelectionModeType { return this._initialSelectionMode; }
+  set initialSelectionMode(mode: SelectionModeType) {
+    if (mode) {
+      this._initialSelectionMode = mode;
+    }
+  }
+  _initialSelectionMode = SelectionModeType.Default;
+
+  /** Selection mode */
+  @Input()
+  set selectionMode(mode) {
+    this._selectionMode = mode;
+  }
+  get selectionMode() {
+    if (!this._selectionMode) {
+      this._selectionMode = this.initialSelectionMode;
+    }
+
+    return this._selectionMode;
+  }
+  _selectionMode: SelectionModeType = this.initialSelectionMode;
+
+  /** Possible selection modes, in the order that they should appear */
+  @Input() selectionModes = [];
+
   /** Emits when the currently selected date changes. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
@@ -332,13 +368,13 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    * The current active date. This determines which time period is shown and which date is
    * highlighted when using keyboard navigation.
    */
-  get activeDate(): D { return this._clampedActiveDate; }
-  set activeDate(value: D) {
+  get activeDate() { return this._clampedActiveDate; }
+  set activeDate(value) {
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
     this.stateChanges.next();
     this._changeDetectorRef.markForCheck();
   }
-  private _clampedActiveDate: D;
+  private _clampedActiveDate;
 
   /** Whether the calendar is in month view. */
   get currentView(): SatCalendarView { return this._currentView; }
@@ -419,29 +455,60 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Updates today's date after an update of the active date */
   updateTodaysDate() {
     let view = this.currentView == 'month' ? this.monthView :
-            (this.currentView == 'year' ? this.yearView : this.multiYearView);
+      (this.currentView == 'year' ? this.yearView : this.multiYearView);
 
     view.ngAfterContentInit();
   }
 
   /** Handles date selection in the month view. */
-  _dateSelected(date: D): void {
-    if (this.rangeMode) {
-        if (!this.beginDateSelected) {
-          this.beginDateSelected = date;
-          this.beginDate = date;
-          this.endDate = date;
-          this.beginDateSelectedChange.emit(date);
-        } else {
-          this.beginDateSelected = false;
-          if (this._dateAdapter.compareDate(<D>this.beginDate, date) <= 0) {
-            this.endDate = date;
-          } else {
-            this.endDate = this.beginDate;
-            this.beginDate = date;
-          }
-          this.dateRangesChange.emit({begin: <D>this.beginDate, end: this.endDate});
+  _dateSelected(date): void {
+    if (this.selectionMode == 'range') {
+
+      if (!this.beginDateSelected) {
+        this.beginDateSelected = date;
+        this.beginDate = date;
+        this.endDate = date;
+        this.beginDateSelectedChange.emit(date);
+      } else {
+        /*
+          Problem: Assign each date from the range accordingly with the user
+          selection, knowing that each "Date" assignment has to be cloned before,
+          preventing assigning a variable to a variable's reference.
+
+          Compare the two dates selected and if they are different,
+          clone them into new consts isolated in this iteration.
+
+          If they are equal just set both dates to
+          the "date" variable, as it only exists in this current iteration
+
+          Emit the change in the end
+        */
+
+        this.beginDateSelected = false;
+        const sumDates = this._dateAdapter.compareDate(this.beginDate, date);
+
+        if (sumDates < 0) { // Seconds date is greater than first date
+          const start = new Date(this.beginDate.getTime());
+          const end = new Date(date.getTime());
+
+          this.beginDate = start;
+          this.endDate = end;
+        } else if (sumDates > 0) { // First date is greater than second date
+          const start = new Date(date.getTime());
+          const end = new Date(this.beginDate.getTime());
+
+          this.beginDate = start;
+          this.endDate = end;
+        } else { // Dates are equal
+          this.beginDate = this.endDate = date;
         }
+
+        this.dateRangesChange.emit({begin: this.beginDate, end: this.endDate});
+      }
+    } else if (this.selectionMode === 'since') {
+      this.dateRangesChange.emit({begin: date, end: Infinity});
+    } else if (this.selectionMode === 'until') {
+      this.dateRangesChange.emit({begin: Infinity, end: date});
     } else if (!this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }
@@ -472,7 +539,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
   private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+    return (obj === Infinity || (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj))) ? obj : null;
   }
 
   /** Returns the component instance that corresponds to the current calendar view. */
