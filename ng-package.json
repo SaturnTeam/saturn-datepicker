@@ -1,7 +1,9 @@
 {
   "ngPackage": {
     "lib": {
-      "styleIncludePaths": ["./src"]
+      "styleIncludePaths": [
+        "./src"
+      ]
     }
   }
 }

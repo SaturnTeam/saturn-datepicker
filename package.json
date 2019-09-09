@@ -9,7 +9,7 @@
     "build": "ng build",
     "build:app": "cpr dist/saturn-datepicker src/saturn-datepicker && ng build packages && rimraf src/@my",
     "build:lib": "rimraf dist && ng-packagr -p saturn-datepicker/package.json && cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist",
-    "publish": "(cd dist; npm publish)",
+    "publish": "cd dist && npm publish",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -24,6 +24,7 @@
     "@angular/material": "^7.3.7",
     "@angular/platform-browser": "7.1.0",
     "@angular/platform-browser-dynamic": "7.1.0",
+    "moment": "2.24.0",
     "core-js": "^2.6.5",
     "rxjs": "^6.4.0",
     "zone.js": "0.8.26"

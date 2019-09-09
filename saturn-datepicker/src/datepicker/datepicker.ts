@@ -139,47 +139,50 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
   setPreset(preset: string) {
     switch (preset) {
       case 'today':
-        const today = moment().toDate();
+        const today = moment().hours(0).minutes(0).seconds(0).toDate();
+        const todayEnd = moment().hours(23).minutes(59).seconds(59).toDate();
 
-        this._calendar.beginDate = this.dateAdapter.deserialize(today);
+        this._calendar.beginDate = this.dateAdapter.deserialize(todayEnd);
         this._calendar.endDate = this.dateAdapter.deserialize(today);
         break;
       case 'yesterday':
-        const yesterday = moment().subtract('1', 'day').toDate();
+        const yesterday = moment().subtract('1', 'day').hours(0).minutes(0).seconds(0).toDate();
+        const yesterdayEnd = moment().subtract('1', 'day').hours(23).minutes(59).seconds(59).toDate();
 
         this._calendar.beginDate = this.dateAdapter.deserialize(yesterday);
-        this._calendar.endDate = this.dateAdapter.deserialize(yesterday);
+        this._calendar.endDate = this.dateAdapter.deserialize(yesterdayEnd);
         break;
       case 'two_days':
-        const twoDays = moment().subtract('2', 'days').toDate();
+        const twoDays = moment().subtract('2', 'days').hours(0).minutes(0).seconds(0).toDate();
+        const twoDaysEnd = moment().subtract('2', 'days').hours(23).minutes(59).seconds(59).toDate();
 
         this._calendar.beginDate = this.dateAdapter.deserialize(twoDays);
-        this._calendar.endDate = this.dateAdapter.deserialize(twoDays);
+        this._calendar.endDate = this.dateAdapter.deserialize(twoDaysEnd);
         break;
       case 'this_week':
-        const startOfWeek = moment().startOf('week').toDate();
-        const endOfWeek = moment().endOf('week').toDate();
+        const startOfWeek = moment().startOf('week').hours(0).minutes(0).seconds(0).toDate();
+        const endOfWeek = moment().endOf('week').hours(23).minutes(59).seconds(59).toDate();
 
         this._calendar.beginDate = this.dateAdapter.deserialize(startOfWeek);
         this._calendar.endDate = this.dateAdapter.deserialize(endOfWeek);
         break;
       case 'last_week':
-        const startOfPreviousWeek = moment().subtract('1', 'week').startOf('week').toDate();
-        const endOfPreviousWeek = moment().subtract('1', 'week').endOf('week').toDate();
+        const startOfPreviousWeek = moment().subtract('1', 'week').startOf('week').hours(0).minutes(0).seconds(0).toDate();
+        const endOfPreviousWeek = moment().subtract('1', 'week').endOf('week').hours(23).minutes(59).seconds(59).toDate();
 
         this._calendar.beginDate = this.dateAdapter.deserialize(startOfPreviousWeek);
         this._calendar.endDate = this.dateAdapter.deserialize(endOfPreviousWeek);
         break;
       case 'this_month':
-        const startOfMonth = moment().startOf('month').toDate();
-        const endOfMonth = moment().endOf('month').toDate();
+        const startOfMonth = moment().startOf('month').hours(0).minutes(0).seconds(0).toDate();
+        const endOfMonth = moment().endOf('month').hours(23).minutes(59).seconds(59).toDate();
 
         this._calendar.beginDate = this.dateAdapter.deserialize(startOfMonth);
         this._calendar.endDate = this.dateAdapter.deserialize(endOfMonth);
         break;
       case 'last_month':
-        const startOfPreviousMonth = moment().subtract('1', 'month').startOf('month').toDate();
-        const endOfPreviousMonth = moment().subtract('1', 'month').endOf('month').toDate();
+        const startOfPreviousMonth = moment().subtract('1', 'month').startOf('month').hours(0).minutes(0).seconds(0).toDate();
+        const endOfPreviousMonth = moment().subtract('1', 'month').endOf('month').hours(23).minutes(59).seconds(59).toDate();
 
         this._calendar.beginDate = this.dateAdapter.deserialize(startOfPreviousMonth);
         this._calendar.endDate = this.dateAdapter.deserialize(endOfPreviousMonth);
