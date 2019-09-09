@@ -142,8 +142,8 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
         const today = moment().hours(0).minutes(0).seconds(0).toDate();
         const todayEnd = moment().hours(23).minutes(59).seconds(59).toDate();
 
-        this._calendar.beginDate = this.dateAdapter.deserialize(todayEnd);
-        this._calendar.endDate = this.dateAdapter.deserialize(today);
+        this._calendar.beginDate = this.dateAdapter.deserialize(today);
+        this._calendar.endDate = this.dateAdapter.deserialize(todayEnd);
         break;
       case 'yesterday':
         const yesterday = moment().subtract('1', 'day').hours(0).minutes(0).seconds(0).toDate();
