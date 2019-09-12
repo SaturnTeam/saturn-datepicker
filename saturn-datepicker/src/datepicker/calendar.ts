@@ -26,12 +26,17 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
+import {SatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {SatDatepickerIntl} from './datepicker-intl';
 import {SatMonthView} from './month-view';
-import {SatMultiYearView, yearsPerPage} from './multi-year-view';
+import {
+  getActiveOffset,
+  isSameMultiYearView,
+  SatMultiYearView,
+  yearsPerPage
+} from './multi-year-view';
 import {SatYearView} from './year-view';
-import {SatCalendarCellCssClasses} from './calendar-body';
 
 import {SatDatepickerRangeValue} from './datepicker-input';
 import {DateAdapter} from '../datetime/date-adapter';
@@ -72,12 +77,15 @@ export class SatCalendarHeader<D> {
     if (this.calendar.currentView == 'year') {
       return this._dateAdapter.getYearName(this.calendar.activeDate);
     }
+
+    // The offset from the active year to the "slot" for the starting year is the
+    // *actual* first rendered year in the multi-year view, and the last year is
+    // just yearsPerPage - 1 away.
     const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
-    const firstYearInView = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(activeYear - activeYear % 24, 0, 1));
-    const lastYearInView = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(activeYear + yearsPerPage - 1 - activeYear % 24, 0, 1));
-    return `${firstYearInView} \u2013 ${lastYearInView}`;
+    const minYearOfPage = activeYear - getActiveOffset(
+      this._dateAdapter, this.calendar.activeDate, this.calendar.minDate, this.calendar.maxDate);
+    const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
+    return `${minYearOfPage} \u2013 ${maxYearOfPage}`;
   }
 
   get periodButtonLabel(): string {
@@ -85,7 +93,7 @@ export class SatCalendarHeader<D> {
         this._intl.switchToMultiYearViewLabel : this._intl.switchToMonthViewLabel;
   }
 
-  /** The label for the the previous button. */
+  /** The label for the previous button. */
   get prevButtonLabel(): string {
     return {
       'month': this._intl.prevMonthLabel,
@@ -94,7 +102,7 @@ export class SatCalendarHeader<D> {
     }[this.calendar.currentView];
   }
 
-  /** The label for the the next button. */
+  /** The label for the next button. */
   get nextButtonLabel(): string {
     return {
       'month': this._intl.nextMonthLabel,
@@ -169,8 +177,8 @@ export class SatCalendarHeader<D> {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
     }
     // Otherwise we are in 'multi-year' view.
-    return Math.floor(this._dateAdapter.getYear(date1) / yearsPerPage) ==
-        Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
+    return isSameMultiYearView(
+      this._dateAdapter, date1, date2, this.calendar.minDate, this.calendar.maxDate);
   }
 }
 
@@ -228,7 +236,6 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
     /** Emits when new pair of dates selected. */
     @Output() dateRangesChange = new EventEmitter<SatDatepickerRangeValue<D>>();
-
 
     /** Whenever user already selected start of dates interval. */
     beginDateSelected: D | boolean = false;
@@ -320,13 +327,13 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
   /** Reference to the current month view component. */
-  @ViewChild(SatMonthView) monthView: SatMonthView<D>;
+  @ViewChild(SatMonthView, {static: false}) monthView: SatMonthView<D>;
 
   /** Reference to the current year view component. */
-  @ViewChild(SatYearView) yearView: SatYearView<D>;
+  @ViewChild(SatYearView, {static: false}) yearView: SatYearView<D>;
 
   /** Reference to the current multi-year view component. */
-  @ViewChild(SatMultiYearView) multiYearView: SatMultiYearView<D>;
+  @ViewChild(SatMultiYearView, {static: false}) multiYearView: SatMultiYearView<D>;
 
   /**
    * The current active date. This determines which time period is shown and which date is

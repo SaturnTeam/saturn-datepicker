@@ -73,10 +73,10 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 // Boilerplate for applying mixins to SatDatepickerContent.
 /** @docs-private */
-export class SatDatepickerContentBase {
+class SatDatepickerContentBase {
   constructor(public _elementRef: ElementRef) { }
 }
-export const _SatDatepickerContentMixinBase: CanColorCtor & typeof SatDatepickerContentBase =
+const _SatDatepickerContentMixinBase: CanColorCtor & typeof SatDatepickerContentBase =
     mixinColor(SatDatepickerContentBase);
 
 /**
@@ -109,7 +109,7 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
   implements AfterViewInit, CanColor {
 
   /** Reference to the internal calendar component. */
-  @ViewChild(SatCalendar) _calendar: SatCalendar<D>;
+  @ViewChild(SatCalendar, {static: false}) _calendar: SatCalendar<D>;
 
   /** Reference to the datepicker that created the overlay. */
   datepicker: SatDatepicker<D>;
@@ -555,7 +555,13 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
         return event.keyCode === ESCAPE ||
                (this._datepickerInput && event.altKey && event.keyCode === UP_ARROW);
       }))
-    ).subscribe(() => this.close());
+    ).subscribe(event => {
+      if (event) {
+        event.preventDefault();
+      }
+
+      this.close();
+    });
   }
 
   /** Create the popup PositionStrategy. */

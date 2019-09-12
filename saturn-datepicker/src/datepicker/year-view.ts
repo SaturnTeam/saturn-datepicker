@@ -102,7 +102,7 @@ export class SatYearView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SatCalendarBody) _matCalendarBody: SatCalendarBody;
+  @ViewChild(SatCalendarBody, {static: false}) _matCalendarBody: SatCalendarBody;
 
   /** Grid of calendar cells representing the months of the year. */
   _months: SatCalendarCell[][];

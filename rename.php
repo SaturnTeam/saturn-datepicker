@@ -37,5 +37,5 @@ function replace($dir) {
         }
     }
 }
-replace('src/lib/datepicker/');
-replace('src/lib/core/datetime/');
+replace('src/material/datepicker/');
+replace('src/material/core/datetime/');

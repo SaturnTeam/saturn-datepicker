@@ -88,7 +88,7 @@ export class SatDatepickerInputEvent<D> {
     {provide: MAT_INPUT_VALUE_ACCESSOR, useExisting: SatDatepickerInput},
   ],
   host: {
-    '[attr.aria-haspopup]': 'true',
+    '[attr.aria-haspopup]': '_datepicker ? "dialog" : null',
     '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
     '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
     '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',

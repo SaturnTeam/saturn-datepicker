@@ -13,6 +13,8 @@ I created this repository and this package due to it takes a lot of time to cont
 3) **You can use all original material attributes: min, max, formControl and others**
 
 ## Changelog
+## 8.0.0
+Updated to 8.2.0 material code
 ## 7.4.0
 Inline usage of calendar. See demo.
 Thanks to [@beyondsanity](https://github.com/beyondsanity) for this feature
