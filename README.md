@@ -3,9 +3,11 @@ Material datepicker with range support
 ## What is this?
 
 This is patched version of Material Datepicker for Angular with range selection support.
-I created this repository and this package due to it takes a lot of time to contribute to material2 repository.
-[Issue in material2 repo.](https://github.com/angular/material2/issues/4763)
-![Material date range picker](screenshot.png)
+I created this repository and this package due to it takes a lot of time to contribute to material2 repository:
+[Issue #4763 in material2 repo](https://github.com/angular/material2/issues/4763) from 2017-present.<br>
+
+[![Material date range picker](screenshot.png)](https://stackblitz.com/edit/angular-4cfnyl)
+
 ## [DEMO with extra features examples](https://stackblitz.com/edit/angular-4cfnyl)
 ## Advantages
 1) You can change order of views: month, year and multi-year
