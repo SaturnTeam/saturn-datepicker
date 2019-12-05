@@ -57,7 +57,7 @@ Add styles:
 * If you are using SCSS (preferable):
 ```scss
 @import '~saturn-datepicker/theming';
-@include sat-datepicker-theme($theme); # material theme data structure https://material.angular.io/guide/theming#defining-a-custom-theme
+@include sat-datepicker-theme($theme); // material theme data structure https://material.angular.io/guide/theming#defining-a-custom-theme
 ```
 
 ## ngModel/formControl value have this interface:
