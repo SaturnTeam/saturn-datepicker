@@ -14,6 +14,7 @@
          [isBeforeSelected]="_beginDateSelected && _dateAdapter.compareDate(activeDate, _beginDateSelected) < 0"
          [rangeFull]="_rangeFull"
          [rangeMode]="rangeMode"
+         [rangeHoverEffect]="rangeHoverEffect"
          [labelMinRequiredCells]="3"
          [activeCell]="_dateAdapter.getDate(activeDate) - 1"
          (selectedValueChange)="_dateSelected($event)"

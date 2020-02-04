@@ -60,6 +60,9 @@ export class SatCalendarBody implements OnChanges {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
+  /** Enables datepicker MouseOver effect on range mode */
+  @Input() rangeHoverEffect = true;
+
   /** The cells to display in the table. */
   @Input() rows: SatCalendarCell[][];
 
@@ -130,7 +133,7 @@ export class SatCalendarBody implements OnChanges {
   }
 
   _mouseOverCell(cell: SatCalendarCell): void {
-    this._cellOver = cell.value;
+    if (this.rangeHoverEffect) this._cellOver = cell.value
   }
 
   ngOnChanges(changes: SimpleChanges) {
