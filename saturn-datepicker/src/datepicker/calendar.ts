@@ -231,6 +231,9 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     /** Whenever datepicker is for selecting range of dates. */
     @Input() rangeMode = false;
 
+    /** Enables datepicker MouseOver effect on range mode */
+    @Input() rangeHoverEffect = true;
+
     /** Enables datepicker closing after selection */
     @Input() closeAfterSelection = true;
 

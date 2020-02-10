@@ -272,6 +272,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** Enables datepicker closing after selection */
   @Input() closeAfterSelection = true;
 
+  /** Enables datepicker MouseOver effect on range mode */
+  @Input() rangeHoverEffect = true;
+
   /** In range mod, enable datepicker to select the first date selected as a one-day-range,
    * if the user closes the picker before selecting another date
    */

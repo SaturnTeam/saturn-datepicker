@@ -126,4 +126,19 @@
       </div>
     </section>
     <hr>
+    <section>
+        <h2>Disable range mouseover effect</h2>
+        <div>
+            <span class="code">rangeHoverEffect</span> option enables or disables the mouseover listener on days when the rangeMode parameter is used and is enabled.
+                By default the option is <span class="code">true</span>
+        </div>
+        <mat-form-field>
+            <input matInput
+                   placeholder="Choose a date"
+                   [satDatepicker]="picker8"
+                   value="">
+            <sat-datepicker [rangeMode]="true" [rangeHoverEffect]="false" [closeAfterSelection]="false" [rangeMode]="true" #picker8></sat-datepicker>
+            <sat-datepicker-toggle matSuffix [for]="picker8"></sat-datepicker-toggle>
+        </mat-form-field>
+    </section>
 </form>

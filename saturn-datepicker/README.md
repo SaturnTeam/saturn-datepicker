@@ -139,5 +139,21 @@ By default the option is false
    </mat-form-field>
 ```
 
+### In range mode, how to disable the mouseover effect ?
+`rangeHoverEffect` option enables or disables the mouseover listener on days when the rangeMode parameter is used and is enabled.
+By default the option is true
+
+```angular2html
+  <mat-form-field>
+    <input matInput [satDatepicker]="resultPicker">
+    <sat-datepicker
+        #resultPicker
+        [rangeMode]="true"
+        [closeAfterSelection]="false"
+        [rangeHoverEffect]="false">
+    </sat-datepicker>
+   </mat-form-field>
+```
+
 ---
 Licence: MIT
