@@ -1,17 +1,8 @@
 {
   "extends": "../tsconfig.json",
-  "angularCompilerOptions": {
-    "paths": {
-      "saturn-datepicker": [ "../saturn-datepicker/src/public_api.ts" ]
-    }
-  },
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "baseUrl": "",
-    "types": [],
-    "paths": {
-      "saturn-datepicker": [ "../saturn-datepicker/src/public_api.ts" ]
-    }
+    "types": []
   },
   "files": [
     "main.ts",

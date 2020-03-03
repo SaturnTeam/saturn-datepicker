@@ -1,28 +1,31 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./src",
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "importHelpers": true,
     "module": "esnext",
-    "outDir": "./dist/out-tsc",
-    "baseUrl": "./src",
-    "sourceMap": true,
-    "declaration": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": false,
-    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
     "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
     "lib": [
       "dom",
       "es2018"
     ],
     "paths": {
-      "saturn-datepicker": [ "../dist/saturn-datepicker" ]
-    }
+      "saturn-datepicker": [ "./dist/lib" ]
+    },
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   },
   "exclude": [
-    ".ng_build"
+    "./dist/"
   ]
 }

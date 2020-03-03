@@ -1,12 +1,11 @@
-import { TestBed, async } from '@angular/core/testing';
-import { MyLibModule } from '@my/lib';
+import { async, TestBed } from '@angular/core/testing';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MyLibModule.forRoot()
       ],
       declarations: [
         AppComponent

@@ -163,7 +163,9 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // Sometimes people use excess language definition, e.g. ru-RU,
     // so we use fallback to two-letter language code
     const locale = this.locale.toLowerCase();
-    return FIRST_DAY_OF_WEEK[locale] || FIRST_DAY_OF_WEEK[locale.substr(0, 2)] || 0;
+    return (FIRST_DAY_OF_WEEK as any)[locale]
+      || (FIRST_DAY_OF_WEEK as any)[locale.substr(0, 2)]
+      || 0;
   }
 
   getNumDaysInMonth(date: Date): number {

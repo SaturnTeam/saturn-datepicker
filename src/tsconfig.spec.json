@@ -1,28 +1,18 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../out-tsc/spec",
-    "target": "es5",
-    "baseUrl": "",
+    "outDir": "../dist/out-tsc/app-spec",
     "types": [
       "jasmine",
       "node"
-    ],
-    "paths": {
-      "saturn-datepicker": [
-        "../dist/saturn-datepicker"
-      ]
-    }
+    ]
   },
   "files": [
     "test.ts",
     "polyfills.ts"
   ],
   "include": [
-    "../saturn-datepicker/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "tmp"
+    "**/*.spec.ts",
+    "**/*.d.ts"
   ]
 }

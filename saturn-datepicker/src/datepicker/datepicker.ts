@@ -160,7 +160,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
       this._beginDate = this._endDate = null;
     }
   }
-  private _rangeMode;
+  private _rangeMode: boolean;
 
   /** Start of dates interval. */
   @Input()
