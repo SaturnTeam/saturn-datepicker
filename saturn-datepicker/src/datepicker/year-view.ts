@@ -42,7 +42,6 @@ import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'sat-year-view',
   templateUrl: 'year-view.html',
   exportAs: 'matYearView',
