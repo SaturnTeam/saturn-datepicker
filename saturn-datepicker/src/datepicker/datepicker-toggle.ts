@@ -81,10 +81,10 @@ export class SatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   @Input() disableRipple: boolean;
 
   /** Custom icon set by the consumer. */
-  @ContentChild(SatDatepickerToggleIcon, {static: false}) _customIcon: SatDatepickerToggleIcon;
+  @ContentChild(SatDatepickerToggleIcon) _customIcon: SatDatepickerToggleIcon;
 
   /** Underlying button element. */
-  @ViewChild('button', {static: false}) _button: MatButton;
+  @ViewChild('button') _button: MatButton;
 
   constructor(
     public _intl: SatDatepickerIntl,

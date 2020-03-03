@@ -330,13 +330,13 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
   /** Reference to the current month view component. */
-  @ViewChild(SatMonthView, {static: false}) monthView: SatMonthView<D>;
+  @ViewChild(SatMonthView) monthView: SatMonthView<D>;
 
   /** Reference to the current year view component. */
-  @ViewChild(SatYearView, {static: false}) yearView: SatYearView<D>;
+  @ViewChild(SatYearView) yearView: SatYearView<D>;
 
   /** Reference to the current multi-year view component. */
-  @ViewChild(SatMultiYearView, {static: false}) multiYearView: SatMultiYearView<D>;
+  @ViewChild(SatMultiYearView) multiYearView: SatMultiYearView<D>;
 
   /**
    * The current active date. This determines which time period is shown and which date is

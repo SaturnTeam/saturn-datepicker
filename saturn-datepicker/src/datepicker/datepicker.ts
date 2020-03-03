@@ -109,7 +109,7 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
   implements AfterViewInit, CanColor {
 
   /** Reference to the internal calendar component. */
-  @ViewChild(SatCalendar, {static: false}) _calendar: SatCalendar<D>;
+  @ViewChild(SatCalendar) _calendar: SatCalendar<D>;
 
   /** Reference to the datepicker that created the overlay. */
   datepicker: SatDatepicker<D>;

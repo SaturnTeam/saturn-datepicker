@@ -154,7 +154,7 @@ export class SatMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SatCalendarBody, {static: false}) _matCalendarBody: SatCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody: SatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
