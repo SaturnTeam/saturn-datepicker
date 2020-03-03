@@ -1,16 +1,12 @@
 {
   "name": "saturn-datepicker",
-  "version": "8.0.4",
+  "version": "8.0.5",
   "repository": "https://github.com/SaturnTeam/saturn-datepicker",
   "keywords": ["angular", "material", "datepicker", "range datepicker"],
   "author": "saturn <saturn@saturn.team>",
   "license": "MIT",
   "private": false,
   "peerDependencies": {
-    "@angular/common": "^8.2.0",
-    "@angular/compiler": "^8.2.0",
-    "@angular/material": "^8.2.0",
-    "@angular/cdk": "^8.2.0"
   },
   "ngPackage": {
     "$schema": "./node_modules/ng-packagr/ng-package.schema.json",

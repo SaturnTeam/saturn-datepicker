@@ -11,6 +11,7 @@ export class AppComponent {
   form: FormGroup;
   rangesFooter = RangesFooter;
   inlineRange;
+  selectedDate;
 
   constructor(fb: FormBuilder) {
     this.form = fb.group({

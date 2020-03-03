@@ -15,6 +15,8 @@ I created this repository and this package due to it takes a lot of time to cont
 3) **You can use all original material attributes: min, max, formControl and others**
 
 ## Changelog
+## 8.0.5
+Works with angular 9.0
 ## 8.0.4
 Fix building process
 ## 8.0.2
