@@ -1,0 +1,25 @@
+{
+  "extends": "../tsconfig.json",
+  "angularCompilerOptions": {
+    "enableResourceInlining": true,
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": true
+  },
+  "compilerOptions": {
+    "declaration": true,
+    "inlineSources": true,
+    "outDir": "../dist/out-tsc/lib",
+    "lib": [
+      "dom",
+      "es2018"
+    ],
+    "paths": {
+    }
+  },
+  "include": [
+    "src/public-api.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ]
+}

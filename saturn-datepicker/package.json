@@ -11,12 +11,5 @@
     "@angular/compiler": "^8.2",
     "@angular/material": "^8.2",
     "@angular/cdk": "^8.2"
-  },
-  "ngPackage": {
-    "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
-    "lib": {
-      "entryFile": "src/public-api.ts"
-    },
-    "dest": "../dist"
   }
 }

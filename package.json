@@ -4,12 +4,13 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve  --project=dev",
+    "clean": "rimraf dist/",
+    "start": "ng serve",
     "build": "ng build",
-    "build:app": "cpr dist/saturn-datepicker src/saturn-datepicker && ng build packages && rimraf src/@my",
-    "build:lib": "rimraf dist && ng-packagr -p saturn-datepicker/package.json && cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist",
-    "publish": "(cd dist; npm publish)",
+    "build:prod": "ng build --prod",
+    "build:lib": "npm run clean && ng run lib:build:production && npm run copy:theming-files",
+    "copy:theming-files": "cp saturn-datepicker/src/bundle.css saturn-datepicker/src/_theming.scss dist/lib/",
+    "publish": "npm publish dist/lib/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.803.25",
+    "@angular-devkit/build-ng-packagr": "0.803.25",
     "@angular-devkit/schematics": "8.1.3",
     "@angular/cli": "8.3.25",
     "@angular/compiler-cli": "8.2.14",

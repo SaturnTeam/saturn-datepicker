@@ -114,6 +114,26 @@
           }
         }
       }
+    },
+    "lib": {
+      "root": "saturn-datepicker",
+      "sourceRoot": "saturn-datepicker/src",
+      "projectType": "library",
+      "prefix": "sat",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "saturn-datepicker/tsconfig.lib.json",
+            "project": "saturn-datepicker/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "saturn-datepicker/tsconfig.lib.prod.json"
+            }
+          }
+        }
+      }
     }
   },
   "cli": {
