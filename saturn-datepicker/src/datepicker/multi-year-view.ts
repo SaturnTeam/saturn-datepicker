@@ -29,11 +29,14 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {SatCalendarBody, SatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateAdapter} from '../datetime/date-adapter';
+import {Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 
 export const yearsPerPage = 24;
 
@@ -44,14 +47,15 @@ export const yearsPerRow = 4;
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'sat-multi-year-view',
   templateUrl: 'multi-year-view.html',
   exportAs: 'matMultiYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SatMultiYearView<D> implements AfterContentInit {
+export class SatMultiYearView<D> implements AfterContentInit, OnDestroy {
+  private _rerenderSubscription = Subscription.EMPTY;
+
   /** The date to display in this multi-year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -106,7 +110,7 @@ export class SatMultiYearView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SatCalendarBody, {static: false}) _matCalendarBody: SatCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody: SatCalendarBody;
 
   /** Grid of calendar cells representing the currently displayed years. */
   _years: SatCalendarCell[][];
@@ -128,7 +132,13 @@ export class SatMultiYearView<D> implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this._init();
+    this._rerenderSubscription = this._dateAdapter.localeChanges
+      .pipe(startWith(null))
+      .subscribe(() => this._init());
+  }
+
+  ngOnDestroy() {
+    this._rerenderSubscription.unsubscribe();
   }
 
   /** Initializes this multi-year view. */

@@ -259,7 +259,8 @@
     }
   },
   "cli": {
-    "packageManager": "yarn"
+    "packageManager": "yarn",
+    "analytics": "57bedf10-aff9-43f6-bb0f-f87fd43bf39b"
   },
   "schematics": {
     "@schematics/angular:component": {

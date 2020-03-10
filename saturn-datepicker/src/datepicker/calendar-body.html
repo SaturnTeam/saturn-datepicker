@@ -29,7 +29,7 @@
   </td>
   <td *ngFor="let item of row; let colIndex = index"
       role="gridcell"
-      class="mat-calendar-body-cell"
+      class="mat-calendar-body-cell mat-focus-indicator"
       [ngClass]="item.cssClasses"
       [tabindex]="_isActiveCell(rowIndex, colIndex) ? 0 : -1"
       [class.mat-calendar-body-disabled]="!item.enabled"
@@ -45,6 +45,7 @@
       (mouseover)="_mouseOverCell(item)"
       [style.width]="_cellWidth"
       [style.paddingTop]="_cellPadding"
+      role="button"
       [style.paddingBottom]="_cellPadding">
     <div class="mat-calendar-body-cell-content"
          [class.mat-calendar-body-selected]="begin === item.value || end === item.value || selectedValue === item.value"

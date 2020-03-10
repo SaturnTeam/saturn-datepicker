@@ -50,7 +50,6 @@ export type SatCalendarView = 'month' | 'year' | 'multi-year';
 
 /** Default header for SatCalendar */
 @Component({
-  moduleId: module.id,
   selector: 'sat-calendar-header',
   templateUrl: 'calendar-header.html',
   exportAs: 'matCalendarHeader',
@@ -85,7 +84,11 @@ export class SatCalendarHeader<D> {
     const minYearOfPage = activeYear - getActiveOffset(
       this._dateAdapter, this.calendar.activeDate, this.calendar.minDate, this.calendar.maxDate);
     const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
-    return `${minYearOfPage} \u2013 ${maxYearOfPage}`;
+    const minYearName =
+      this._dateAdapter.getYearName(this._dateAdapter.createDate(minYearOfPage, 0, 1));
+    const maxYearName =
+      this._dateAdapter.getYearName(this._dateAdapter.createDate(maxYearOfPage, 0, 1));
+    return this._intl.formatYearRange(minYearName, maxYearName);
   }
 
   get periodButtonLabel(): string {
@@ -184,7 +187,6 @@ export class SatCalendarHeader<D> {
 
 /** Default footer for SatCalendar */
 @Component({
-  moduleId: module.id,
   selector: 'sat-calendar-footer',
   templateUrl: 'calendar-footer.html',
   exportAs: 'matCalendarFooter',
@@ -199,7 +201,6 @@ export class SatCalendarFooter<D> {
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'sat-calendar',
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],
@@ -246,17 +247,20 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     /** Emits when a new start date has been selected in range mode. */
     @Output() beginDateSelectedChange = new EventEmitter<D>();
 
-    /** An input indicating the type of the header component, if set. */
-  @Input() headerComponent: ComponentType<any>;
-
-  /** A portal containing the header component type for this calendar. */
-  _calendarHeaderPortal: Portal<any>;
-
   /** An input indicating the type of the footer component, if set. */
   @Input() footerComponent: ComponentType<any>;
 
   /** A portal containing the footer component type for this calendar. */
   _calendarFooterPortal: Portal<any>;
+
+  /** Order the views when clicking on period label button */
+  @Input() orderPeriodLabel: 'multi-year' | 'month' = 'multi-year';
+
+  /** An input indicating the type of the header component, if set. */
+  @Input() headerComponent: ComponentType<any>;
+
+  /** A portal containing the header component type for this calendar. */
+  _calendarHeaderPortal: Portal<any>;
 
   private _intlChanges: Subscription;
 
@@ -308,9 +312,6 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Function that can be used to add custom CSS classes to dates. */
   @Input() dateClass: (date: D) => SatCalendarCellCssClasses;
 
-  /** Order the views when clicking on period label button */
-  @Input() orderPeriodLabel: 'multi-year' | 'month' = 'multi-year';
-
   /** Emits when the currently selected date changes. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
@@ -330,13 +331,13 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
   /** Reference to the current month view component. */
-  @ViewChild(SatMonthView, {static: false}) monthView: SatMonthView<D>;
+  @ViewChild(SatMonthView) monthView: SatMonthView<D>;
 
   /** Reference to the current year view component. */
-  @ViewChild(SatYearView, {static: false}) yearView: SatYearView<D>;
+  @ViewChild(SatYearView) yearView: SatYearView<D>;
 
   /** Reference to the current multi-year view component. */
-  @ViewChild(SatMultiYearView, {static: false}) multiYearView: SatMultiYearView<D>;
+  @ViewChild(SatMultiYearView) multiYearView: SatMultiYearView<D>;
 
   /**
    * The current active date. This determines which time period is shown and which date is
@@ -428,8 +429,16 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** Updates today's date after an update of the active date */
   updateTodaysDate() {
-    let view = this.currentView == 'month' ? this.monthView :
-            (this.currentView == 'year' ? this.yearView : this.multiYearView);
+    const currentView = this.currentView;
+    let view: SatMonthView<D> | SatYearView<D> | SatMultiYearView<D>;
+
+    if (currentView === 'month') {
+      view = this.monthView;
+    } else if (currentView === 'year') {
+      view = this.yearView;
+    } else {
+      view = this.multiYearView;
+    }
 
     view.ngAfterContentInit();
   }

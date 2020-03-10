@@ -32,21 +32,21 @@ can easily be used as a prefix or suffix on the material input:
 </mat-form-field>
 ```
 
-If you want to customize the icon that is rendered inside the `sat-datepicker-toggle`, you can do so
+If you want to customize the icon that is rendered inside the `mat-datepicker-toggle`, you can do so
 by using the `matDatepickerToggleIcon` directive:
 
 <!-- example(datepicker-custom-icon) -->
 
 ### Setting the calendar starting view
 
-The `startView` property of `<sat-datepicker>` can be used to set the view that will show up when
+The `startView` property of `<mat-datepicker>` can be used to set the view that will show up when
 the calendar first opens. It can be set to `month`, `year`, or `multi-year`; by default it will open
 to month view.
 
 The month, year, or range of years that the calendar opens to is determined by first checking if any
 date is currently selected, if so it will open to the month or year containing that date. Otherwise
 it will open to the month or year containing today's date. This behavior can be overridden by using
-the `startAt` property of `<sat-datepicker>`. In this case the calendar will open to the month or
+the `startAt` property of `<mat-datepicker>`. In this case the calendar will open to the month or
 year containing the `startAt` date.
 
 <!-- example(datepicker-start-view) -->
@@ -57,7 +57,7 @@ When a year or a month is selected in `multi-year` and `year` views respectively
 and `monthSelected` outputs emit a normalized date representing the chosen year or month. By
 "normalized" we mean that the dates representing years will have their month set to January and
 their day set to the 1st. Dates representing months will have their day set to the 1st of the
-month. For example, if `<sat-datepicker>` is configured to work with javascript native Date
+month. For example, if `<mat-datepicker>` is configured to work with javascript native Date
 objects, the `yearSelected` will emit `new Date(2017, 0, 1)` if the user selects 2017 in
 `multi-year` view. Similarly, `monthSelected` will emit `new Date(2017, 1, 1)` if the user
 selects **February** in `year` view and the current date value of the connected `<input>` was
@@ -65,7 +65,7 @@ set to something like `new Date(2017, MM, dd)` when the calendar was opened (the
 irrelevant in this case).
 
 Notice that the emitted value does not affect the current value in the connected `<input>`, which
-is only bound to the selection made in the `month` view. So if the end user closes the calendar 
+is only bound to the selection made in the `month` view. So if the end user closes the calendar
 after choosing a year in `multi-view` mode (by pressing the `ESC` key, for example), the selected
 year, emitted by `yearSelected` output, will not cause any change in the value of the date in the
 associated `<input>`.
@@ -104,7 +104,7 @@ As with other types of `<input>`, the datepicker works with `@angular/forms` dir
 
 The datepicker popup will automatically inherit the color palette (`primary`, `accent`, or `warn`)
 from the `mat-form-field` it is attached to. If you would like to specify a different palette for
-the popup you can do so by setting the `color` property on `sat-datepicker`.
+the popup you can do so by setting the `color` property on `mat-datepicker`.
 
 <!-- example(datepicker-color) -->
 
@@ -155,7 +155,7 @@ date from the calendar. The `(dateChange)` event will fire whenever the user fin
 ### Disabling parts of the datepicker
 
 As with any standard `<input>`, it is possible to disable the datepicker input by adding the
-`disabled` property. By default, the `<sat-datepicker>` and `<sat-datepicker-toggle>` will inherit
+`disabled` property. By default, the `<mat-datepicker>` and `<mat-datepicker-toggle>` will inherit
 their disabled state from the `<input>`, but this can be overridden by setting the `disabled`
 property on the datepicker or toggle elements. This can be useful if you want to disable text input
 but allow selection via the calendar or vice-versa.
@@ -166,7 +166,7 @@ but allow selection via the calendar or vice-versa.
 
 The datepicker normally opens as a popup under the input. However this is not ideal for touch
 devices that don't have as much screen real estate and need bigger click targets. For this reason
-`<sat-datepicker>` has a `touchUi` property that can be set to `true` in order to enable a more
+`<mat-datepicker>` has a `touchUi` property that can be set to `true` in order to enable a more
 touch friendly UI where the calendar opens in a large dialog.
 
 <!-- example(datepicker-touch) -->
@@ -174,7 +174,7 @@ touch friendly UI where the calendar opens in a large dialog.
 ### Manually opening and closing the calendar
 
 The calendar popup can be programmatically controlled using the `open` and `close` methods on the
-`<sat-datepicker>`. It also has an `opened` property that reflects the status of the popup.
+`<mat-datepicker>`. It also has an `opened` property that reflects the status of the popup.
 
 <!-- example(datepicker-api) -->
 
@@ -210,20 +210,62 @@ It's also possible to set the locale at runtime using the `setLocale` method of 
 The datepicker was built to be date implementation agnostic. This means that it can be made to work
 with a variety of different date implementations. However it also means that developers need to make
 sure to provide the appropriate pieces for the datepicker to work with their chosen implementation.
-The easiest way to ensure this is just to import one of the pre-made modules:
 
-|Module               |Date type|Supported locales                                                      |Dependencies                      |Import from                       |
-|---------------------|---------|-----------------------------------------------------------------------|----------------------------------|----------------------------------|
-|`MatNativeDateModule`|`Date`   |en-US                                                                  |None                              |`@angular/material`               |
-|`MatMomentDateModule`|`Moment` |[See project](https://github.com/moment/moment/tree/develop/src/locale)|[Moment.js](https://momentjs.com/)|`@angular/material-moment-adapter`|
+The easiest way to ensure this is to import one of the provided date modules:
 
-*Please note: `MatNativeDateModule` is based off of the functionality available in JavaScript's
-native `Date` object, and is thus not suitable for many locales. One of the biggest shortcomings of
-the native `Date` object is the inability to set the parse format. We highly recommend using the
-`MomentDateAdapter` or a custom `DateAdapter` that works with the formatting/parsing library of your
-choice.*
+`MatNativeDateModule`
 
-These modules include providers for `DateAdapter` and `MAT_DATE_FORMATS`
+<table>
+  <tbody>
+  <tr>
+    <th align="left" scope="row">Date type</th>
+    <td><code>Date</code></td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Supported locales</th>
+    <td>en-US</td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Dependencies</th>
+    <td>None</td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Import from</th>
+    <td><code>@angular/material/core</code></td>
+  </tr>
+  </tbody>
+</table>
+
+`MatMomentDateModule`
+
+<table>
+  <tbody>
+  <tr>
+    <th align="left" scope="row">Date type</th>
+    <td><code>Moment</code></td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Supported locales</th>
+    <td><a href="https://github.com/moment/moment/tree/develop/src/locale) for details">See project</a></td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Dependencies</th>
+    <td><a href="https://momentjs.com/">Moment.js</a></td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Import from</th>
+    <td><code>@angular/material-moment-adapter</code></td>
+  </tr>
+  </tbody>
+</table>
+
+*Please note: `MatNativeDateModule` is based off the functionality available in JavaScript's
+native [`Date` object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date).
+Thus it is not suitable for many locales. One of the biggest shortcomings of the native `Date`
+object is the inability to set the parse format. We highly recommend using the `MomentDateAdapter`
+or a custom `DateAdapter` that works with the formatting/parsing library of your choice.*
+
+These modules include providers for `DateAdapter` and `MAT_DATE_FORMATS`.
 
 ```ts
 @NgModule({
@@ -246,12 +288,38 @@ export class MyComponent {
 
 <!-- example(datepicker-moment) -->
 
+By default the `MomentDateAdapter` will creates dates in your time zone specific locale. You can change the default behaviour to parse dates as UTC by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `useUtc: true`.
+
+```ts
+@NgModule({
+  imports: [MatDatepickerModule, MatMomentDateModule],
+  providers: [
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}
+  ]
+})
+```
+
+By default the `MomentDateAdapter` will parse dates in a
+[forgiving way](https://momentjs.com/guides/#/parsing/forgiving-mode/). This may result in dates
+being parsed incorrectly. You can change the default behaviour to
+[parse dates strictly](https://momentjs.com/guides/#/parsing/strict-mode/) by providing
+the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `strict: true`.
+
+```ts
+@NgModule({
+  imports: [MatDatepickerModule, MatMomentDateModule],
+  providers: [
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {strict: true}}
+  ]
+})
+```
+
 It is also possible to create your own `DateAdapter` that works with any date format your app
 requires. This is accomplished by subclassing `DateAdapter` and providing your subclass as the
 `DateAdapter` implementation. You will also want to make sure that the `MAT_DATE_FORMATS` provided
 in your app are formats that can be understood by your date implementation. See
 [_Customizing the parse and display formats_](#customizing-the-parse-and-display-formats)for more
-information about `MAT_DATE_FORMATS`. <!-- TODO(mmalerba): Add a guide about this -->
+information about `MAT_DATE_FORMATS`.
 
 ```ts
 @NgModule({
@@ -266,7 +334,7 @@ export class MyApp {}
 
 #### Customizing the parse and display formats
 
-The `MAT_DATE_FORMATS` object is just a collection of formats that the datepicker uses when parsing
+The `MAT_DATE_FORMATS` object is a collection of formats that the datepicker uses when parsing
 and displaying dates. These formats are passed through to the `DateAdapter` so you will want to make
 sure that the format objects you're using are compatible with the `DateAdapter` used in your app.
 
@@ -287,6 +355,51 @@ export class MyApp {}
 
 <!-- example(datepicker-formats) -->
 
+##### MomentDateModule formats
+
+To use custom formats with the `MomentDateModule` you can pick from the parse formats documented
+[here](https://momentjs.com/docs/#/parsing/string-format/) and the display formats documented
+[here](https://momentjs.com/docs/#/displaying/format/).
+
+It is also possible to support multiple parse formats. For example:
+
+```ts
+@NgModule({
+  imports: [MatDatepickerModule, MomentDateModule],
+  providers: [
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: ['l', 'LL'],
+        },
+        display: {
+          dateInput: 'L',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
+    },
+  ],
+})
+export class MyApp {}
+```
+
+#### Customizing the calendar header
+
+The header section of the calendar (the part containing the view switcher and previous and next
+buttons) can be replaced with a custom component if desired. This is accomplished using the
+`calendarHeaderComponent` property of `<mat-datepicker>`. It takes a component class and constructs
+an instance of the component to use as the header.
+
+In order to interact with the calendar in your custom header component, you can inject the parent
+`MatCalendar` in the constructor. To make sure your header stays in sync with the calendar,
+subscribe to the `stateChanges` observable of the calendar and mark your header component for change
+detection.
+
+<!-- example(datepicker-custom-header) -->
+
 #### Localizing labels and messages
 
 The various text strings used by the datepicker are provided through `MatDatepickerIntl`.
@@ -303,16 +416,25 @@ application root module.
 export class MyApp {}
 ```
 
+#### Highlighting specific dates
+If you want to apply one or more CSS classes to some dates in the calendar (e.g. to highlight a
+holiday), you can do so with the `dateClass` input. It accepts a function which will be called
+with each of the dates in the calendar and will apply any classes that are returned. The return
+value can be anything that is accepted by `ngClass`.
+
+<!-- example(datepicker-date-class) -->
+
 ### Accessibility
 
-The `MatDatepickerInput` directive adds `aria-haspopup` attribute to the native input element, and it
-triggers a calendar dialog with `role="dialog"`.
+The `MatDatepickerInput` and `MatDatepickerToggle` directives add the `aria-haspopup` attribute to
+the native input and toggle button elements respectively, and they trigger a calendar dialog with
+`role="dialog"`.
 
 `MatDatepickerIntl` includes strings that are used for `aria-label`s. The datepicker input
 should have a placeholder or be given a meaningful label via `aria-label`, `aria-labelledby` or
 `MatDatepickerIntl`.
 
-#### Keyboard shortcuts
+#### Keyboard interaction
 
 The datepicker supports the following keyboard shortcuts:
 
@@ -384,12 +506,12 @@ more information.
 #### Error: A MatDatepicker can only be associated with a single input
 
 This error is thrown if more than one `<input>` tries to claim ownership over the same
-`<sat-datepicker>` (via the `matDatepicker` attribute on the input). A datepicker can only be
+`<mat-datepicker>` (via the `matDatepicker` attribute on the input). A datepicker can only be
 associated with a single input.
 
 #### Error: Attempted to open an MatDatepicker with no associated input.
 
-This error occurs if your `<sat-datepicker>` is not associated with any `<input>`. To associate an
+This error occurs if your `<mat-datepicker>` is not associated with any `<input>`. To associate an
 input with your datepicker, create a template reference for the datepicker and assign it to the
 `matDatepicker` attribute on the input:
 

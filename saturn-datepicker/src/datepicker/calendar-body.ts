@@ -34,7 +34,7 @@ export class SatCalendarCell {
               public displayValue: string,
               public ariaLabel: string,
               public enabled: boolean,
-              public cssClasses?: SatCalendarCellCssClasses) {}
+              public cssClasses: SatCalendarCellCssClasses = {}) {}
 }
 
 
@@ -43,7 +43,6 @@ export class SatCalendarCell {
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: '[sat-calendar-body]',
   templateUrl: 'calendar-body.html',
   styleUrls: ['calendar-body.css'],
@@ -94,20 +93,23 @@ export class SatCalendarBody implements OnChanges {
   /** Whether to use date range selection behaviour.*/
   @Input() rangeMode = false;
 
+  /** The cell number of the hovered cell */
+  _cellOver: number;
+
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;
 
   /** The number of columns in the table. */
-  @Input() numCols = 7;
+  @Input() numCols: number = 7;
 
   /** The cell number of the active cell in the table. */
-  @Input() activeCell = 0;
+  @Input() activeCell: number = 0;
 
   /**
    * The aspect ratio (width / height) to use for the cells in the table. This aspect ratio will be
    * maintained even as the table resizes.
    */
-  @Input() cellAspectRatio = 1;
+  @Input() cellAspectRatio: number = 1;
 
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
@@ -120,9 +122,6 @@ export class SatCalendarBody implements OnChanges {
 
   /** Width of an individual cell. */
   _cellWidth: string;
-
-  /** The cell number of the hovered cell */
-  _cellOver: number;
 
   constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
 

@@ -30,26 +30,30 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {SatCalendarBody, SatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
+import {Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 
 /**
  * An internal component used to display a single year in the datepicker.
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'sat-year-view',
   templateUrl: 'year-view.html',
   exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SatYearView<D> implements AfterContentInit {
+export class SatYearView<D> implements AfterContentInit, OnDestroy {
+  private _rerenderSubscription = Subscription.EMPTY;
+
   /** The date to display in this year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -102,7 +106,7 @@ export class SatYearView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SatCalendarBody, {static: false}) _matCalendarBody: SatCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody: SatCalendarBody;
 
   /** Grid of calendar cells representing the months of the year. */
   _months: SatCalendarCell[][];
@@ -134,7 +138,13 @@ export class SatYearView<D> implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this._init();
+    this._rerenderSubscription = this._dateAdapter.localeChanges
+      .pipe(startWith(null))
+      .subscribe(() => this._init());
+  }
+
+  ngOnDestroy() {
+    this._rerenderSubscription.unsubscribe();
   }
 
   /** Handles when a new month is selected. */

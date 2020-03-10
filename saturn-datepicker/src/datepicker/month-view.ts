@@ -30,12 +30,15 @@ import {
   Output,
   ViewEncapsulation,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import {DateAdapter} from '../datetime/date-adapter';
 import {MAT_DATE_FORMATS, MatDateFormats} from '../datetime/date-formats';
 import {Directionality} from '@angular/cdk/bidi';
 import {SatCalendarBody, SatCalendarCell, SatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 
 
 const DAYS_PER_WEEK = 7;
@@ -46,14 +49,14 @@ const DAYS_PER_WEEK = 7;
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'sat-month-view',
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SatMonthView<D> implements AfterContentInit {
+export class SatMonthView<D> implements AfterContentInit, OnDestroy {
+  private _rerenderSubscription = Subscription.EMPTY;
 
   /** Current start of interval. */
   @Input()
@@ -154,7 +157,7 @@ export class SatMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(SatCalendarBody, {static: false}) _matCalendarBody: SatCalendarBody;
+  @ViewChild(SatCalendarBody) _matCalendarBody: SatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -192,7 +195,13 @@ export class SatMonthView<D> implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this._init();
+    this._rerenderSubscription = this._dateAdapter.localeChanges
+      .pipe(startWith(null))
+      .subscribe(() => this._init());
+  }
+
+  ngOnDestroy() {
+    this._rerenderSubscription.unsubscribe();
   }
 
   /** Handles when a new date is selected. */
@@ -358,9 +367,9 @@ export class SatMonthView<D> implements AfterContentInit {
   /** Date filter for the month */
   private _shouldEnableDate(date: D): boolean {
     return !!date &&
-        (!this.dateFilter || this.dateFilter(date)) &&
         (!this.minDate || this._dateAdapter.compareDate(date, this.minDate) >= 0) &&
-        (!this.maxDate || this._dateAdapter.compareDate(date, this.maxDate) <= 0);
+        (!this.maxDate || this._dateAdapter.compareDate(date, this.maxDate) <= 0) &&
+        (!this.dateFilter || this.dateFilter(date));
   }
 
   /**
