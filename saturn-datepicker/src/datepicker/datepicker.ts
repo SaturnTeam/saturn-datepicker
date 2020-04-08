@@ -108,6 +108,9 @@ const _SatDatepickerContentMixinBase: CanColorCtor & typeof SatDatepickerContent
 export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
   implements AfterViewInit, CanColor {
 
+  /** Will emit whenever the begin date is selected */
+  @Output() beginDateSelected = new EventEmitter<D>();
+
   /** Reference to the internal calendar component. */
   @ViewChild(SatCalendar, {static: false}) _calendar: SatCalendar<D>;
 
@@ -123,6 +126,12 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
 
   ngAfterViewInit() {
     this._calendar.focusActiveCell();
+  }
+
+  setBeginDateSelected(beginDate: D) {
+    this.datepicker.setBeginDateSelected(beginDate);
+
+    this.beginDateSelected.emit(beginDate);
   }
 
   close() {
@@ -268,6 +277,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Emits when the datepicker has been closed. */
   @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Emits when the begin date has been selected. */
+  @Output() beginDateSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Enables datepicker closing after selection */
   @Input() closeAfterSelection = true;
@@ -508,6 +520,10 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
       panelClass: 'mat-datepicker-dialog',
     });
 
+    this._dialogRef.componentInstance.beginDateSelected.subscribe( beginDate => {
+      this.beginDateSelected.emit(beginDate);
+    });
+
     this._dialogRef.afterClosed().subscribe(() => this.close());
     this._dialogRef.componentInstance.datepicker = this;
     this._setColor();
@@ -518,6 +534,7 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
     if (!this._calendarPortal) {
       this._calendarPortal = new ComponentPortal<SatDatepickerContent<D>>(SatDatepickerContent,
                                                                           this._viewContainerRef);
+
     }
 
     if (!this._popupRef) {
@@ -527,6 +544,11 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
     if (!this._popupRef.hasAttached()) {
       this._popupComponentRef = this._popupRef.attach(this._calendarPortal);
       this._popupComponentRef.instance.datepicker = this;
+
+      this._popupComponentRef.instance.beginDateSelected.subscribe(beginDate => {
+        this.beginDateSelected.emit(beginDate);
+      });
+
       this._setColor();
 
       // Update the position once the calendar has rendered.

@@ -21,6 +21,6 @@
     [closeAfterSelection]="datepicker.closeAfterSelection"
     [orderPeriodLabel]="datepicker.orderPeriodLabel"
     (dateRangesChange)="datepicker._selectRange($event)"
-    (beginDateSelectedChange)="datepicker.setBeginDateSelected($event)"
+    (beginDateSelectedChange)="setBeginDateSelected($event)"
     (_userSelection)="close()">
 </sat-calendar>
