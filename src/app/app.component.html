@@ -110,18 +110,42 @@
     </section>
     <hr>
     <section>
-      <h2>Inline Usage</h2>
+      <h2>Inline Usage - Range</h2>
       <div>
           The <span class="code">sat-calendar</span> component with its <span class="code">dateRangesChange</span> output binding can be used as an inline range date picker. Validation NOT WORKING.
       </div>
       <span class="code" *ngIf="inlineRange">
         {{ inlineRange.begin | date }}
         {{ inlineRange.end | date }}
+        <button mat-button (click)="resetRange()">Reset</button>
+      </span>
+      <span class="code" *ngIf="inlineBeginDate && !inlineRange">
+        {{ inlineBeginDate | date }}
+        <button mat-button (click)="resetRange()">Reset</button>
       </span>
       <div class="inlineCalendarContainer">
         <sat-calendar [rangeMode]="true"
                       (dateRangesChange)="inlineRangeChange($event)"
-                      [selected]="selectedDate">
+                      (beginDateSelectedChange)="inlineBeginChange($event)"
+                      #inlineRangePicker>
+        </sat-calendar>
+      </div>
+    </section>
+    <hr>
+    <section>
+      <h2>Inline Usage - Single Date</h2>
+      <div>
+          The <span class="code">sat-calendar</span> component with its <span class="code">selectedChange</span> output binding can be used as an inline date picker. Validation NOT WORKING.
+      </div>
+      <span class="code" *ngIf="selectedDate">
+        {{ selectedDate | date }}
+        <button mat-button (click)="resetSingleDate()">Reset</button>
+      </span>
+      <div class="inlineCalendarContainer">
+        <sat-calendar [rangeMode]="false"
+                      (selectedChange)="inlineSingleDateChange($event)"
+                      [selected]="selectedDate"
+                      #inlineSingleDatePicker>
         </sat-calendar>
       </div>
     </section>
@@ -137,7 +161,7 @@
                    placeholder="Choose a date"
                    [satDatepicker]="picker8"
                    value="">
-            <sat-datepicker [rangeMode]="true" [rangeHoverEffect]="false" [closeAfterSelection]="false" [rangeMode]="true" #picker8></sat-datepicker>
+            <sat-datepicker [rangeMode]="true" [rangeHoverEffect]="false" [closeAfterSelection]="false" #picker8></sat-datepicker>
             <sat-datepicker-toggle matSuffix [for]="picker8"></sat-datepicker-toggle>
         </mat-form-field>
     </section>
