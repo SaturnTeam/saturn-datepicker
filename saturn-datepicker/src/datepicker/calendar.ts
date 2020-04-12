@@ -489,4 +489,16 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   private _getCurrentViewComponent() {
     return this.monthView || this.yearView || this.multiYearView;
   }
+
+  /** Reset inserted values */
+  public _reset() {
+    if (!this.rangeMode) {
+      this._selected = null;
+      return this.selectedChange.emit(null);
+    }
+    this._beginDate = null;
+    this._endDate = null;
+    this.beginDateSelected = null;
+    this.dateRangesChange.emit(null);
+  }
 }
