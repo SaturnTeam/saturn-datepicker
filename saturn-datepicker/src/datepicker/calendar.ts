@@ -85,7 +85,8 @@ export class SatCalendarHeader<D> {
     const minYearOfPage = activeYear - getActiveOffset(
       this._dateAdapter, this.calendar.activeDate, this.calendar.minDate, this.calendar.maxDate);
     const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
-    return `${minYearOfPage} \u2013 ${maxYearOfPage}`;
+    return `${this._dateAdapter.getYearName(this._dateAdapter.createDate(minYearOfPage, 0, 1))}
+      \u2013 ${this._dateAdapter.getYearName(this._dateAdapter.createDate(maxYearOfPage, 0, 1))}`;
   }
 
   get periodButtonLabel(): string {
