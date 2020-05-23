@@ -454,6 +454,7 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
           this.dateRangesChange.emit({begin: <D>this.beginDate, end: this.endDate});
         }
     } else if (!this._dateAdapter.sameDate(date, this.selected)) {
+      this.selected = date;
       this.selectedChange.emit(date);
     }
   }
@@ -489,5 +490,17 @@ export class SatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Returns the component instance that corresponds to the current calendar view. */
   private _getCurrentViewComponent() {
     return this.monthView || this.yearView || this.multiYearView;
+  }
+
+  /** Reset inserted values */
+  public _reset() {
+    if (!this.rangeMode) {
+      this._selected = null;
+      return this.selectedChange.emit(null);
+    }
+    this._beginDate = null;
+    this._endDate = null;
+    this.beginDateSelected = null;
+    this.dateRangesChange.emit(null);
   }
 }

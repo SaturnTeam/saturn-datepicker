@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { RangesFooter } from './ranges-footer.component';
 
@@ -8,9 +8,13 @@ import { RangesFooter } from './ranges-footer.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @ViewChild('inlineRangePicker', {static: false}) inlineRangePicker;
+  @ViewChild('inlineSingleDatePicker', {static: false}) inlineSingleDatePicker;
+
   form: FormGroup;
   rangesFooter = RangesFooter;
   inlineRange;
+  inlineBeginDate;
   selectedDate;
 
   constructor(fb: FormBuilder) {
@@ -21,6 +25,26 @@ export class AppComponent {
 
   inlineRangeChange($event) {
     this.inlineRange = $event;
+  }
+
+  inlineBeginChange($event) {
+    this.inlineBeginDate = $event;
+  }
+
+  inlineSingleDateChange($event) {
+    this.selectedDate = $event;
+  }
+
+  resetRange() {
+    this.inlineRange = undefined;
+    this.inlineBeginDate = undefined;
+
+    this.inlineRangePicker._reset();
+  }
+
+  resetSingleDate() {
+    this.selectedDate = undefined;
+    this.inlineRangePicker._reset();
   }
 
 }
