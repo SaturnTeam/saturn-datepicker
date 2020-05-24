@@ -19,7 +19,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
-
 /**
  * Extra CSS classes that can be associated with a calendar cell.
  */
@@ -179,7 +178,7 @@ export class SatCalendarBody implements OnChanges {
     /** Do not mark start and end of interval. */
     if (date === this.begin || date === this.end) {
       return false;
-    }
+    }      
     if (this.begin && !this.end) {
       return date > this.begin;
     }
@@ -196,6 +195,12 @@ export class SatCalendarBody implements OnChanges {
     }
     if (this.isBeforeSelected && !this.begin) {
       return date > this._cellOver;
+    }
+    if(this._cellOver > this.end){
+      return false
+    }
+    if(this._cellOver < this.begin){
+      return false
     }
     if (this._cellOver > this.begin) {
       return date > this.begin && date < this._cellOver;
@@ -222,7 +227,7 @@ export class SatCalendarBody implements OnChanges {
   /** Whenever to mark cell as end of the range. */
   _isEnd(date: number): boolean {
     if (this.rangeMode && this.beginSelected && this._cellOver) {
-      if (this.isBeforeSelected && !this.begin) {
+      if (this.isBeforeSelected && !this.begin || date > this.end) {
         return false;
       } else {
         return (this.end === date && !(this._cellOver > this.begin)) ||
@@ -248,6 +253,12 @@ export class SatCalendarBody implements OnChanges {
 
   /** Whenever to highlight the target cell when selecting the second date in range mode */
   _previewCellOver(date: number): boolean {
+    if(this._cellOver > this.end){
+      return false
+    }
+    if(this._cellOver < this.begin){
+      return false
+    }
     return this._cellOver === date && this.rangeMode && this.beginSelected;
   }
 }

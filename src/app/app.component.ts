@@ -17,6 +17,10 @@ export class AppComponent {
   inlineBeginDate;
   selectedDate;
 
+  min = new Date(2019, 0, 1);
+  max = new Date(2020, 0, 1);
+
+  
   constructor(fb: FormBuilder) {
     this.form = fb.group({
       date: [{begin: new Date(2018, 7, 5), end: new Date(2018, 7, 25)}]
