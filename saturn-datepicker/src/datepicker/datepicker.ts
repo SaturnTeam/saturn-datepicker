@@ -353,6 +353,9 @@ export class SatDatepicker<D> implements OnDestroy, CanColor {
   /** The date already selected by the user in range mode. */
   private _beginDateSelected: D | null;
 
+  /** Default color to fall back to if no value is set. */
+  readonly defaultColor: ThemePalette = 'primary';
+
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
               private _ngZone: NgZone,
