@@ -80,7 +80,6 @@ export const _SatDatepickerContentMixinBase = mixinColor(SatDatepickerContentBas
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'sat-datepicker-content',
   templateUrl: 'datepicker-content.html',
   styleUrls: ['datepicker-content.css'],
@@ -125,7 +124,6 @@ export class SatDatepickerContent<D> extends _SatDatepickerContentMixinBase
 // if angular adds support for `exportAs: '$implicit'` on directives.
 /** Component responsible for managing the datepicker popup/dialog. */
 @Component({
-  moduleId: module.id,
   selector: 'sat-datepicker',
   template: '',
   exportAs: 'matDatepicker',
