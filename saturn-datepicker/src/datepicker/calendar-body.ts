@@ -132,7 +132,9 @@ export class SatCalendarBody implements OnChanges {
   }
 
   _mouseOverCell(cell: SatCalendarCell): void {
-    if (this.rangeHoverEffect) this._cellOver = cell.value;
+    if (this.rangeHoverEffect) {
+      this._cellOver = cell.value;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -152,7 +154,10 @@ export class SatCalendarBody implements OnChanges {
     }
 
     if (changes.activeCell) {
-      this._cellOver = this.activeCell + 1;
+      // Only modify hovered cell variable when rangeHoverEffect is enabled
+      if (this.rangeHoverEffect) {
+        this._cellOver = this.activeCell + 1;
+      }
     }
   }
 
