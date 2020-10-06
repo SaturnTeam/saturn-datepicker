@@ -50,7 +50,6 @@ export type SatCalendarView = 'month' | 'year' | 'multi-year';
 
 /** Default header for SatCalendar */
 @Component({
-  moduleId: module.id,
   selector: 'sat-calendar-header',
   templateUrl: 'calendar-header.html',
   exportAs: 'matCalendarHeader',
@@ -200,7 +199,6 @@ export class SatCalendarFooter<D> {
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'sat-calendar',
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],

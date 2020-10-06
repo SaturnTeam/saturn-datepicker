@@ -43,7 +43,6 @@ export class SatCalendarCell {
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: '[sat-calendar-body]',
   templateUrl: 'calendar-body.html',
   styleUrls: ['calendar-body.css'],
